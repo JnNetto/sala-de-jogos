@@ -1,11 +1,11 @@
 {
-    "name": "impostor_app",
-    "short_name": "impostor_app",
+    "name": "Sala de Jogos",
+    "short_name": "Sala de Jogos",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Jogos sociais para jogar em grupo.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

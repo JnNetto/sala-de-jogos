@@ -42,8 +42,6 @@ class ResistenciaHomeScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-              const _ResumoRegras(),
-              const Spacer(),
               PrimaryButton(
                 text: 'Jogar neste celular',
                 icon: Icons.add,
@@ -102,34 +100,6 @@ class ResistenciaHomeScreen extends StatelessWidget {
               const SizedBox(height: 48),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ResumoRegras extends StatelessWidget {
-  const _ResumoRegras();
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Fatia 2 pronta', style: textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Text(
-              'Lobby local com nomes, composição oficial dos times, tamanhos '
-              'das missões e sorteio da primeira partida.',
-              style: textTheme.bodyMedium,
-            ),
-          ],
         ),
       ),
     );

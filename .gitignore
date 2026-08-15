@@ -45,6 +45,8 @@ app.*.map.json
 /android/app/release
 
 # Firebase / local service artifacts
+.env*
+!.env.example
 .firebaserc
 lib/firebase_options.dart
 firebase-debug*.log
@@ -66,7 +68,3 @@ functions/.runtimeconfig.json
 
 # Local analysis exports
 /analise_*.json
-
-# Question/quiz banks and database-like local content
-/assets/*_banco.json
-/*banco*.json

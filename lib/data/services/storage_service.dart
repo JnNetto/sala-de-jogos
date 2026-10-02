@@ -242,4 +242,16 @@ class StorageService {
   Future<bool> limparQuizPerguntasUsadas() async {
     return saveQuizPerguntasUsadas([]);
   }
+
+  String? getNomeJogador() {
+    final nome = _prefs?.getString(AppConstants.prefsKeyNomeJogador)?.trim();
+    if (nome == null || nome.isEmpty) return null;
+    return nome;
+  }
+
+  Future<void> saveNomeJogador(String nome) async {
+    final trimmed = nome.trim();
+    if (trimmed.isEmpty) return;
+    await _prefs?.setString(AppConstants.prefsKeyNomeJogador, trimmed);
+  }
 }

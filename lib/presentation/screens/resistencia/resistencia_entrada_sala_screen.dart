@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/utils/service_locator.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/primary_button.dart';
 import 'resistencia_sala_router_screen.dart';
@@ -17,8 +18,15 @@ class ResistenciaEntradaSalaScreen extends StatefulWidget {
 
 class _ResistenciaEntradaSalaScreenState
     extends State<ResistenciaEntradaSalaScreen> {
-  final _nomeController = TextEditingController(text: 'Jogador');
+  final _nomeController = TextEditingController();
   final _codigoController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nomeController.text =
+        ServiceLocator().storageService.getNomeJogador() ?? 'Jogador';
+  }
 
   @override
   void dispose() {
@@ -37,6 +45,8 @@ class _ResistenciaEntradaSalaScreenState
       messenger.showSnackBar(const SnackBar(content: Text('Informe seu nome')));
       return;
     }
+
+    await ServiceLocator().storageService.saveNomeJogador(nome);
 
     final ok = widget.criarSala
         ? await provider.criarSala(nome)

@@ -32,6 +32,7 @@ class AppConstants {
   static const String prefsKeyEstatisticas = 'estatisticas';
   static const String prefsKeyPalavrasUsadas = 'palavras_usadas';
   static const String prefsKeyCategorias = 'categorias';
+  static const String prefsKeyNomeJogador = 'jogador_nome';
 
   AppConstants._();
 }

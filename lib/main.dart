@@ -20,6 +20,7 @@ import 'presentation/providers/resistencia_sala_provider.dart';
 import 'presentation/providers/lobisomem_partida_provider.dart';
 import 'presentation/providers/so_uma_partida_provider.dart';
 import 'presentation/providers/so_uma_sala_provider.dart';
+import 'presentation/providers/aneis_sala_provider.dart';
 import 'presentation/providers/theme_provider.dart';
 import 'presentation/screens/splash_screen.dart';
 
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SoUmaPartidaProvider()),
         ChangeNotifierProvider(create: (_) => SoUmaSalaProvider()),
         ChangeNotifierProvider(create: (_) => LobisomemPartidaProvider()),
+        ChangeNotifierProvider(create: (_) => AneisSalaProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {

@@ -3,6 +3,7 @@ import {HttpsError, onCall} from "firebase-functions/v2/https";
 import {db} from "./firebaseAdmin";
 
 export * from "./soUma";
+export * from "./aneis";
 
 const region = "southamerica-east1";
 const spyCount: Record<number, number> = {

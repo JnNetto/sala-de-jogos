@@ -10,6 +10,7 @@ import 'quiz_da_vez/quiz_home_screen.dart';
 import 'resistencia/resistencia_home_screen.dart';
 import 'lobisomem/lobisomem_home_screen.dart';
 import 'so_uma/so_uma_home_screen.dart';
+import 'aneis/aneis_home_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -44,6 +45,11 @@ class HomeScreen extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const LobisomemHomeScreen()),
+      );
+    } else if (jogoId == JogosDisponiveis.idAneis) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AneisHomeScreen()),
       );
     }
   }

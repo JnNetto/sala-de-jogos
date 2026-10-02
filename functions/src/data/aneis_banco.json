@@ -1,0 +1,8298 @@
+{
+  "jogo": "Nos Anéis",
+  "versao": 1,
+  "observacao": "Banco original. Não reproduz cartas nem regras do jogo publicado.",
+  "aneis": [
+    {
+      "id": "palavra",
+      "nome": "Palavra",
+      "subtitulo": "escrita, som ou forma da palavra",
+      "cor": "#3B82F6"
+    },
+    {
+      "id": "atributo",
+      "nome": "Atributo",
+      "subtitulo": "o que a coisa é ou tem",
+      "cor": "#F59E0B"
+    },
+    {
+      "id": "contexto",
+      "nome": "Contexto",
+      "subtitulo": "onde aparece ou para que se usa",
+      "cor": "#EC4899"
+    }
+  ],
+  "dificuldades": [
+    "facil",
+    "medio",
+    "dificil"
+  ],
+  "tags": [
+    {
+      "id": "vivo",
+      "anel": "atributo",
+      "nome": "Vivo",
+      "dica": "Animal, planta, fungo ou pessoa que está viva de verdade."
+    },
+    {
+      "id": "animal",
+      "anel": "atributo",
+      "nome": "Animal",
+      "dica": "Qualquer bicho, do mosquito à baleia."
+    },
+    {
+      "id": "planta",
+      "anel": "atributo",
+      "nome": "Planta",
+      "dica": "Vegetal vivo: árvore, flor, erva, folha."
+    },
+    {
+      "id": "pessoa",
+      "anel": "atributo",
+      "nome": "Pessoa",
+      "dica": "Profissão, personagem ou papel humano."
+    },
+    {
+      "id": "comida",
+      "anel": "atributo",
+      "nome": "Comida",
+      "dica": "Algo que se come como alimento."
+    },
+    {
+      "id": "bebida",
+      "anel": "atributo",
+      "nome": "Bebida",
+      "dica": "Algo que se bebe."
+    },
+    {
+      "id": "comestivel",
+      "anel": "atributo",
+      "nome": "Comestível",
+      "dica": "Dá para comer ou beber de verdade, não só de brincadeira."
+    },
+    {
+      "id": "natural",
+      "anel": "atributo",
+      "nome": "Natural",
+      "dica": "Existe na natureza sem ter sido inventado por gente."
+    },
+    {
+      "id": "fabricado",
+      "anel": "atributo",
+      "nome": "Fabricado",
+      "dica": "Feito ou preparado por pessoas."
+    },
+    {
+      "id": "madeira",
+      "anel": "atributo",
+      "nome": "Madeira",
+      "dica": "Feito de madeira, no todo ou em parte importante."
+    },
+    {
+      "id": "metal",
+      "anel": "atributo",
+      "nome": "Metal",
+      "dica": "Feito de metal, no todo ou em parte importante."
+    },
+    {
+      "id": "plastico",
+      "anel": "atributo",
+      "nome": "Plástico",
+      "dica": "Normalmente feito de plástico."
+    },
+    {
+      "id": "tecido",
+      "anel": "atributo",
+      "nome": "Tecido",
+      "dica": "Feito de pano, tecido ou fibra."
+    },
+    {
+      "id": "vidro",
+      "anel": "atributo",
+      "nome": "Vidro",
+      "dica": "Feito de vidro, no todo ou em parte importante."
+    },
+    {
+      "id": "papel",
+      "anel": "atributo",
+      "nome": "Papel",
+      "dica": "Feito de papel ou papelão."
+    },
+    {
+      "id": "borracha",
+      "anel": "atributo",
+      "nome": "Borracha",
+      "dica": "Feito de borracha."
+    },
+    {
+      "id": "liquido",
+      "anel": "atributo",
+      "nome": "Líquido",
+      "dica": "É líquido ou é feito principalmente de líquido."
+    },
+    {
+      "id": "solido",
+      "anel": "atributo",
+      "nome": "Sólido",
+      "dica": "Material sólido em grãos, pedaço ou bloco."
+    },
+    {
+      "id": "pequeno",
+      "anel": "atributo",
+      "nome": "Pequeno",
+      "dica": "Cabe na palma da mão."
+    },
+    {
+      "id": "grande",
+      "anel": "atributo",
+      "nome": "Grande",
+      "dica": "Maior que uma pessoa."
+    },
+    {
+      "id": "macio",
+      "anel": "atributo",
+      "nome": "Macio",
+      "dica": "É macio ou fofo ao toque."
+    },
+    {
+      "id": "duro",
+      "anel": "atributo",
+      "nome": "Duro",
+      "dica": "É duro ao toque; não amassa com a mão."
+    },
+    {
+      "id": "eletrico",
+      "anel": "atributo",
+      "nome": "Elétrico",
+      "dica": "Funciona com eletricidade ou bateria."
+    },
+    {
+      "id": "tem_pernas",
+      "anel": "atributo",
+      "nome": "Tem pernas",
+      "dica": "Tem pernas ou patas (inclui pés de móvel)."
+    },
+    {
+      "id": "tem_rodas",
+      "anel": "atributo",
+      "nome": "Tem rodas",
+      "dica": "Anda ou se move sobre rodas."
+    },
+    {
+      "id": "tem_asas",
+      "anel": "atributo",
+      "nome": "Tem asas",
+      "dica": "Tem asas, de verdade ou na imaginação."
+    },
+    {
+      "id": "tem_tela",
+      "anel": "atributo",
+      "nome": "Tem tela",
+      "dica": "Tem uma tela que mostra imagens."
+    },
+    {
+      "id": "ferramenta",
+      "anel": "atributo",
+      "nome": "Ferramenta",
+      "dica": "Serve para fazer um trabalho ou conserto."
+    },
+    {
+      "id": "vestimenta",
+      "anel": "atributo",
+      "nome": "Vestimenta",
+      "dica": "Roupa, calçado ou acessório que se veste."
+    },
+    {
+      "id": "movel",
+      "anel": "atributo",
+      "nome": "Móvel",
+      "dica": "Mobília de casa ou de escritório."
+    },
+    {
+      "id": "veiculo",
+      "anel": "atributo",
+      "nome": "Veículo",
+      "dica": "Leva pessoas ou coisas de um lugar para outro."
+    },
+    {
+      "id": "brinquedo",
+      "anel": "atributo",
+      "nome": "Brinquedo",
+      "dica": "Feito para brincar ou jogar."
+    },
+    {
+      "id": "instrumento_musical",
+      "anel": "atributo",
+      "nome": "Instrumento musical",
+      "dica": "Serve para tocar música."
+    },
+    {
+      "id": "recipiente",
+      "anel": "atributo",
+      "nome": "Recipiente",
+      "dica": "Serve para guardar ou carregar outra coisa."
+    },
+    {
+      "id": "arma",
+      "anel": "atributo",
+      "nome": "Arma",
+      "dica": "Pode ser usado para ferir ou caçar."
+    },
+    {
+      "id": "eletronico",
+      "anel": "atributo",
+      "nome": "Eletrônico",
+      "dica": "Aparelho com circuito eletrônico."
+    },
+    {
+      "id": "fruta",
+      "anel": "atributo",
+      "nome": "Fruta",
+      "dica": "Fruto de planta, incluindo os que usamos como legume."
+    },
+    {
+      "id": "objeto",
+      "anel": "atributo",
+      "nome": "Objeto",
+      "dica": "Coisa concreta que se pode pegar ou mover."
+    },
+    {
+      "id": "lugar",
+      "anel": "atributo",
+      "nome": "Lugar",
+      "dica": "Um lugar onde se pode estar."
+    },
+    {
+      "id": "ideia",
+      "anel": "atributo",
+      "nome": "Ideia",
+      "dica": "Algo abstrato: sentimento, atividade, evento ou conceito."
+    },
+    {
+      "id": "casa",
+      "anel": "contexto",
+      "nome": "Casa",
+      "dica": "Comum dentro de casa, em qualquer cômodo."
+    },
+    {
+      "id": "cozinha",
+      "anel": "contexto",
+      "nome": "Cozinha",
+      "dica": "Comum na cozinha."
+    },
+    {
+      "id": "banheiro",
+      "anel": "contexto",
+      "nome": "Banheiro",
+      "dica": "Comum no banheiro."
+    },
+    {
+      "id": "quarto",
+      "anel": "contexto",
+      "nome": "Quarto",
+      "dica": "Comum no quarto."
+    },
+    {
+      "id": "sala",
+      "anel": "contexto",
+      "nome": "Sala",
+      "dica": "Comum na sala."
+    },
+    {
+      "id": "escola",
+      "anel": "contexto",
+      "nome": "Escola",
+      "dica": "Comum na escola ou no estudo."
+    },
+    {
+      "id": "trabalho",
+      "anel": "contexto",
+      "nome": "Trabalho",
+      "dica": "Ligado a trabalho ou profissão."
+    },
+    {
+      "id": "escritorio",
+      "anel": "contexto",
+      "nome": "Escritório",
+      "dica": "Comum num escritório."
+    },
+    {
+      "id": "hospital",
+      "anel": "contexto",
+      "nome": "Hospital",
+      "dica": "Ligado a hospital, saúde ou cuidado médico."
+    },
+    {
+      "id": "rua",
+      "anel": "contexto",
+      "nome": "Rua",
+      "dica": "Aparece na rua ou na calçada."
+    },
+    {
+      "id": "cidade",
+      "anel": "contexto",
+      "nome": "Cidade",
+      "dica": "Típico da cidade."
+    },
+    {
+      "id": "praia",
+      "anel": "contexto",
+      "nome": "Praia",
+      "dica": "Aparece na praia."
+    },
+    {
+      "id": "floresta",
+      "anel": "contexto",
+      "nome": "Floresta",
+      "dica": "Aparece na floresta ou na mata."
+    },
+    {
+      "id": "fazenda",
+      "anel": "contexto",
+      "nome": "Fazenda",
+      "dica": "Aparece na fazenda ou no campo."
+    },
+    {
+      "id": "mar",
+      "anel": "contexto",
+      "nome": "Mar",
+      "dica": "Aparece no mar ou na água."
+    },
+    {
+      "id": "festa",
+      "anel": "contexto",
+      "nome": "Festa",
+      "dica": "Aparece em festas e comemorações."
+    },
+    {
+      "id": "esporte",
+      "anel": "contexto",
+      "nome": "Esporte",
+      "dica": "Ligado a esporte ou atividade física."
+    },
+    {
+      "id": "infancia",
+      "anel": "contexto",
+      "nome": "Infância",
+      "dica": "Muito ligado a crianças."
+    },
+    {
+      "id": "viagem",
+      "anel": "contexto",
+      "nome": "Viagem",
+      "dica": "Ligado a viagens e passeios."
+    },
+    {
+      "id": "mercado",
+      "anel": "contexto",
+      "nome": "Mercado",
+      "dica": "Se compra no mercado ou na feira."
+    },
+    {
+      "id": "igreja",
+      "anel": "contexto",
+      "nome": "Igreja",
+      "dica": "Aparece em igrejas ou em ritos religiosos."
+    },
+    {
+      "id": "show",
+      "anel": "contexto",
+      "nome": "Show",
+      "dica": "Aparece em shows, cinema ou espetáculos."
+    },
+    {
+      "id": "brasil",
+      "anel": "contexto",
+      "nome": "Brasil",
+      "dica": "Muito típico do Brasil."
+    },
+    {
+      "id": "verao",
+      "anel": "contexto",
+      "nome": "Verão",
+      "dica": "Associado ao calor e ao verão."
+    },
+    {
+      "id": "inverno",
+      "anel": "contexto",
+      "nome": "Inverno",
+      "dica": "Associado ao frio e ao inverno."
+    },
+    {
+      "id": "corpo",
+      "anel": "contexto",
+      "nome": "Corpo",
+      "dica": "É parte do corpo ou se usa no corpo."
+    }
+  ],
+  "regras": [
+    {
+      "id": "palavra_inicia_vogal",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Começa com vogal",
+      "avaliacao": {
+        "tipo": "iniciaComVogal"
+      }
+    },
+    {
+      "id": "palavra_inicia_consoante",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Começa com consoante",
+      "avaliacao": {
+        "tipo": "iniciaComConsoante"
+      }
+    },
+    {
+      "id": "palavra_inicia_c",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Começa com C",
+      "avaliacao": {
+        "tipo": "iniciaCom",
+        "letra": "c"
+      }
+    },
+    {
+      "id": "palavra_inicia_p",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Começa com P",
+      "avaliacao": {
+        "tipo": "iniciaCom",
+        "letra": "p"
+      }
+    },
+    {
+      "id": "palavra_inicia_b",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Começa com B",
+      "avaliacao": {
+        "tipo": "iniciaCom",
+        "letra": "b"
+      }
+    },
+    {
+      "id": "palavra_inicia_m",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Começa com M",
+      "avaliacao": {
+        "tipo": "iniciaCom",
+        "letra": "m"
+      }
+    },
+    {
+      "id": "palavra_termina_a",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Termina com A",
+      "avaliacao": {
+        "tipo": "terminaCom",
+        "letra": "a"
+      }
+    },
+    {
+      "id": "palavra_termina_o",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Termina com O",
+      "avaliacao": {
+        "tipo": "terminaCom",
+        "letra": "o"
+      }
+    },
+    {
+      "id": "palavra_termina_e",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Termina com E",
+      "avaliacao": {
+        "tipo": "terminaCom",
+        "letra": "e"
+      }
+    },
+    {
+      "id": "palavra_termina_r",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Termina com R",
+      "avaliacao": {
+        "tipo": "terminaCom",
+        "letra": "r"
+      }
+    },
+    {
+      "id": "palavra_genero_f",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Palavra feminina",
+      "avaliacao": {
+        "tipo": "genero",
+        "valor": "f"
+      }
+    },
+    {
+      "id": "palavra_genero_m",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Palavra masculina",
+      "avaliacao": {
+        "tipo": "genero",
+        "valor": "m"
+      }
+    },
+    {
+      "id": "palavra_silabas_2",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Tem 2 sílabas",
+      "avaliacao": {
+        "tipo": "quantidadeSilabas",
+        "op": "eq",
+        "valor": 2
+      }
+    },
+    {
+      "id": "palavra_silabas_3",
+      "anel": "palavra",
+      "dificuldade": "facil",
+      "texto": "Tem 3 sílabas",
+      "avaliacao": {
+        "tipo": "quantidadeSilabas",
+        "op": "eq",
+        "valor": 3
+      }
+    },
+    {
+      "id": "palavra_silabas_min4",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem 4 sílabas ou mais",
+      "avaliacao": {
+        "tipo": "quantidadeSilabas",
+        "op": "min",
+        "valor": 4
+      }
+    },
+    {
+      "id": "palavra_silabas_max2",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem no máximo 2 sílabas",
+      "avaliacao": {
+        "tipo": "quantidadeSilabas",
+        "op": "max",
+        "valor": 2
+      }
+    },
+    {
+      "id": "palavra_contem_r",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem a letra R",
+      "avaliacao": {
+        "tipo": "contemLetra",
+        "letra": "r"
+      }
+    },
+    {
+      "id": "palavra_contem_l",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem a letra L",
+      "avaliacao": {
+        "tipo": "contemLetra",
+        "letra": "l"
+      }
+    },
+    {
+      "id": "palavra_contem_i",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem a letra I",
+      "avaliacao": {
+        "tipo": "contemLetra",
+        "letra": "i"
+      }
+    },
+    {
+      "id": "palavra_sem_e",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Não tem a letra E",
+      "avaliacao": {
+        "tipo": "naoContemLetra",
+        "letra": "e"
+      }
+    },
+    {
+      "id": "palavra_sem_a",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Não tem a letra A",
+      "avaliacao": {
+        "tipo": "naoContemLetra",
+        "letra": "a"
+      }
+    },
+    {
+      "id": "palavra_letras_min7",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem 7 letras ou mais",
+      "avaliacao": {
+        "tipo": "quantidadeLetras",
+        "op": "min",
+        "valor": 7
+      }
+    },
+    {
+      "id": "palavra_letras_max5",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem no máximo 5 letras",
+      "avaliacao": {
+        "tipo": "quantidadeLetras",
+        "op": "max",
+        "valor": 5
+      }
+    },
+    {
+      "id": "palavra_letras_eq4",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Tem exatamente 4 letras",
+      "avaliacao": {
+        "tipo": "quantidadeLetras",
+        "op": "eq",
+        "valor": 4
+      }
+    },
+    {
+      "id": "palavra_letras_par",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Tem quantidade par de letras",
+      "avaliacao": {
+        "tipo": "quantidadeLetras",
+        "op": "par"
+      }
+    },
+    {
+      "id": "palavra_letras_impar",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Tem quantidade ímpar de letras",
+      "avaliacao": {
+        "tipo": "quantidadeLetras",
+        "op": "impar"
+      }
+    },
+    {
+      "id": "palavra_tem_acento",
+      "anel": "palavra",
+      "dificuldade": "medio",
+      "texto": "Tem acento ou cedilha",
+      "avaliacao": {
+        "tipo": "temAcento"
+      }
+    },
+    {
+      "id": "palavra_tem_hifen",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Tem hífen",
+      "avaliacao": {
+        "tipo": "temHifen"
+      }
+    },
+    {
+      "id": "palavra_tem_espaco",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Tem mais de uma palavra",
+      "avaliacao": {
+        "tipo": "temEspaco"
+      }
+    },
+    {
+      "id": "palavra_inicia_termina_igual",
+      "anel": "palavra",
+      "dificuldade": "dificil",
+      "texto": "Começa e termina com a mesma letra",
+      "avaliacao": {
+        "tipo": "iniciaETerminaIgual"
+      }
+    },
+    {
+      "id": "atributo_comestivel",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "É comestível",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "comestivel"
+        ]
+      }
+    },
+    {
+      "id": "atributo_animal",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "É um animal",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "animal"
+        ]
+      }
+    },
+    {
+      "id": "atributo_vivo",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "É vivo",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "vivo"
+        ]
+      }
+    },
+    {
+      "id": "atributo_fabricado",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "Foi feito por gente",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "fabricado"
+        ]
+      }
+    },
+    {
+      "id": "atributo_natural",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "Existe na natureza",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "natural"
+        ]
+      }
+    },
+    {
+      "id": "atributo_pequeno",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "Cabe na palma da mão",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "pequeno"
+        ]
+      }
+    },
+    {
+      "id": "atributo_grande",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "É maior que uma pessoa",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "grande"
+        ]
+      }
+    },
+    {
+      "id": "atributo_macio",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "É macio",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "macio"
+        ]
+      }
+    },
+    {
+      "id": "atributo_duro",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "É duro",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "duro"
+        ]
+      }
+    },
+    {
+      "id": "atributo_objeto",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "É um objeto que se pode pegar",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "objeto"
+        ]
+      }
+    },
+    {
+      "id": "atributo_vestimenta",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "Se veste ou se usa no corpo como roupa",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "vestimenta"
+        ]
+      }
+    },
+    {
+      "id": "atributo_meio_transporte",
+      "anel": "atributo",
+      "dificuldade": "facil",
+      "texto": "É um veículo",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "veiculo"
+        ]
+      }
+    },
+    {
+      "id": "atributo_metal",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "Tem metal",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "metal"
+        ]
+      }
+    },
+    {
+      "id": "atributo_madeira",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "Tem madeira",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "madeira"
+        ]
+      }
+    },
+    {
+      "id": "atributo_tecido",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "É feito de tecido",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "tecido"
+        ]
+      }
+    },
+    {
+      "id": "atributo_eletrico",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "Funciona com eletricidade",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "eletrico"
+        ]
+      }
+    },
+    {
+      "id": "atributo_pernas",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "Tem pernas ou patas",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "tem_pernas"
+        ]
+      }
+    },
+    {
+      "id": "atributo_asas_ou_rodas",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "Tem asas ou rodas",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "tem_asas",
+          "tem_rodas"
+        ]
+      }
+    },
+    {
+      "id": "atributo_liquido",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "É líquido",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "liquido"
+        ]
+      }
+    },
+    {
+      "id": "atributo_ferramenta_arma",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "É ferramenta ou arma",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "ferramenta",
+          "arma"
+        ]
+      }
+    },
+    {
+      "id": "atributo_fruta",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "É uma fruta",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "fruta"
+        ]
+      }
+    },
+    {
+      "id": "atributo_pessoa",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "É uma pessoa ou personagem",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "pessoa"
+        ]
+      }
+    },
+    {
+      "id": "atributo_lugar_ou_ideia",
+      "anel": "atributo",
+      "dificuldade": "medio",
+      "texto": "Não dá para pegar na mão (lugar ou ideia)",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "lugar",
+          "ideia"
+        ]
+      }
+    },
+    {
+      "id": "atributo_vivo_nao_animal",
+      "anel": "atributo",
+      "dificuldade": "dificil",
+      "texto": "É vivo mas não é animal",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "vivo"
+        ],
+        "nenhuma": [
+          "animal"
+        ]
+      }
+    },
+    {
+      "id": "atributo_natural_nao_vivo",
+      "anel": "atributo",
+      "dificuldade": "dificil",
+      "texto": "É natural mas não é vivo",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "natural"
+        ],
+        "nenhuma": [
+          "vivo"
+        ]
+      }
+    },
+    {
+      "id": "atributo_fabricado_macio",
+      "anel": "atributo",
+      "dificuldade": "dificil",
+      "texto": "Foi feito por gente e é macio",
+      "avaliacao": {
+        "tipo": "tags",
+        "todas": [
+          "fabricado",
+          "macio"
+        ]
+      }
+    },
+    {
+      "id": "atributo_comestivel_fabricado",
+      "anel": "atributo",
+      "dificuldade": "dificil",
+      "texto": "É comida ou bebida preparada por gente",
+      "avaliacao": {
+        "tipo": "tags",
+        "todas": [
+          "comestivel",
+          "fabricado"
+        ]
+      }
+    },
+    {
+      "id": "atributo_objeto_sem_metal",
+      "anel": "atributo",
+      "dificuldade": "dificil",
+      "texto": "É um objeto sem metal",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "objeto"
+        ],
+        "nenhuma": [
+          "metal"
+        ]
+      }
+    },
+    {
+      "id": "atributo_recipiente_ou_musica",
+      "anel": "atributo",
+      "dificuldade": "dificil",
+      "texto": "Guarda coisas ou faz música",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "recipiente",
+          "instrumento_musical",
+          "brinquedo"
+        ]
+      }
+    },
+    {
+      "id": "contexto_cozinha",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "É comum na cozinha",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "cozinha"
+        ]
+      }
+    },
+    {
+      "id": "contexto_casa",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "É comum dentro de casa",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "casa",
+          "cozinha",
+          "banheiro",
+          "quarto",
+          "sala"
+        ]
+      }
+    },
+    {
+      "id": "contexto_mercado",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "Se compra no mercado",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "mercado"
+        ]
+      }
+    },
+    {
+      "id": "contexto_festa",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "Aparece em festas",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "festa"
+        ]
+      }
+    },
+    {
+      "id": "contexto_brasil",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "É bem brasileiro",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "brasil"
+        ]
+      }
+    },
+    {
+      "id": "contexto_corpo",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "É do corpo ou se usa no corpo",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "corpo"
+        ]
+      }
+    },
+    {
+      "id": "contexto_praia_mar",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "Aparece na praia ou no mar",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "praia",
+          "mar"
+        ]
+      }
+    },
+    {
+      "id": "contexto_natureza",
+      "anel": "contexto",
+      "dificuldade": "facil",
+      "texto": "Aparece na floresta ou na fazenda",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "floresta",
+          "fazenda"
+        ]
+      }
+    },
+    {
+      "id": "contexto_infancia",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Lembra infância",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "infancia"
+        ]
+      }
+    },
+    {
+      "id": "contexto_trabalho",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Ligado a trabalho",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "trabalho",
+          "escritorio"
+        ]
+      }
+    },
+    {
+      "id": "contexto_escola",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Aparece na escola",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "escola"
+        ]
+      }
+    },
+    {
+      "id": "contexto_cidade_rua",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Aparece na cidade ou na rua",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "cidade",
+          "rua"
+        ]
+      }
+    },
+    {
+      "id": "contexto_viagem",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Ligado a viagem",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "viagem"
+        ]
+      }
+    },
+    {
+      "id": "contexto_esporte",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Ligado a esporte",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "esporte"
+        ]
+      }
+    },
+    {
+      "id": "contexto_verao",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Combina com verão",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "verao"
+        ]
+      }
+    },
+    {
+      "id": "contexto_inverno",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Combina com frio",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "inverno"
+        ]
+      }
+    },
+    {
+      "id": "contexto_espetaculo",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Aparece em show ou espetáculo",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "show",
+          "igreja"
+        ]
+      }
+    },
+    {
+      "id": "contexto_saude_higiene",
+      "anel": "contexto",
+      "dificuldade": "medio",
+      "texto": "Ligado a saúde ou higiene",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "hospital",
+          "banheiro"
+        ]
+      }
+    },
+    {
+      "id": "contexto_casa_nao_cozinha",
+      "anel": "contexto",
+      "dificuldade": "dificil",
+      "texto": "Fica em casa, mas não na cozinha",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "casa",
+          "cozinha",
+          "banheiro",
+          "quarto",
+          "sala"
+        ],
+        "nenhuma": [
+          "cozinha"
+        ]
+      }
+    },
+    {
+      "id": "contexto_fora_de_casa",
+      "anel": "contexto",
+      "dificuldade": "dificil",
+      "texto": "Nunca fica dentro de casa",
+      "avaliacao": {
+        "tipo": "tags",
+        "nenhuma": [
+          "casa",
+          "cozinha",
+          "banheiro",
+          "quarto",
+          "sala"
+        ]
+      }
+    },
+    {
+      "id": "contexto_festa_brasil",
+      "anel": "contexto",
+      "dificuldade": "dificil",
+      "texto": "Festa bem brasileira",
+      "avaliacao": {
+        "tipo": "tags",
+        "todas": [
+          "festa",
+          "brasil"
+        ]
+      }
+    },
+    {
+      "id": "contexto_praia_nao_mar",
+      "anel": "contexto",
+      "dificuldade": "dificil",
+      "texto": "Aparece na praia, mas não dentro do mar",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "praia"
+        ],
+        "nenhuma": [
+          "mar"
+        ]
+      }
+    },
+    {
+      "id": "contexto_quarto_sala",
+      "anel": "contexto",
+      "dificuldade": "dificil",
+      "texto": "Fica no quarto ou na sala",
+      "avaliacao": {
+        "tipo": "tags",
+        "qualquer": [
+          "quarto",
+          "sala"
+        ]
+      }
+    },
+    {
+      "id": "contexto_sem_lugar",
+      "anel": "contexto",
+      "dificuldade": "dificil",
+      "texto": "Não é típico de casa, escola nem trabalho",
+      "avaliacao": {
+        "tipo": "tags",
+        "nenhuma": [
+          "casa",
+          "cozinha",
+          "banheiro",
+          "quarto",
+          "sala",
+          "escola",
+          "trabalho",
+          "escritorio"
+        ]
+      }
+    }
+  ],
+  "coisas": [
+    {
+      "id": "pao",
+      "texto": "pão",
+      "palavra": {
+        "normalizada": "pao",
+        "silabas": 1,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "macio",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "cafe",
+      "texto": "café",
+      "palavra": {
+        "normalizada": "cafe",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "e",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "cozinha",
+        "trabalho",
+        "brasil"
+      ]
+    },
+    {
+      "id": "sushi",
+      "texto": "sushi",
+      "palavra": {
+        "normalizada": "sushi",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "i",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "cidade"
+      ]
+    },
+    {
+      "id": "feijoada",
+      "texto": "feijoada",
+      "palavra": {
+        "normalizada": "feijoada",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "cozinha",
+        "brasil",
+        "festa"
+      ]
+    },
+    {
+      "id": "refrigerante",
+      "texto": "refrigerante",
+      "palavra": {
+        "normalizada": "refrigerante",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "r",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "festa",
+        "mercado",
+        "verao"
+      ]
+    },
+    {
+      "id": "brigadeiro",
+      "texto": "brigadeiro",
+      "palavra": {
+        "normalizada": "brigadeiro",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "macio",
+        "festa",
+        "infancia",
+        "brasil"
+      ]
+    },
+    {
+      "id": "pipoca",
+      "texto": "pipoca",
+      "palavra": {
+        "normalizada": "pipoca",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "show",
+        "infancia",
+        "festa"
+      ]
+    },
+    {
+      "id": "coxinha",
+      "texto": "coxinha",
+      "palavra": {
+        "normalizada": "coxinha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "festa",
+        "brasil"
+      ]
+    },
+    {
+      "id": "pao_de_queijo",
+      "texto": "pão de queijo",
+      "palavra": {
+        "normalizada": "pao de queijo",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "macio",
+        "cozinha",
+        "brasil"
+      ]
+    },
+    {
+      "id": "acai",
+      "texto": "açaí",
+      "palavra": {
+        "normalizada": "acai",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "i",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "praia",
+        "verao",
+        "brasil"
+      ]
+    },
+    {
+      "id": "tapioca",
+      "texto": "tapioca",
+      "palavra": {
+        "normalizada": "tapioca",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "t",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "macio",
+        "cozinha",
+        "brasil"
+      ]
+    },
+    {
+      "id": "sorvete",
+      "texto": "sorvete",
+      "palavra": {
+        "normalizada": "sorvete",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "macio",
+        "verao",
+        "infancia",
+        "praia"
+      ]
+    },
+    {
+      "id": "chocolate",
+      "texto": "chocolate",
+      "palavra": {
+        "normalizada": "chocolate",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "festa",
+        "infancia",
+        "mercado"
+      ]
+    },
+    {
+      "id": "ovo",
+      "texto": "ovo",
+      "palavra": {
+        "normalizada": "ovo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "pequeno",
+        "duro",
+        "cozinha",
+        "mercado",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "leite",
+      "texto": "leite",
+      "palavra": {
+        "normalizada": "leite",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "l",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "natural",
+        "cozinha",
+        "mercado",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "suco",
+      "texto": "suco",
+      "palavra": {
+        "normalizada": "suco",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "cozinha",
+        "verao"
+      ]
+    },
+    {
+      "id": "agua_de_coco",
+      "texto": "água de coco",
+      "palavra": {
+        "normalizada": "agua de coco",
+        "silabas": 5,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "natural",
+        "praia",
+        "verao",
+        "brasil"
+      ]
+    },
+    {
+      "id": "chimarrao",
+      "texto": "chimarrão",
+      "palavra": {
+        "normalizada": "chimarrao",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "inverno",
+        "brasil"
+      ]
+    },
+    {
+      "id": "cha",
+      "texto": "chá",
+      "palavra": {
+        "normalizada": "cha",
+        "silabas": 1,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "cozinha",
+        "inverno"
+      ]
+    },
+    {
+      "id": "sopa",
+      "texto": "sopa",
+      "palavra": {
+        "normalizada": "sopa",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "s",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "cozinha",
+        "inverno"
+      ]
+    },
+    {
+      "id": "arroz",
+      "texto": "arroz",
+      "palavra": {
+        "normalizada": "arroz",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "z",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "pequeno",
+        "solido",
+        "cozinha",
+        "mercado",
+        "brasil"
+      ]
+    },
+    {
+      "id": "feijao",
+      "texto": "feijão",
+      "palavra": {
+        "normalizada": "feijao",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "f",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "pequeno",
+        "solido",
+        "cozinha",
+        "mercado",
+        "brasil"
+      ]
+    },
+    {
+      "id": "macarrao",
+      "texto": "macarrão",
+      "palavra": {
+        "normalizada": "macarrao",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "pizza",
+      "texto": "pizza",
+      "palavra": {
+        "normalizada": "pizza",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "festa",
+        "cidade"
+      ]
+    },
+    {
+      "id": "bolo",
+      "texto": "bolo",
+      "palavra": {
+        "normalizada": "bolo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "macio",
+        "festa",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "queijo",
+      "texto": "queijo",
+      "palavra": {
+        "normalizada": "queijo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "q",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "macio",
+        "cozinha",
+        "mercado",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "mel",
+      "texto": "mel",
+      "palavra": {
+        "normalizada": "mel",
+        "silabas": 1,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "liquido",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "pimenta",
+      "texto": "pimenta",
+      "palavra": {
+        "normalizada": "pimenta",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "pequeno",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "cachorro_quente",
+      "texto": "cachorro-quente",
+      "palavra": {
+        "normalizada": "cachorro-quente",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "rua",
+        "festa"
+      ]
+    },
+    {
+      "id": "pe_de_moleque",
+      "texto": "pé de moleque",
+      "palavra": {
+        "normalizada": "pe de moleque",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "e",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "duro",
+        "pequeno",
+        "festa",
+        "brasil"
+      ]
+    },
+    {
+      "id": "pastel",
+      "texto": "pastel",
+      "palavra": {
+        "normalizada": "pastel",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "rua",
+        "brasil"
+      ]
+    },
+    {
+      "id": "salsicha",
+      "texto": "salsicha",
+      "palavra": {
+        "normalizada": "salsicha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "s",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "torrada",
+      "texto": "torrada",
+      "palavra": {
+        "normalizada": "torrada",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "t",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "duro",
+        "pequeno",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "biscoito",
+      "texto": "biscoito",
+      "palavra": {
+        "normalizada": "biscoito",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "pequeno",
+        "duro",
+        "cozinha",
+        "infancia"
+      ]
+    },
+    {
+      "id": "gelatina",
+      "texto": "gelatina",
+      "palavra": {
+        "normalizada": "gelatina",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "macio",
+        "festa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "limonada",
+      "texto": "limonada",
+      "palavra": {
+        "normalizada": "limonada",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "l",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "bebida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "verao"
+      ]
+    },
+    {
+      "id": "iogurte",
+      "texto": "iogurte",
+      "palavra": {
+        "normalizada": "iogurte",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "i",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "macio",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "sal",
+      "texto": "sal",
+      "palavra": {
+        "normalizada": "sal",
+        "silabas": 1,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "solido",
+        "cozinha",
+        "mercado",
+        "mar"
+      ]
+    },
+    {
+      "id": "acucar",
+      "texto": "açúcar",
+      "palavra": {
+        "normalizada": "acucar",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "r",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "solido",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "churrasco",
+      "texto": "churrasco",
+      "palavra": {
+        "normalizada": "churrasco",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "festa",
+        "brasil"
+      ]
+    },
+    {
+      "id": "omelete",
+      "texto": "omelete",
+      "palavra": {
+        "normalizada": "omelete",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "o",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fabricado",
+        "macio",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "vinagre",
+      "texto": "vinagre",
+      "palavra": {
+        "normalizada": "vinagre",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "v",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "liquido",
+        "fabricado",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "maca",
+      "texto": "maçã",
+      "palavra": {
+        "normalizada": "maca",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "banana",
+      "texto": "banana",
+      "palavra": {
+        "normalizada": "banana",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "macio",
+        "mercado",
+        "brasil"
+      ]
+    },
+    {
+      "id": "abacaxi",
+      "texto": "abacaxi",
+      "palavra": {
+        "normalizada": "abacaxi",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "i",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "duro",
+        "mercado",
+        "verao",
+        "brasil"
+      ]
+    },
+    {
+      "id": "melancia",
+      "texto": "melancia",
+      "palavra": {
+        "normalizada": "melancia",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "verao",
+        "praia",
+        "mercado"
+      ]
+    },
+    {
+      "id": "uva",
+      "texto": "uva",
+      "palavra": {
+        "normalizada": "uva",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "u",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "macio",
+        "mercado"
+      ]
+    },
+    {
+      "id": "morango",
+      "texto": "morango",
+      "palavra": {
+        "normalizada": "morango",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "macio",
+        "mercado"
+      ]
+    },
+    {
+      "id": "limao",
+      "texto": "limão",
+      "palavra": {
+        "normalizada": "limao",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "l",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "ameixa",
+      "texto": "ameixa",
+      "palavra": {
+        "normalizada": "ameixa",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "macio",
+        "mercado"
+      ]
+    },
+    {
+      "id": "abacate",
+      "texto": "abacate",
+      "palavra": {
+        "normalizada": "abacate",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "macio",
+        "mercado"
+      ]
+    },
+    {
+      "id": "coco",
+      "texto": "coco",
+      "palavra": {
+        "normalizada": "coco",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "duro",
+        "praia",
+        "brasil"
+      ]
+    },
+    {
+      "id": "laranja",
+      "texto": "laranja",
+      "palavra": {
+        "normalizada": "laranja",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "l",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "mercado"
+      ]
+    },
+    {
+      "id": "manga",
+      "texto": "manga",
+      "palavra": {
+        "normalizada": "manga",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "mercado",
+        "verao",
+        "brasil"
+      ]
+    },
+    {
+      "id": "caju",
+      "texto": "caju",
+      "palavra": {
+        "normalizada": "caju",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "u",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "praia",
+        "brasil"
+      ]
+    },
+    {
+      "id": "jabuticaba",
+      "texto": "jabuticaba",
+      "palavra": {
+        "normalizada": "jabuticaba",
+        "silabas": 5,
+        "genero": "f",
+        "inicia": "j",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "brasil"
+      ]
+    },
+    {
+      "id": "cenoura",
+      "texto": "cenoura",
+      "palavra": {
+        "normalizada": "cenoura",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "duro",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "alface",
+      "texto": "alface",
+      "palavra": {
+        "normalizada": "alface",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "macio",
+        "cozinha",
+        "mercado",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "couve_flor",
+      "texto": "couve-flor",
+      "palavra": {
+        "normalizada": "couve-flor",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "cozinha",
+        "mercado",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "abobora",
+      "texto": "abóbora",
+      "palavra": {
+        "normalizada": "abobora",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "duro",
+        "cozinha",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "milho",
+      "texto": "milho",
+      "palavra": {
+        "normalizada": "milho",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "fazenda",
+        "festa",
+        "brasil"
+      ]
+    },
+    {
+      "id": "batata",
+      "texto": "batata",
+      "palavra": {
+        "normalizada": "batata",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "duro",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "cebola",
+      "texto": "cebola",
+      "palavra": {
+        "normalizada": "cebola",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "tomate",
+      "texto": "tomate",
+      "palavra": {
+        "normalizada": "tomate",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "fruta",
+        "natural",
+        "pequeno",
+        "macio",
+        "cozinha",
+        "mercado"
+      ]
+    },
+    {
+      "id": "oregano",
+      "texto": "orégano",
+      "palavra": {
+        "normalizada": "oregano",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "comida",
+        "comestivel",
+        "natural",
+        "planta",
+        "pequeno",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "gato",
+      "texto": "gato",
+      "palavra": {
+        "normalizada": "gato",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "g",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "macio",
+        "tem_pernas",
+        "casa"
+      ]
+    },
+    {
+      "id": "cachorro",
+      "texto": "cachorro",
+      "palavra": {
+        "normalizada": "cachorro",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "macio",
+        "tem_pernas",
+        "casa",
+        "rua"
+      ]
+    },
+    {
+      "id": "baleia",
+      "texto": "baleia",
+      "palavra": {
+        "normalizada": "baleia",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "mar"
+      ]
+    },
+    {
+      "id": "mosquito",
+      "texto": "mosquito",
+      "palavra": {
+        "normalizada": "mosquito",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_asas",
+        "tem_pernas",
+        "verao",
+        "casa"
+      ]
+    },
+    {
+      "id": "jacare",
+      "texto": "jacaré",
+      "palavra": {
+        "normalizada": "jacare",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "j",
+        "termina": "e",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "duro",
+        "tem_pernas",
+        "floresta",
+        "brasil"
+      ]
+    },
+    {
+      "id": "vaca",
+      "texto": "vaca",
+      "palavra": {
+        "normalizada": "vaca",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "v",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "tem_pernas",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "galinha",
+      "texto": "galinha",
+      "palavra": {
+        "normalizada": "galinha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_asas",
+        "tem_pernas",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "cavalo",
+      "texto": "cavalo",
+      "palavra": {
+        "normalizada": "cavalo",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "tem_pernas",
+        "fazenda",
+        "esporte"
+      ]
+    },
+    {
+      "id": "arara",
+      "texto": "arara",
+      "palavra": {
+        "normalizada": "arara",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_asas",
+        "tem_pernas",
+        "floresta",
+        "brasil"
+      ]
+    },
+    {
+      "id": "beija_flor",
+      "texto": "beija-flor",
+      "palavra": {
+        "normalizada": "beija-flor",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_asas",
+        "floresta"
+      ]
+    },
+    {
+      "id": "bem_te_vi",
+      "texto": "bem-te-vi",
+      "palavra": {
+        "normalizada": "bem-te-vi",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "i",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_asas",
+        "tem_pernas",
+        "cidade",
+        "brasil"
+      ]
+    },
+    {
+      "id": "abelha",
+      "texto": "abelha",
+      "palavra": {
+        "normalizada": "abelha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_asas",
+        "tem_pernas",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "aranha",
+      "texto": "aranha",
+      "palavra": {
+        "normalizada": "aranha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_pernas",
+        "casa",
+        "floresta"
+      ]
+    },
+    {
+      "id": "formiga",
+      "texto": "formiga",
+      "palavra": {
+        "normalizada": "formiga",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_pernas",
+        "casa"
+      ]
+    },
+    {
+      "id": "tubarao",
+      "texto": "tubarão",
+      "palavra": {
+        "normalizada": "tubarao",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "mar"
+      ]
+    },
+    {
+      "id": "polvo",
+      "texto": "polvo",
+      "palavra": {
+        "normalizada": "polvo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "macio",
+        "mar"
+      ]
+    },
+    {
+      "id": "caranguejo",
+      "texto": "caranguejo",
+      "palavra": {
+        "normalizada": "caranguejo",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "duro",
+        "tem_pernas",
+        "praia",
+        "mar"
+      ]
+    },
+    {
+      "id": "tartaruga",
+      "texto": "tartaruga",
+      "palavra": {
+        "normalizada": "tartaruga",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "t",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "duro",
+        "tem_pernas",
+        "mar",
+        "praia"
+      ]
+    },
+    {
+      "id": "girafa",
+      "texto": "girafa",
+      "palavra": {
+        "normalizada": "girafa",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "tem_pernas",
+        "viagem"
+      ]
+    },
+    {
+      "id": "elefante",
+      "texto": "elefante",
+      "palavra": {
+        "normalizada": "elefante",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "e",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "tem_pernas",
+        "viagem"
+      ]
+    },
+    {
+      "id": "onca",
+      "texto": "onça",
+      "palavra": {
+        "normalizada": "onca",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "o",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "tem_pernas",
+        "floresta",
+        "brasil"
+      ]
+    },
+    {
+      "id": "macaco",
+      "texto": "macaco",
+      "palavra": {
+        "normalizada": "macaco",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_pernas",
+        "floresta"
+      ]
+    },
+    {
+      "id": "sapo",
+      "texto": "sapo",
+      "palavra": {
+        "normalizada": "sapo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_pernas",
+        "floresta"
+      ]
+    },
+    {
+      "id": "coruja",
+      "texto": "coruja",
+      "palavra": {
+        "normalizada": "coruja",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_asas",
+        "tem_pernas",
+        "floresta"
+      ]
+    },
+    {
+      "id": "pinguim",
+      "texto": "pinguim",
+      "palavra": {
+        "normalizada": "pinguim",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "m",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_asas",
+        "tem_pernas",
+        "inverno",
+        "mar"
+      ]
+    },
+    {
+      "id": "urso",
+      "texto": "urso",
+      "palavra": {
+        "normalizada": "urso",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "u",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "grande",
+        "macio",
+        "tem_pernas",
+        "floresta",
+        "inverno"
+      ]
+    },
+    {
+      "id": "porco",
+      "texto": "porco",
+      "palavra": {
+        "normalizada": "porco",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_pernas",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "ovelha",
+      "texto": "ovelha",
+      "palavra": {
+        "normalizada": "ovelha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "o",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "macio",
+        "tem_pernas",
+        "fazenda",
+        "inverno"
+      ]
+    },
+    {
+      "id": "peixe",
+      "texto": "peixe",
+      "palavra": {
+        "normalizada": "peixe",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "comida",
+        "comestivel",
+        "mar",
+        "mercado"
+      ]
+    },
+    {
+      "id": "camarao",
+      "texto": "camarão",
+      "palavra": {
+        "normalizada": "camarao",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "comida",
+        "comestivel",
+        "mar",
+        "praia"
+      ]
+    },
+    {
+      "id": "borboleta",
+      "texto": "borboleta",
+      "palavra": {
+        "normalizada": "borboleta",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_asas",
+        "tem_pernas",
+        "floresta"
+      ]
+    },
+    {
+      "id": "minhoca",
+      "texto": "minhoca",
+      "palavra": {
+        "normalizada": "minhoca",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "macio",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "pato",
+      "texto": "pato",
+      "palavra": {
+        "normalizada": "pato",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_asas",
+        "tem_pernas",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "morcego",
+      "texto": "morcego",
+      "palavra": {
+        "normalizada": "morcego",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "tem_asas",
+        "floresta"
+      ]
+    },
+    {
+      "id": "cobra",
+      "texto": "cobra",
+      "palavra": {
+        "normalizada": "cobra",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "floresta"
+      ]
+    },
+    {
+      "id": "dinossauro",
+      "texto": "dinossauro",
+      "palavra": {
+        "normalizada": "dinossauro",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "d",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "animal",
+        "grande",
+        "tem_pernas",
+        "infancia"
+      ]
+    },
+    {
+      "id": "coelho",
+      "texto": "coelho",
+      "palavra": {
+        "normalizada": "coelho",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "pequeno",
+        "macio",
+        "tem_pernas",
+        "infancia"
+      ]
+    },
+    {
+      "id": "papagaio",
+      "texto": "papagaio",
+      "palavra": {
+        "normalizada": "papagaio",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "animal",
+        "natural",
+        "tem_asas",
+        "tem_pernas",
+        "casa",
+        "brasil"
+      ]
+    },
+    {
+      "id": "palmeira",
+      "texto": "palmeira",
+      "palavra": {
+        "normalizada": "palmeira",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "grande",
+        "praia",
+        "brasil"
+      ]
+    },
+    {
+      "id": "pedra",
+      "texto": "pedra",
+      "palavra": {
+        "normalizada": "pedra",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "duro",
+        "solido",
+        "pequeno",
+        "rua",
+        "floresta"
+      ]
+    },
+    {
+      "id": "rio",
+      "texto": "rio",
+      "palavra": {
+        "normalizada": "rio",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "r",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "liquido",
+        "grande",
+        "lugar",
+        "floresta",
+        "viagem"
+      ]
+    },
+    {
+      "id": "nuvem",
+      "texto": "nuvem",
+      "palavra": {
+        "normalizada": "nuvem",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "n",
+        "termina": "m",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "macio",
+        "grande",
+        "inverno"
+      ]
+    },
+    {
+      "id": "vulcao",
+      "texto": "vulcão",
+      "palavra": {
+        "normalizada": "vulcao",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "v",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "grande",
+        "lugar",
+        "viagem"
+      ]
+    },
+    {
+      "id": "arvore",
+      "texto": "árvore",
+      "palavra": {
+        "normalizada": "arvore",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "e",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "grande",
+        "madeira",
+        "floresta",
+        "cidade"
+      ]
+    },
+    {
+      "id": "flor",
+      "texto": "flor",
+      "palavra": {
+        "normalizada": "flor",
+        "silabas": 1,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "pequeno",
+        "macio",
+        "casa",
+        "festa"
+      ]
+    },
+    {
+      "id": "cacto",
+      "texto": "cacto",
+      "palavra": {
+        "normalizada": "cacto",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "duro",
+        "casa"
+      ]
+    },
+    {
+      "id": "rosa",
+      "texto": "rosa",
+      "palavra": {
+        "normalizada": "rosa",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "r",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "pequeno",
+        "festa"
+      ]
+    },
+    {
+      "id": "girassol",
+      "texto": "girassol",
+      "palavra": {
+        "normalizada": "girassol",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "g",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "fazenda",
+        "verao"
+      ]
+    },
+    {
+      "id": "cogumelo",
+      "texto": "cogumelo",
+      "palavra": {
+        "normalizada": "cogumelo",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "natural",
+        "pequeno",
+        "macio",
+        "comida",
+        "comestivel",
+        "floresta"
+      ]
+    },
+    {
+      "id": "folha",
+      "texto": "folha",
+      "palavra": {
+        "normalizada": "folha",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "pequeno",
+        "floresta"
+      ]
+    },
+    {
+      "id": "areia",
+      "texto": "areia",
+      "palavra": {
+        "normalizada": "areia",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "solido",
+        "praia",
+        "verao"
+      ]
+    },
+    {
+      "id": "onda",
+      "texto": "onda",
+      "palavra": {
+        "normalizada": "onda",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "o",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "liquido",
+        "grande",
+        "praia",
+        "mar",
+        "esporte"
+      ]
+    },
+    {
+      "id": "estrela",
+      "texto": "estrela",
+      "palavra": {
+        "normalizada": "estrela",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "e",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "grande",
+        "viagem"
+      ]
+    },
+    {
+      "id": "lua",
+      "texto": "lua",
+      "palavra": {
+        "normalizada": "lua",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "l",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "grande",
+        "viagem"
+      ]
+    },
+    {
+      "id": "sol",
+      "texto": "sol",
+      "palavra": {
+        "normalizada": "sol",
+        "silabas": 1,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "grande",
+        "verao",
+        "praia"
+      ]
+    },
+    {
+      "id": "neve",
+      "texto": "neve",
+      "palavra": {
+        "normalizada": "neve",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "n",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "macio",
+        "solido",
+        "inverno",
+        "viagem"
+      ]
+    },
+    {
+      "id": "chuva",
+      "texto": "chuva",
+      "palavra": {
+        "normalizada": "chuva",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "liquido",
+        "rua",
+        "inverno"
+      ]
+    },
+    {
+      "id": "arco_iris",
+      "texto": "arco-íris",
+      "palavra": {
+        "normalizada": "arco-iris",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "s",
+        "temAcento": true,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "grande",
+        "infancia"
+      ]
+    },
+    {
+      "id": "montanha",
+      "texto": "montanha",
+      "palavra": {
+        "normalizada": "montanha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "grande",
+        "duro",
+        "lugar",
+        "viagem",
+        "inverno"
+      ]
+    },
+    {
+      "id": "ilha",
+      "texto": "ilha",
+      "palavra": {
+        "normalizada": "ilha",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "i",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "grande",
+        "lugar",
+        "mar",
+        "viagem"
+      ]
+    },
+    {
+      "id": "cachoeira",
+      "texto": "cachoeira",
+      "palavra": {
+        "normalizada": "cachoeira",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "liquido",
+        "grande",
+        "lugar",
+        "floresta",
+        "viagem",
+        "brasil"
+      ]
+    },
+    {
+      "id": "concha",
+      "texto": "concha",
+      "palavra": {
+        "normalizada": "concha",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "pequeno",
+        "duro",
+        "praia",
+        "mar"
+      ]
+    },
+    {
+      "id": "bambu",
+      "texto": "bambu",
+      "palavra": {
+        "normalizada": "bambu",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "u",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "madeira",
+        "floresta"
+      ]
+    },
+    {
+      "id": "grama",
+      "texto": "grama",
+      "palavra": {
+        "normalizada": "grama",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "planta",
+        "natural",
+        "macio",
+        "casa",
+        "esporte",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "ouro",
+      "texto": "ouro",
+      "palavra": {
+        "normalizada": "ouro",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "metal",
+        "duro",
+        "solido"
+      ]
+    },
+    {
+      "id": "osso",
+      "texto": "osso",
+      "palavra": {
+        "normalizada": "osso",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "duro",
+        "solido",
+        "corpo"
+      ]
+    },
+    {
+      "id": "vaso",
+      "texto": "vaso",
+      "palavra": {
+        "normalizada": "vaso",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "v",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "recipiente",
+        "vidro",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "chave",
+      "texto": "chave",
+      "palavra": {
+        "normalizada": "chave",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "pequeno",
+        "duro",
+        "casa",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "sofa",
+      "texto": "sofá",
+      "palavra": {
+        "normalizada": "sofa",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "movel",
+        "grande",
+        "macio",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "lampada",
+      "texto": "lâmpada",
+      "palavra": {
+        "normalizada": "lampada",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "l",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "vidro",
+        "pequeno",
+        "eletrico",
+        "casa"
+      ]
+    },
+    {
+      "id": "guarda_chuva",
+      "texto": "guarda-chuva",
+      "palavra": {
+        "normalizada": "guarda-chuva",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "metal",
+        "rua",
+        "inverno"
+      ]
+    },
+    {
+      "id": "travesseiro",
+      "texto": "travesseiro",
+      "palavra": {
+        "normalizada": "travesseiro",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "casa",
+        "quarto"
+      ]
+    },
+    {
+      "id": "cama",
+      "texto": "cama",
+      "palavra": {
+        "normalizada": "cama",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "movel",
+        "grande",
+        "macio",
+        "madeira",
+        "tem_pernas",
+        "quarto"
+      ]
+    },
+    {
+      "id": "cadeira",
+      "texto": "cadeira",
+      "palavra": {
+        "normalizada": "cadeira",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "movel",
+        "madeira",
+        "tem_pernas",
+        "casa",
+        "escola",
+        "escritorio"
+      ]
+    },
+    {
+      "id": "mesa",
+      "texto": "mesa",
+      "palavra": {
+        "normalizada": "mesa",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "movel",
+        "madeira",
+        "tem_pernas",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "geladeira",
+      "texto": "geladeira",
+      "palavra": {
+        "normalizada": "geladeira",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletrico",
+        "metal",
+        "grande",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "panela",
+      "texto": "panela",
+      "palavra": {
+        "normalizada": "panela",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "recipiente",
+        "duro",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "faca",
+      "texto": "faca",
+      "palavra": {
+        "normalizada": "faca",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "ferramenta",
+        "arma",
+        "pequeno",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "garfo",
+      "texto": "garfo",
+      "palavra": {
+        "normalizada": "garfo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "g",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "pequeno",
+        "duro",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "colher",
+      "texto": "colher",
+      "palavra": {
+        "normalizada": "colher",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "pequeno",
+        "duro",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "copo",
+      "texto": "copo",
+      "palavra": {
+        "normalizada": "copo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "vidro",
+        "recipiente",
+        "pequeno",
+        "cozinha",
+        "festa"
+      ]
+    },
+    {
+      "id": "prato",
+      "texto": "prato",
+      "palavra": {
+        "normalizada": "prato",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "recipiente",
+        "duro",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "micro_ondas",
+      "texto": "micro-ondas",
+      "palavra": {
+        "normalizada": "micro-ondas",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "s",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletrico",
+        "eletronico",
+        "metal",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "liquidificador",
+      "texto": "liquidificador",
+      "palavra": {
+        "normalizada": "liquidificador",
+        "silabas": 6,
+        "genero": "m",
+        "inicia": "l",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletrico",
+        "vidro",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "escova_de_dentes",
+      "texto": "escova de dentes",
+      "palavra": {
+        "normalizada": "escova de dentes",
+        "silabas": 6,
+        "genero": "f",
+        "inicia": "e",
+        "termina": "s",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "plastico",
+        "pequeno",
+        "banheiro",
+        "corpo"
+      ]
+    },
+    {
+      "id": "sabonete",
+      "texto": "sabonete",
+      "palavra": {
+        "normalizada": "sabonete",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "solido",
+        "banheiro",
+        "corpo"
+      ]
+    },
+    {
+      "id": "toalha",
+      "texto": "toalha",
+      "palavra": {
+        "normalizada": "toalha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "t",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "banheiro",
+        "praia"
+      ]
+    },
+    {
+      "id": "espelho",
+      "texto": "espelho",
+      "palavra": {
+        "normalizada": "espelho",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "e",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "vidro",
+        "banheiro",
+        "casa"
+      ]
+    },
+    {
+      "id": "chuveiro",
+      "texto": "chuveiro",
+      "palavra": {
+        "normalizada": "chuveiro",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "eletrico",
+        "banheiro"
+      ]
+    },
+    {
+      "id": "privada",
+      "texto": "privada",
+      "palavra": {
+        "normalizada": "privada",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "duro",
+        "banheiro"
+      ]
+    },
+    {
+      "id": "pente",
+      "texto": "pente",
+      "palavra": {
+        "normalizada": "pente",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "plastico",
+        "pequeno",
+        "banheiro",
+        "corpo"
+      ]
+    },
+    {
+      "id": "tapete",
+      "texto": "tapete",
+      "palavra": {
+        "normalizada": "tapete",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "cortina",
+      "texto": "cortina",
+      "palavra": {
+        "normalizada": "cortina",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "televisao",
+      "texto": "televisão",
+      "palavra": {
+        "normalizada": "televisao",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "t",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletrico",
+        "eletronico",
+        "tem_tela",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "controle_remoto",
+      "texto": "controle remoto",
+      "palavra": {
+        "normalizada": "controle remoto",
+        "silabas": 6,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletronico",
+        "plastico",
+        "pequeno",
+        "sala"
+      ]
+    },
+    {
+      "id": "relogio",
+      "texto": "relógio",
+      "palavra": {
+        "normalizada": "relogio",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "r",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "duro",
+        "trabalho",
+        "corpo"
+      ]
+    },
+    {
+      "id": "celular",
+      "texto": "celular",
+      "palavra": {
+        "normalizada": "celular",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletronico",
+        "eletrico",
+        "tem_tela",
+        "pequeno",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "computador",
+      "texto": "computador",
+      "palavra": {
+        "normalizada": "computador",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletronico",
+        "eletrico",
+        "tem_tela",
+        "escritorio",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "fone_de_ouvido",
+      "texto": "fone de ouvido",
+      "palavra": {
+        "normalizada": "fone de ouvido",
+        "silabas": 6,
+        "genero": "m",
+        "inicia": "f",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletronico",
+        "pequeno",
+        "show",
+        "viagem",
+        "corpo"
+      ]
+    },
+    {
+      "id": "vela",
+      "texto": "vela",
+      "palavra": {
+        "normalizada": "vela",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "v",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "festa",
+        "igreja"
+      ]
+    },
+    {
+      "id": "balao",
+      "texto": "balão",
+      "palavra": {
+        "normalizada": "balao",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "borracha",
+        "brinquedo",
+        "festa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "tesoura",
+      "texto": "tesoura",
+      "palavra": {
+        "normalizada": "tesoura",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "t",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "ferramenta",
+        "pequeno",
+        "escola"
+      ]
+    },
+    {
+      "id": "lapis",
+      "texto": "lápis",
+      "palavra": {
+        "normalizada": "lapis",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "l",
+        "termina": "s",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "madeira",
+        "pequeno",
+        "escola"
+      ]
+    },
+    {
+      "id": "caderno",
+      "texto": "caderno",
+      "palavra": {
+        "normalizada": "caderno",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "papel",
+        "escola"
+      ]
+    },
+    {
+      "id": "livro",
+      "texto": "livro",
+      "palavra": {
+        "normalizada": "livro",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "l",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "papel",
+        "escola",
+        "quarto"
+      ]
+    },
+    {
+      "id": "mochila",
+      "texto": "mochila",
+      "palavra": {
+        "normalizada": "mochila",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "recipiente",
+        "escola",
+        "viagem"
+      ]
+    },
+    {
+      "id": "quadro",
+      "texto": "quadro",
+      "palavra": {
+        "normalizada": "quadro",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "q",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "madeira",
+        "escola",
+        "sala"
+      ]
+    },
+    {
+      "id": "borracha",
+      "texto": "borracha",
+      "palavra": {
+        "normalizada": "borracha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "borracha",
+        "pequeno",
+        "macio",
+        "escola"
+      ]
+    },
+    {
+      "id": "cola",
+      "texto": "cola",
+      "palavra": {
+        "normalizada": "cola",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "liquido",
+        "pequeno",
+        "escola"
+      ]
+    },
+    {
+      "id": "envelope",
+      "texto": "envelope",
+      "palavra": {
+        "normalizada": "envelope",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "e",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "papel",
+        "escritorio",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "grampeador",
+      "texto": "grampeador",
+      "palavra": {
+        "normalizada": "grampeador",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "g",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "ferramenta",
+        "escritorio"
+      ]
+    },
+    {
+      "id": "caixa",
+      "texto": "caixa",
+      "palavra": {
+        "normalizada": "caixa",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "papel",
+        "recipiente",
+        "mercado"
+      ]
+    },
+    {
+      "id": "garrafa",
+      "texto": "garrafa",
+      "palavra": {
+        "normalizada": "garrafa",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "vidro",
+        "recipiente",
+        "cozinha",
+        "festa"
+      ]
+    },
+    {
+      "id": "porta_retrato",
+      "texto": "porta-retrato",
+      "palavra": {
+        "normalizada": "porta-retrato",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "vidro",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "almofada",
+      "texto": "almofada",
+      "palavra": {
+        "normalizada": "almofada",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "casa",
+        "sala"
+      ]
+    },
+    {
+      "id": "ventilador",
+      "texto": "ventilador",
+      "palavra": {
+        "normalizada": "ventilador",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "v",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletrico",
+        "casa",
+        "verao",
+        "quarto"
+      ]
+    },
+    {
+      "id": "cobertor",
+      "texto": "cobertor",
+      "palavra": {
+        "normalizada": "cobertor",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "quarto",
+        "inverno"
+      ]
+    },
+    {
+      "id": "jornal",
+      "texto": "jornal",
+      "palavra": {
+        "normalizada": "jornal",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "j",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "papel",
+        "trabalho",
+        "cidade"
+      ]
+    },
+    {
+      "id": "dinheiro",
+      "texto": "dinheiro",
+      "palavra": {
+        "normalizada": "dinheiro",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "d",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "papel",
+        "mercado",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "sino",
+      "texto": "sino",
+      "palavra": {
+        "normalizada": "sino",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "duro",
+        "igreja",
+        "escola"
+      ]
+    },
+    {
+      "id": "bola",
+      "texto": "bola",
+      "palavra": {
+        "normalizada": "bola",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "borracha",
+        "brinquedo",
+        "esporte",
+        "infancia"
+      ]
+    },
+    {
+      "id": "pipa",
+      "texto": "pipa",
+      "palavra": {
+        "normalizada": "pipa",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "papel",
+        "brinquedo",
+        "infancia",
+        "verao",
+        "brasil"
+      ]
+    },
+    {
+      "id": "boneca",
+      "texto": "boneca",
+      "palavra": {
+        "normalizada": "boneca",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "brinquedo",
+        "plastico",
+        "infancia",
+        "quarto"
+      ]
+    },
+    {
+      "id": "dado",
+      "texto": "dado",
+      "palavra": {
+        "normalizada": "dado",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "d",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "duro",
+        "brinquedo",
+        "festa"
+      ]
+    },
+    {
+      "id": "peteca",
+      "texto": "peteca",
+      "palavra": {
+        "normalizada": "peteca",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "brinquedo",
+        "esporte",
+        "brasil"
+      ]
+    },
+    {
+      "id": "patinete",
+      "texto": "patinete",
+      "palavra": {
+        "normalizada": "patinete",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "veiculo",
+        "brinquedo",
+        "tem_rodas",
+        "rua",
+        "infancia"
+      ]
+    },
+    {
+      "id": "algema",
+      "texto": "algema",
+      "palavra": {
+        "normalizada": "algema",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "metal",
+        "duro",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "seringa",
+      "texto": "seringa",
+      "palavra": {
+        "normalizada": "seringa",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "s",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "plastico",
+        "pequeno",
+        "hospital"
+      ]
+    },
+    {
+      "id": "termometro",
+      "texto": "termômetro",
+      "palavra": {
+        "normalizada": "termometro",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "vidro",
+        "hospital",
+        "casa"
+      ]
+    },
+    {
+      "id": "esparadrapo",
+      "texto": "esparadrapo",
+      "palavra": {
+        "normalizada": "esparadrapo",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "e",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "tecido",
+        "hospital",
+        "corpo"
+      ]
+    },
+    {
+      "id": "cadeira_de_rodas",
+      "texto": "cadeira de rodas",
+      "palavra": {
+        "normalizada": "cadeira de rodas",
+        "silabas": 6,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "s",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "veiculo",
+        "movel",
+        "tem_rodas",
+        "metal",
+        "hospital"
+      ]
+    },
+    {
+      "id": "meia",
+      "texto": "meia",
+      "palavra": {
+        "normalizada": "meia",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "pequeno",
+        "corpo",
+        "inverno"
+      ]
+    },
+    {
+      "id": "chapeu",
+      "texto": "chapéu",
+      "palavra": {
+        "normalizada": "chapeu",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "u",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "corpo",
+        "praia",
+        "verao"
+      ]
+    },
+    {
+      "id": "chinelo",
+      "texto": "chinelo",
+      "palavra": {
+        "normalizada": "chinelo",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "borracha",
+        "corpo",
+        "praia",
+        "verao",
+        "brasil"
+      ]
+    },
+    {
+      "id": "gravata",
+      "texto": "gravata",
+      "palavra": {
+        "normalizada": "gravata",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "g",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "corpo",
+        "trabalho",
+        "escritorio"
+      ]
+    },
+    {
+      "id": "casaco",
+      "texto": "casaco",
+      "palavra": {
+        "normalizada": "casaco",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "corpo",
+        "inverno"
+      ]
+    },
+    {
+      "id": "biquini",
+      "texto": "biquíni",
+      "palavra": {
+        "normalizada": "biquini",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "i",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "pequeno",
+        "corpo",
+        "praia",
+        "verao"
+      ]
+    },
+    {
+      "id": "luva",
+      "texto": "luva",
+      "palavra": {
+        "normalizada": "luva",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "l",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "corpo",
+        "inverno",
+        "hospital"
+      ]
+    },
+    {
+      "id": "cachecol",
+      "texto": "cachecol",
+      "palavra": {
+        "normalizada": "cachecol",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "corpo",
+        "inverno"
+      ]
+    },
+    {
+      "id": "bone",
+      "texto": "boné",
+      "palavra": {
+        "normalizada": "bone",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "e",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "corpo",
+        "esporte",
+        "verao"
+      ]
+    },
+    {
+      "id": "uniforme",
+      "texto": "uniforme",
+      "palavra": {
+        "normalizada": "uniforme",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "u",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "corpo",
+        "escola",
+        "trabalho",
+        "esporte"
+      ]
+    },
+    {
+      "id": "pijama",
+      "texto": "pijama",
+      "palavra": {
+        "normalizada": "pijama",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "macio",
+        "corpo",
+        "quarto"
+      ]
+    },
+    {
+      "id": "vestido",
+      "texto": "vestido",
+      "palavra": {
+        "normalizada": "vestido",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "v",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "corpo",
+        "festa"
+      ]
+    },
+    {
+      "id": "bota",
+      "texto": "bota",
+      "palavra": {
+        "normalizada": "bota",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "borracha",
+        "duro",
+        "corpo",
+        "inverno",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "oculos",
+      "texto": "óculos",
+      "palavra": {
+        "normalizada": "oculos",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "s",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "vidro",
+        "pequeno",
+        "corpo"
+      ]
+    },
+    {
+      "id": "anel",
+      "texto": "anel",
+      "palavra": {
+        "normalizada": "anel",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "metal",
+        "pequeno",
+        "duro",
+        "corpo",
+        "festa"
+      ]
+    },
+    {
+      "id": "fantasia",
+      "texto": "fantasia",
+      "palavra": {
+        "normalizada": "fantasia",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "corpo",
+        "festa",
+        "infancia",
+        "brasil"
+      ]
+    },
+    {
+      "id": "cinto",
+      "texto": "cinto",
+      "palavra": {
+        "normalizada": "cinto",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "corpo"
+      ]
+    },
+    {
+      "id": "avental",
+      "texto": "avental",
+      "palavra": {
+        "normalizada": "avental",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "tecido",
+        "corpo",
+        "cozinha",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "capacete",
+      "texto": "capacete",
+      "palavra": {
+        "normalizada": "capacete",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vestimenta",
+        "objeto",
+        "fabricado",
+        "plastico",
+        "duro",
+        "corpo",
+        "esporte",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "bicicleta",
+      "texto": "bicicleta",
+      "palavra": {
+        "normalizada": "bicicleta",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "tem_rodas",
+        "esporte",
+        "rua",
+        "cidade"
+      ]
+    },
+    {
+      "id": "martelo",
+      "texto": "martelo",
+      "palavra": {
+        "normalizada": "martelo",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "metal",
+        "madeira",
+        "duro",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "trator",
+      "texto": "trator",
+      "palavra": {
+        "normalizada": "trator",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "grande",
+        "tem_rodas",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "drone",
+      "texto": "drone",
+      "palavra": {
+        "normalizada": "drone",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "d",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletronico",
+        "eletrico",
+        "pequeno",
+        "viagem"
+      ]
+    },
+    {
+      "id": "onibus",
+      "texto": "ônibus",
+      "palavra": {
+        "normalizada": "onibus",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "s",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "grande",
+        "tem_rodas",
+        "cidade",
+        "viagem",
+        "escola"
+      ]
+    },
+    {
+      "id": "aviao",
+      "texto": "avião",
+      "palavra": {
+        "normalizada": "aviao",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "grande",
+        "tem_asas",
+        "viagem"
+      ]
+    },
+    {
+      "id": "navio",
+      "texto": "navio",
+      "palavra": {
+        "normalizada": "navio",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "n",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "grande",
+        "mar",
+        "viagem"
+      ]
+    },
+    {
+      "id": "barco",
+      "texto": "barco",
+      "palavra": {
+        "normalizada": "barco",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "madeira",
+        "grande",
+        "mar",
+        "praia"
+      ]
+    },
+    {
+      "id": "carro",
+      "texto": "carro",
+      "palavra": {
+        "normalizada": "carro",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "grande",
+        "tem_rodas",
+        "rua",
+        "cidade"
+      ]
+    },
+    {
+      "id": "moto",
+      "texto": "moto",
+      "palavra": {
+        "normalizada": "moto",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "tem_rodas",
+        "rua",
+        "cidade"
+      ]
+    },
+    {
+      "id": "trem",
+      "texto": "trem",
+      "palavra": {
+        "normalizada": "trem",
+        "silabas": 1,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "m",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "grande",
+        "tem_rodas",
+        "viagem",
+        "cidade"
+      ]
+    },
+    {
+      "id": "foguete",
+      "texto": "foguete",
+      "palavra": {
+        "normalizada": "foguete",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "f",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "grande",
+        "viagem",
+        "infancia"
+      ]
+    },
+    {
+      "id": "helicoptero",
+      "texto": "helicóptero",
+      "palavra": {
+        "normalizada": "helicoptero",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "h",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "grande",
+        "viagem",
+        "hospital"
+      ]
+    },
+    {
+      "id": "ambulancia",
+      "texto": "ambulância",
+      "palavra": {
+        "normalizada": "ambulancia",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "grande",
+        "tem_rodas",
+        "hospital",
+        "rua",
+        "cidade"
+      ]
+    },
+    {
+      "id": "carrinho_de_mao",
+      "texto": "carrinho de mão",
+      "palavra": {
+        "normalizada": "carrinho de mao",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "ferramenta",
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "metal",
+        "tem_rodas",
+        "fazenda",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "serrote",
+      "texto": "serrote",
+      "palavra": {
+        "normalizada": "serrote",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "metal",
+        "arma",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "chave_de_fenda",
+      "texto": "chave de fenda",
+      "palavra": {
+        "normalizada": "chave de fenda",
+        "silabas": 5,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "metal",
+        "pequeno",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "furadeira",
+      "texto": "furadeira",
+      "palavra": {
+        "normalizada": "furadeira",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "eletrico",
+        "metal",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "pa",
+      "texto": "pá",
+      "palavra": {
+        "normalizada": "pa",
+        "silabas": 1,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "metal",
+        "madeira",
+        "fazenda",
+        "praia"
+      ]
+    },
+    {
+      "id": "enxada",
+      "texto": "enxada",
+      "palavra": {
+        "normalizada": "enxada",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "e",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "metal",
+        "madeira",
+        "fazenda"
+      ]
+    },
+    {
+      "id": "vassoura",
+      "texto": "vassoura",
+      "palavra": {
+        "normalizada": "vassoura",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "v",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "madeira",
+        "casa"
+      ]
+    },
+    {
+      "id": "balde",
+      "texto": "balde",
+      "palavra": {
+        "normalizada": "balde",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "recipiente",
+        "objeto",
+        "fabricado",
+        "plastico",
+        "casa",
+        "praia"
+      ]
+    },
+    {
+      "id": "escada",
+      "texto": "escada",
+      "palavra": {
+        "normalizada": "escada",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "e",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "madeira",
+        "metal",
+        "grande",
+        "tem_pernas",
+        "trabalho",
+        "casa"
+      ]
+    },
+    {
+      "id": "agulha",
+      "texto": "agulha",
+      "palavra": {
+        "normalizada": "agulha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "metal",
+        "pequeno",
+        "hospital",
+        "casa"
+      ]
+    },
+    {
+      "id": "regua",
+      "texto": "régua",
+      "palavra": {
+        "normalizada": "regua",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "r",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "plastico",
+        "pequeno",
+        "escola"
+      ]
+    },
+    {
+      "id": "lanterna",
+      "texto": "lanterna",
+      "palavra": {
+        "normalizada": "lanterna",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "l",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ferramenta",
+        "objeto",
+        "fabricado",
+        "eletrico",
+        "pequeno",
+        "viagem"
+      ]
+    },
+    {
+      "id": "canoa",
+      "texto": "canoa",
+      "palavra": {
+        "normalizada": "canoa",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "veiculo",
+        "objeto",
+        "fabricado",
+        "madeira",
+        "floresta",
+        "viagem"
+      ]
+    },
+    {
+      "id": "espada",
+      "texto": "espada",
+      "palavra": {
+        "normalizada": "espada",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "e",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "arma",
+        "objeto",
+        "fabricado",
+        "metal",
+        "duro",
+        "infancia"
+      ]
+    },
+    {
+      "id": "arco",
+      "texto": "arco",
+      "palavra": {
+        "normalizada": "arco",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "arma",
+        "objeto",
+        "fabricado",
+        "madeira",
+        "esporte",
+        "floresta"
+      ]
+    },
+    {
+      "id": "radar",
+      "texto": "radar",
+      "palavra": {
+        "normalizada": "radar",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "r",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletronico",
+        "eletrico",
+        "tem_tela",
+        "rua"
+      ]
+    },
+    {
+      "id": "violao",
+      "texto": "violão",
+      "palavra": {
+        "normalizada": "violao",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "v",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "instrumento_musical",
+        "objeto",
+        "fabricado",
+        "madeira",
+        "festa",
+        "show",
+        "brasil"
+      ]
+    },
+    {
+      "id": "tambor",
+      "texto": "tambor",
+      "palavra": {
+        "normalizada": "tambor",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "t",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "instrumento_musical",
+        "objeto",
+        "fabricado",
+        "festa",
+        "show"
+      ]
+    },
+    {
+      "id": "pandeiro",
+      "texto": "pandeiro",
+      "palavra": {
+        "normalizada": "pandeiro",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "instrumento_musical",
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "festa",
+        "brasil"
+      ]
+    },
+    {
+      "id": "piano",
+      "texto": "piano",
+      "palavra": {
+        "normalizada": "piano",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "instrumento_musical",
+        "objeto",
+        "fabricado",
+        "madeira",
+        "grande",
+        "show",
+        "sala"
+      ]
+    },
+    {
+      "id": "flauta",
+      "texto": "flauta",
+      "palavra": {
+        "normalizada": "flauta",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "instrumento_musical",
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "escola",
+        "show"
+      ]
+    },
+    {
+      "id": "apito",
+      "texto": "apito",
+      "palavra": {
+        "normalizada": "apito",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "pequeno",
+        "plastico",
+        "esporte"
+      ]
+    },
+    {
+      "id": "microfone",
+      "texto": "microfone",
+      "palavra": {
+        "normalizada": "microfone",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "objeto",
+        "fabricado",
+        "eletronico",
+        "eletrico",
+        "show",
+        "festa"
+      ]
+    },
+    {
+      "id": "orgao",
+      "texto": "órgão",
+      "palavra": {
+        "normalizada": "orgao",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "instrumento_musical",
+        "objeto",
+        "fabricado",
+        "grande",
+        "igreja"
+      ]
+    },
+    {
+      "id": "berimbau",
+      "texto": "berimbau",
+      "palavra": {
+        "normalizada": "berimbau",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "u",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "instrumento_musical",
+        "objeto",
+        "fabricado",
+        "madeira",
+        "esporte",
+        "brasil"
+      ]
+    },
+    {
+      "id": "praia",
+      "texto": "praia",
+      "palavra": {
+        "normalizada": "praia",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "natural",
+        "grande",
+        "praia",
+        "verao",
+        "mar",
+        "viagem"
+      ]
+    },
+    {
+      "id": "farmacia",
+      "texto": "farmácia",
+      "palavra": {
+        "normalizada": "farmacia",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "cidade",
+        "rua",
+        "hospital"
+      ]
+    },
+    {
+      "id": "elevador",
+      "texto": "elevador",
+      "palavra": {
+        "normalizada": "elevador",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "e",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "eletrico",
+        "grande",
+        "metal",
+        "trabalho",
+        "cidade"
+      ]
+    },
+    {
+      "id": "estadio",
+      "texto": "estádio",
+      "palavra": {
+        "normalizada": "estadio",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "e",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "esporte",
+        "cidade",
+        "show"
+      ]
+    },
+    {
+      "id": "escola",
+      "texto": "escola",
+      "palavra": {
+        "normalizada": "escola",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "e",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "cidade",
+        "escola",
+        "infancia"
+      ]
+    },
+    {
+      "id": "hospital",
+      "texto": "hospital",
+      "palavra": {
+        "normalizada": "hospital",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "h",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "cidade",
+        "hospital"
+      ]
+    },
+    {
+      "id": "igreja",
+      "texto": "igreja",
+      "palavra": {
+        "normalizada": "igreja",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "i",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "cidade",
+        "igreja"
+      ]
+    },
+    {
+      "id": "mercado",
+      "texto": "mercado",
+      "palavra": {
+        "normalizada": "mercado",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "cidade",
+        "mercado"
+      ]
+    },
+    {
+      "id": "padaria",
+      "texto": "padaria",
+      "palavra": {
+        "normalizada": "padaria",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "cidade",
+        "rua",
+        "brasil"
+      ]
+    },
+    {
+      "id": "aeroporto",
+      "texto": "aeroporto",
+      "palavra": {
+        "normalizada": "aeroporto",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "cidade",
+        "viagem",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "floresta",
+      "texto": "floresta",
+      "palavra": {
+        "normalizada": "floresta",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "natural",
+        "vivo",
+        "grande",
+        "floresta"
+      ]
+    },
+    {
+      "id": "fazenda",
+      "texto": "fazenda",
+      "palavra": {
+        "normalizada": "fazenda",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "grande",
+        "fazenda",
+        "brasil"
+      ]
+    },
+    {
+      "id": "cozinha",
+      "texto": "cozinha",
+      "palavra": {
+        "normalizada": "cozinha",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "casa",
+        "cozinha"
+      ]
+    },
+    {
+      "id": "banheiro",
+      "texto": "banheiro",
+      "palavra": {
+        "normalizada": "banheiro",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "casa",
+        "banheiro"
+      ]
+    },
+    {
+      "id": "piscina",
+      "texto": "piscina",
+      "palavra": {
+        "normalizada": "piscina",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "esporte",
+        "verao",
+        "casa"
+      ]
+    },
+    {
+      "id": "circo",
+      "texto": "circo",
+      "palavra": {
+        "normalizada": "circo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "festa",
+        "infancia",
+        "show"
+      ]
+    },
+    {
+      "id": "parque",
+      "texto": "parque",
+      "palavra": {
+        "normalizada": "parque",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "grande",
+        "cidade",
+        "infancia",
+        "esporte"
+      ]
+    },
+    {
+      "id": "roda_gigante",
+      "texto": "roda-gigante",
+      "palavra": {
+        "normalizada": "roda-gigante",
+        "silabas": 5,
+        "genero": "f",
+        "inicia": "r",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "brinquedo",
+        "fabricado",
+        "grande",
+        "metal",
+        "festa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "ponte",
+      "texto": "ponte",
+      "palavra": {
+        "normalizada": "ponte",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "p",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "rua",
+        "cidade",
+        "viagem"
+      ]
+    },
+    {
+      "id": "biblioteca",
+      "texto": "biblioteca",
+      "palavra": {
+        "normalizada": "biblioteca",
+        "silabas": 5,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "escola",
+        "cidade"
+      ]
+    },
+    {
+      "id": "museu",
+      "texto": "museu",
+      "palavra": {
+        "normalizada": "museu",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "u",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "cidade",
+        "viagem"
+      ]
+    },
+    {
+      "id": "cinema",
+      "texto": "cinema",
+      "palavra": {
+        "normalizada": "cinema",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "lugar",
+        "fabricado",
+        "grande",
+        "tem_tela",
+        "cidade",
+        "show"
+      ]
+    },
+    {
+      "id": "joelho",
+      "texto": "joelho",
+      "palavra": {
+        "normalizada": "joelho",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "j",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "duro",
+        "corpo",
+        "esporte"
+      ]
+    },
+    {
+      "id": "dentista",
+      "texto": "dentista",
+      "palavra": {
+        "normalizada": "dentista",
+        "silabas": 3,
+        "genero": "n",
+        "inicia": "d",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "hospital",
+        "trabalho",
+        "corpo"
+      ]
+    },
+    {
+      "id": "palhaco",
+      "texto": "palhaço",
+      "palavra": {
+        "normalizada": "palhaco",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "festa",
+        "infancia",
+        "show"
+      ]
+    },
+    {
+      "id": "nariz",
+      "texto": "nariz",
+      "palavra": {
+        "normalizada": "nariz",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "n",
+        "termina": "z",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "pequeno",
+        "corpo"
+      ]
+    },
+    {
+      "id": "mao",
+      "texto": "mão",
+      "palavra": {
+        "normalizada": "mao",
+        "silabas": 1,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "pequeno",
+        "corpo"
+      ]
+    },
+    {
+      "id": "cabelo",
+      "texto": "cabelo",
+      "palavra": {
+        "normalizada": "cabelo",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "macio",
+        "corpo"
+      ]
+    },
+    {
+      "id": "dente",
+      "texto": "dente",
+      "palavra": {
+        "normalizada": "dente",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "d",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "pequeno",
+        "duro",
+        "corpo"
+      ]
+    },
+    {
+      "id": "coracao",
+      "texto": "coração",
+      "palavra": {
+        "normalizada": "coracao",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "pequeno",
+        "corpo"
+      ]
+    },
+    {
+      "id": "olho",
+      "texto": "olho",
+      "palavra": {
+        "normalizada": "olho",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "pequeno",
+        "corpo"
+      ]
+    },
+    {
+      "id": "ombro",
+      "texto": "ombro",
+      "palavra": {
+        "normalizada": "ombro",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "o",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "natural",
+        "corpo",
+        "esporte"
+      ]
+    },
+    {
+      "id": "bombeiro",
+      "texto": "bombeiro",
+      "palavra": {
+        "normalizada": "bombeiro",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "trabalho",
+        "cidade",
+        "rua"
+      ]
+    },
+    {
+      "id": "professor",
+      "texto": "professor",
+      "palavra": {
+        "normalizada": "professor",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "escola",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "medico",
+      "texto": "médico",
+      "palavra": {
+        "normalizada": "medico",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "hospital",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "padre",
+      "texto": "padre",
+      "palavra": {
+        "normalizada": "padre",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "igreja"
+      ]
+    },
+    {
+      "id": "bebe",
+      "texto": "bebê",
+      "palavra": {
+        "normalizada": "bebe",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "b",
+        "termina": "e",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "pequeno",
+        "macio",
+        "casa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "astronauta",
+      "texto": "astronauta",
+      "palavra": {
+        "normalizada": "astronauta",
+        "silabas": 4,
+        "genero": "n",
+        "inicia": "a",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "trabalho",
+        "viagem"
+      ]
+    },
+    {
+      "id": "pescador",
+      "texto": "pescador",
+      "palavra": {
+        "normalizada": "pescador",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "r",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "trabalho",
+        "mar",
+        "praia"
+      ]
+    },
+    {
+      "id": "cozinheiro",
+      "texto": "cozinheiro",
+      "palavra": {
+        "normalizada": "cozinheiro",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "cozinha",
+        "trabalho"
+      ]
+    },
+    {
+      "id": "salva_vidas",
+      "texto": "salva-vidas",
+      "palavra": {
+        "normalizada": "salva-vidas",
+        "silabas": 4,
+        "genero": "n",
+        "inicia": "s",
+        "termina": "s",
+        "temAcento": false,
+        "temHifen": true,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "trabalho",
+        "praia",
+        "mar",
+        "verao"
+      ]
+    },
+    {
+      "id": "goleiro",
+      "texto": "goleiro",
+      "palavra": {
+        "normalizada": "goleiro",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "g",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "esporte"
+      ]
+    },
+    {
+      "id": "fada",
+      "texto": "fada",
+      "palavra": {
+        "normalizada": "fada",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "pessoa",
+        "tem_asas",
+        "infancia"
+      ]
+    },
+    {
+      "id": "pirata",
+      "texto": "pirata",
+      "palavra": {
+        "normalizada": "pirata",
+        "silabas": 3,
+        "genero": "n",
+        "inicia": "p",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "pessoa",
+        "mar",
+        "infancia"
+      ]
+    },
+    {
+      "id": "rei",
+      "texto": "rei",
+      "palavra": {
+        "normalizada": "rei",
+        "silabas": 1,
+        "genero": "m",
+        "inicia": "r",
+        "termina": "i",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "vivo",
+        "pessoa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "papai_noel",
+      "texto": "papai noel",
+      "palavra": {
+        "normalizada": "papai noel",
+        "silabas": 4,
+        "genero": "m",
+        "inicia": "p",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": true
+      },
+      "tags": [
+        "pessoa",
+        "festa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "bruxa",
+      "texto": "bruxa",
+      "palavra": {
+        "normalizada": "bruxa",
+        "silabas": 2,
+        "genero": "f",
+        "inicia": "b",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "pessoa",
+        "festa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "medo",
+      "texto": "medo",
+      "palavra": {
+        "normalizada": "medo",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "m",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "infancia",
+        "quarto"
+      ]
+    },
+    {
+      "id": "samba",
+      "texto": "samba",
+      "palavra": {
+        "normalizada": "samba",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "festa",
+        "show",
+        "brasil"
+      ]
+    },
+    {
+      "id": "futebol",
+      "texto": "futebol",
+      "palavra": {
+        "normalizada": "futebol",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "f",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "esporte",
+        "brasil"
+      ]
+    },
+    {
+      "id": "carnaval",
+      "texto": "carnaval",
+      "palavra": {
+        "normalizada": "carnaval",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "c",
+        "termina": "l",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "festa",
+        "brasil",
+        "verao"
+      ]
+    },
+    {
+      "id": "saudade",
+      "texto": "saudade",
+      "palavra": {
+        "normalizada": "saudade",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "s",
+        "termina": "e",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "viagem",
+        "brasil"
+      ]
+    },
+    {
+      "id": "sonho",
+      "texto": "sonho",
+      "palavra": {
+        "normalizada": "sonho",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "quarto",
+        "infancia"
+      ]
+    },
+    {
+      "id": "musica",
+      "texto": "música",
+      "palavra": {
+        "normalizada": "musica",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "m",
+        "termina": "a",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "festa",
+        "show"
+      ]
+    },
+    {
+      "id": "ferias",
+      "texto": "férias",
+      "palavra": {
+        "normalizada": "ferias",
+        "silabas": 3,
+        "genero": "f",
+        "inicia": "f",
+        "termina": "s",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "viagem",
+        "verao",
+        "escola"
+      ]
+    },
+    {
+      "id": "aniversario",
+      "texto": "aniversário",
+      "palavra": {
+        "normalizada": "aniversario",
+        "silabas": 5,
+        "genero": "m",
+        "inicia": "a",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "festa",
+        "infancia"
+      ]
+    },
+    {
+      "id": "silencio",
+      "texto": "silêncio",
+      "palavra": {
+        "normalizada": "silencio",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "o",
+        "temAcento": true,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "igreja",
+        "hospital",
+        "escritorio"
+      ]
+    },
+    {
+      "id": "segredo",
+      "texto": "segredo",
+      "palavra": {
+        "normalizada": "segredo",
+        "silabas": 3,
+        "genero": "m",
+        "inicia": "s",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "infancia",
+        "escola"
+      ]
+    },
+    {
+      "id": "frio",
+      "texto": "frio",
+      "palavra": {
+        "normalizada": "frio",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "f",
+        "termina": "o",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "inverno",
+        "viagem"
+      ]
+    },
+    {
+      "id": "capoeira",
+      "texto": "capoeira",
+      "palavra": {
+        "normalizada": "capoeira",
+        "silabas": 4,
+        "genero": "f",
+        "inicia": "c",
+        "termina": "a",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "esporte",
+        "brasil"
+      ]
+    },
+    {
+      "id": "xadrez",
+      "texto": "xadrez",
+      "palavra": {
+        "normalizada": "xadrez",
+        "silabas": 2,
+        "genero": "m",
+        "inicia": "x",
+        "termina": "z",
+        "temAcento": false,
+        "temHifen": false,
+        "temEspaco": false
+      },
+      "tags": [
+        "ideia",
+        "esporte",
+        "escola"
+      ]
+    }
+  ]
+}

@@ -76,6 +76,7 @@ flutter:
     - assets/pergunta_impostora_banco.json
     - assets/quiz_da_vez_banco.json
     - assets/so_uma_banco.json
+    - assets/aneis_banco.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

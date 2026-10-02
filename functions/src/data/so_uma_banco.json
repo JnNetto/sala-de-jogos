@@ -1,0 +1,2208 @@
+{
+  "jogo": "Só Uma! (banco de palavras alternativo)",
+  "observacao": "Lista original criada para uso caseiro; não reproduz as cartas do jogo publicado.",
+  "total_cartas": 220,
+  "palavras_por_carta": 5,
+  "cartas": [
+    {
+      "id": 1,
+      "palavras": [
+        "duende",
+        "helicóptero",
+        "garrafa",
+        "rinoceronte",
+        "cérebro"
+      ]
+    },
+    {
+      "id": 2,
+      "palavras": [
+        "bruxa",
+        "samba",
+        "café",
+        "prato",
+        "pulga"
+      ]
+    },
+    {
+      "id": 3,
+      "palavras": [
+        "rio",
+        "ovelha",
+        "sorriso",
+        "canoa",
+        "bandeira"
+      ]
+    },
+    {
+      "id": 4,
+      "palavras": [
+        "múmia",
+        "Amazônia",
+        "agulha",
+        "sandália",
+        "sapo"
+      ]
+    },
+    {
+      "id": 5,
+      "palavras": [
+        "isca",
+        "neve",
+        "jornal",
+        "árbitro",
+        "rainha"
+      ]
+    },
+    {
+      "id": 6,
+      "palavras": [
+        "tijolo",
+        "carrinho",
+        "chiclete",
+        "mordida",
+        "ninja"
+      ]
+    },
+    {
+      "id": 7,
+      "palavras": [
+        "açúcar",
+        "medo",
+        "lupa",
+        "girafa",
+        "maestro"
+      ]
+    },
+    {
+      "id": 8,
+      "palavras": [
+        "espião",
+        "vôlei",
+        "colher",
+        "despedida",
+        "sushi"
+      ]
+    },
+    {
+      "id": 9,
+      "palavras": [
+        "escola",
+        "bigode",
+        "cientista",
+        "foguete",
+        "telhado"
+      ]
+    },
+    {
+      "id": 10,
+      "palavras": [
+        "teclado",
+        "fralda",
+        "balão",
+        "fantasia",
+        "castelo"
+      ]
+    },
+    {
+      "id": 11,
+      "palavras": [
+        "tristeza",
+        "liquidificador",
+        "tênis",
+        "morcego",
+        "hotel"
+      ]
+    },
+    {
+      "id": 12,
+      "palavras": [
+        "caranguejo",
+        "ciúme",
+        "pilha",
+        "dominó",
+        "eco"
+      ]
+    },
+    {
+      "id": 13,
+      "palavras": [
+        "cinema",
+        "samurai",
+        "binóculo",
+        "azar",
+        "surfe"
+      ]
+    },
+    {
+      "id": 14,
+      "palavras": [
+        "guitarra",
+        "motorista",
+        "brigadeiro",
+        "guardanapo",
+        "skate"
+      ]
+    },
+    {
+      "id": 15,
+      "palavras": [
+        "morango",
+        "olimpíada",
+        "revista",
+        "escultura",
+        "fotógrafo"
+      ]
+    },
+    {
+      "id": 16,
+      "palavras": [
+        "ouriço",
+        "buzina",
+        "praça",
+        "salada",
+        "botão"
+      ]
+    },
+    {
+      "id": 17,
+      "palavras": [
+        "tapete",
+        "rato",
+        "judô",
+        "funk",
+        "lobisomem"
+      ]
+    },
+    {
+      "id": 18,
+      "palavras": [
+        "escavadeira",
+        "colchão",
+        "recibo",
+        "chocolate",
+        "sombra"
+      ]
+    },
+    {
+      "id": 19,
+      "palavras": [
+        "mágico",
+        "gorjeta",
+        "pizza",
+        "metrô",
+        "espelho"
+      ]
+    },
+    {
+      "id": 20,
+      "palavras": [
+        "lápis",
+        "pintura",
+        "joelho",
+        "pescador",
+        "coroa"
+      ]
+    },
+    {
+      "id": 21,
+      "palavras": [
+        "cochilo",
+        "ruga",
+        "canudo",
+        "labirinto",
+        "bolo"
+      ]
+    },
+    {
+      "id": 22,
+      "palavras": [
+        "guarda-chuva",
+        "soluço",
+        "estrela",
+        "bicicleta",
+        "oficina"
+      ]
+    },
+    {
+      "id": 23,
+      "palavras": [
+        "sorte",
+        "natação",
+        "fogueira",
+        "orelha",
+        "zíper"
+      ]
+    },
+    {
+      "id": 24,
+      "palavras": [
+        "gelo",
+        "nariz",
+        "abelha",
+        "sussurro",
+        "roleta"
+      ]
+    },
+    {
+      "id": 25,
+      "palavras": [
+        "pião",
+        "circo",
+        "unicórnio",
+        "casamento",
+        "avião"
+      ]
+    },
+    {
+      "id": 26,
+      "palavras": [
+        "palco",
+        "outdoor",
+        "padaria",
+        "salsicha",
+        "caos"
+      ]
+    },
+    {
+      "id": 27,
+      "palavras": [
+        "bazar",
+        "vinho",
+        "porco",
+        "jetski",
+        "túnel"
+      ]
+    },
+    {
+      "id": 28,
+      "palavras": [
+        "arrepio",
+        "tucano",
+        "lâmpada",
+        "moeda",
+        "fantasma"
+      ]
+    },
+    {
+      "id": 29,
+      "palavras": [
+        "imposto",
+        "trenó",
+        "astronauta",
+        "sangue",
+        "novela"
+      ]
+    },
+    {
+      "id": 30,
+      "palavras": [
+        "sanfona",
+        "milagre",
+        "polvo",
+        "bambolê",
+        "alarme"
+      ]
+    },
+    {
+      "id": 31,
+      "palavras": [
+        "montanha",
+        "espanador",
+        "orvalho",
+        "microfone",
+        "aniversário"
+      ]
+    },
+    {
+      "id": 32,
+      "palavras": [
+        "oceano",
+        "bruxo",
+        "destino",
+        "ópera",
+        "futebol"
+      ]
+    },
+    {
+      "id": 33,
+      "palavras": [
+        "cebola",
+        "vaca",
+        "garçom",
+        "justiça",
+        "romance"
+      ]
+    },
+    {
+      "id": 34,
+      "palavras": [
+        "uniforme",
+        "confete",
+        "açougue",
+        "tempo",
+        "refrigerante"
+      ]
+    },
+    {
+      "id": 35,
+      "palavras": [
+        "maré",
+        "livro",
+        "posto",
+        "melancia",
+        "tambor"
+      ]
+    },
+    {
+      "id": 36,
+      "palavras": [
+        "furacão",
+        "chapéu",
+        "piloto",
+        "navio",
+        "zebra"
+      ]
+    },
+    {
+      "id": 37,
+      "palavras": [
+        "padeiro",
+        "vento",
+        "coral",
+        "peteca",
+        "funil"
+      ]
+    },
+    {
+      "id": 38,
+      "palavras": [
+        "rapadura",
+        "estádio",
+        "alegria",
+        "policial",
+        "geladeira"
+      ]
+    },
+    {
+      "id": 39,
+      "palavras": [
+        "placa",
+        "canja",
+        "ventilador",
+        "dentista",
+        "igreja"
+      ]
+    },
+    {
+      "id": 40,
+      "palavras": [
+        "alienígena",
+        "baleia",
+        "quebra-cabeça",
+        "queijo",
+        "suor"
+      ]
+    },
+    {
+      "id": 41,
+      "palavras": [
+        "goteira",
+        "boleto",
+        "pedra",
+        "açaí",
+        "minhoca"
+      ]
+    },
+    {
+      "id": 42,
+      "palavras": [
+        "galinha",
+        "brechó",
+        "suco",
+        "pirata",
+        "mentira"
+      ]
+    },
+    {
+      "id": 43,
+      "palavras": [
+        "churrasco",
+        "sereia",
+        "telescópio",
+        "hipopótamo",
+        "barba"
+      ]
+    },
+    {
+      "id": 44,
+      "palavras": [
+        "panqueca",
+        "gratidão",
+        "cowboy",
+        "esquilo",
+        "cotovelo"
+      ]
+    },
+    {
+      "id": 45,
+      "palavras": [
+        "assobio",
+        "golfinho",
+        "promessa",
+        "ator",
+        "pudim"
+      ]
+    },
+    {
+      "id": 46,
+      "palavras": [
+        "pressa",
+        "mergulho",
+        "farofa",
+        "pombo",
+        "carroça"
+      ]
+    },
+    {
+      "id": 47,
+      "palavras": [
+        "pipoca",
+        "surpresa",
+        "corrida",
+        "chave",
+        "tigre"
+      ]
+    },
+    {
+      "id": 48,
+      "palavras": [
+        "esperança",
+        "tartaruga",
+        "mapa",
+        "roteiro",
+        "faxina"
+      ]
+    },
+    {
+      "id": 49,
+      "palavras": [
+        "greve",
+        "canguru",
+        "lágrima",
+        "martelo",
+        "memória"
+      ]
+    },
+    {
+      "id": 50,
+      "palavras": [
+        "biscoito",
+        "abraço",
+        "ronco",
+        "urso",
+        "anão"
+      ]
+    },
+    {
+      "id": 51,
+      "palavras": [
+        "cortina",
+        "mudança",
+        "lago",
+        "coruja",
+        "chá"
+      ]
+    },
+    {
+      "id": 52,
+      "palavras": [
+        "celular",
+        "pesadelo",
+        "beijo",
+        "salto",
+        "sirene"
+      ]
+    },
+    {
+      "id": 53,
+      "palavras": [
+        "médico",
+        "tontura",
+        "banho",
+        "controle",
+        "esconde-esconde"
+      ]
+    },
+    {
+      "id": 54,
+      "palavras": [
+        "trator",
+        "fogão",
+        "tsunami",
+        "boneca",
+        "filme"
+      ]
+    },
+    {
+      "id": 55,
+      "palavras": [
+        "flauta",
+        "balanço",
+        "motocicleta",
+        "panela",
+        "ilha"
+      ]
+    },
+    {
+      "id": 56,
+      "palavras": [
+        "carro",
+        "atraso",
+        "poesia",
+        "pipa",
+        "régua"
+      ]
+    },
+    {
+      "id": 57,
+      "palavras": [
+        "camelo",
+        "computador",
+        "trem",
+        "advogado",
+        "pirâmide"
+      ]
+    },
+    {
+      "id": 58,
+      "palavras": [
+        "cãibra",
+        "tatu",
+        "palhaço",
+        "abacaxi",
+        "relógio"
+      ]
+    },
+    {
+      "id": 59,
+      "palavras": [
+        "forró",
+        "praia",
+        "gol",
+        "cachorro",
+        "banana"
+      ]
+    },
+    {
+      "id": 60,
+      "palavras": [
+        "areia",
+        "macarrão",
+        "golfe",
+        "arquiteto",
+        "bagunça"
+      ]
+    },
+    {
+      "id": 61,
+      "palavras": [
+        "submarino",
+        "águia",
+        "manga",
+        "espirro",
+        "enfermeira"
+      ]
+    },
+    {
+      "id": 62,
+      "palavras": [
+        "armário",
+        "coração",
+        "pega-pega",
+        "deserto",
+        "limão"
+      ]
+    },
+    {
+      "id": 63,
+      "palavras": [
+        "bússola",
+        "zumbi",
+        "barata",
+        "paciência",
+        "amarelinha"
+      ]
+    },
+    {
+      "id": 64,
+      "palavras": [
+        "fazenda",
+        "sofá",
+        "formiga",
+        "iogurte",
+        "ioiô"
+      ]
+    },
+    {
+      "id": 65,
+      "palavras": [
+        "cofre",
+        "tesouro",
+        "torcida",
+        "apagão",
+        "papagaio"
+      ]
+    },
+    {
+      "id": 66,
+      "palavras": [
+        "meia",
+        "tropeço",
+        "barulho",
+        "sarda",
+        "ônibus"
+      ]
+    },
+    {
+      "id": 67,
+      "palavras": [
+        "barco",
+        "aranha",
+        "bolinha",
+        "fantoche",
+        "arco-íris"
+      ]
+    },
+    {
+      "id": 68,
+      "palavras": [
+        "cabelo",
+        "piano",
+        "eclipse",
+        "câmera",
+        "jangada"
+      ]
+    },
+    {
+      "id": 69,
+      "palavras": [
+        "pamonha",
+        "escorregador",
+        "parque",
+        "capivara",
+        "karaokê"
+      ]
+    },
+    {
+      "id": 70,
+      "palavras": [
+        "ginástica",
+        "caneta",
+        "beija-flor",
+        "robô",
+        "teleférico"
+      ]
+    },
+    {
+      "id": 71,
+      "palavras": [
+        "carteiro",
+        "copo",
+        "rede",
+        "medalha",
+        "rodoviária"
+      ]
+    },
+    {
+      "id": 72,
+      "palavras": [
+        "gladiador",
+        "dança",
+        "sono",
+        "alface",
+        "cadeado"
+      ]
+    },
+    {
+      "id": 73,
+      "palavras": [
+        "agricultor",
+        "faca",
+        "engarrafamento",
+        "língua",
+        "terremoto"
+      ]
+    },
+    {
+      "id": 74,
+      "palavras": [
+        "uva",
+        "rei",
+        "gangorra",
+        "música",
+        "fogo"
+      ]
+    },
+    {
+      "id": 75,
+      "palavras": [
+        "troco",
+        "fone",
+        "alho",
+        "vampiro",
+        "geada"
+      ]
+    },
+    {
+      "id": 76,
+      "palavras": [
+        "feijão",
+        "cadeira",
+        "leilão",
+        "sol",
+        "bateria"
+      ]
+    },
+    {
+      "id": 77,
+      "palavras": [
+        "viagem",
+        "coxinha",
+        "aquário",
+        "verdade",
+        "garfo"
+      ]
+    },
+    {
+      "id": 78,
+      "palavras": [
+        "guerra",
+        "borracha",
+        "dardo",
+        "gato",
+        "nota"
+      ]
+    },
+    {
+      "id": 79,
+      "palavras": [
+        "cenoura",
+        "vara",
+        "inveja",
+        "restaurante",
+        "boxe"
+      ]
+    },
+    {
+      "id": 80,
+      "palavras": [
+        "amor",
+        "fumaça",
+        "ovo",
+        "armadilha",
+        "academia"
+      ]
+    },
+    {
+      "id": 81,
+      "palavras": [
+        "jacaré",
+        "sorvete",
+        "anzol",
+        "moinho",
+        "cometa"
+      ]
+    },
+    {
+      "id": 82,
+      "palavras": [
+        "galáxia",
+        "semáforo",
+        "onça",
+        "microscópio",
+        "bacon"
+      ]
+    },
+    {
+      "id": 83,
+      "palavras": [
+        "príncipe",
+        "feijoada",
+        "trovão",
+        "cupim",
+        "campainha"
+      ]
+    },
+    {
+      "id": 84,
+      "palavras": [
+        "pavão",
+        "professor",
+        "hospital",
+        "toalha",
+        "luva"
+      ]
+    },
+    {
+      "id": 85,
+      "palavras": [
+        "orgulho",
+        "cinto",
+        "raposa",
+        "caça-níquel",
+        "mandioca"
+      ]
+    },
+    {
+      "id": 86,
+      "palavras": [
+        "fila",
+        "aeroporto",
+        "avestruz",
+        "desfile",
+        "hambúrguer"
+      ]
+    },
+    {
+      "id": 87,
+      "palavras": [
+        "mostarda",
+        "mercado",
+        "gravata",
+        "grito",
+        "mosquito"
+      ]
+    },
+    {
+      "id": 88,
+      "palavras": [
+        "corda",
+        "cicatriz",
+        "silêncio",
+        "avalanche",
+        "vulcão"
+      ]
+    },
+    {
+      "id": 89,
+      "palavras": [
+        "baralho",
+        "escada",
+        "teatro",
+        "jornalista",
+        "cuscuz"
+      ]
+    },
+    {
+      "id": 90,
+      "palavras": [
+        "chaminé",
+        "gibi",
+        "nuvem",
+        "queda",
+        "xadrez"
+      ]
+    },
+    {
+      "id": 91,
+      "palavras": [
+        "sino",
+        "dado",
+        "mesa",
+        "lesma",
+        "esqueleto"
+      ]
+    },
+    {
+      "id": 92,
+      "palavras": [
+        "carnaval",
+        "bocejo",
+        "letreiro",
+        "planeta",
+        "travesseiro"
+      ]
+    },
+    {
+      "id": 93,
+      "palavras": [
+        "ponte",
+        "quadro",
+        "camaleão",
+        "paz",
+        "juiz"
+      ]
+    },
+    {
+      "id": 94,
+      "palavras": [
+        "violão",
+        "chuva",
+        "escorpião",
+        "gnomo",
+        "elevador"
+      ]
+    },
+    {
+      "id": 95,
+      "palavras": [
+        "carimbo",
+        "museu",
+        "mel",
+        "tubarão",
+        "plateia"
+      ]
+    },
+    {
+      "id": 96,
+      "palavras": [
+        "pinguim",
+        "floresta",
+        "maratona",
+        "vassoura",
+        "lua"
+      ]
+    },
+    {
+      "id": 97,
+      "palavras": [
+        "boliche",
+        "elefante",
+        "biblioteca",
+        "apito",
+        "leite"
+      ]
+    },
+    {
+      "id": 98,
+      "palavras": [
+        "crachá",
+        "cavalo",
+        "óculos",
+        "Everest",
+        "dente"
+      ]
+    },
+    {
+      "id": 99,
+      "palavras": [
+        "âncora",
+        "detetive",
+        "ciclismo",
+        "caverna",
+        "coelho"
+      ]
+    },
+    {
+      "id": 100,
+      "palavras": [
+        "caminhão",
+        "bailarina",
+        "bombeiro",
+        "cheque",
+        "pimenta"
+      ]
+    },
+    {
+      "id": 101,
+      "palavras": [
+        "cobertor",
+        "tapioca",
+        "basquete",
+        "cachoeira",
+        "chupeta"
+      ]
+    },
+    {
+      "id": 102,
+      "palavras": [
+        "unha",
+        "coragem",
+        "arroz",
+        "mochila",
+        "patinete"
+      ]
+    },
+    {
+      "id": 103,
+      "palavras": [
+        "janela",
+        "rotina",
+        "relâmpago",
+        "videogame",
+        "prisão"
+      ]
+    },
+    {
+      "id": 104,
+      "palavras": [
+        "segredo",
+        "desenho",
+        "cerveja",
+        "farmácia",
+        "tomada"
+      ]
+    },
+    {
+      "id": 105,
+      "palavras": [
+        "elástico",
+        "saudade",
+        "nevoeiro",
+        "cócegas",
+        "táxi"
+      ]
+    },
+    {
+      "id": 106,
+      "palavras": [
+        "lama",
+        "ódio",
+        "berço",
+        "senha",
+        "micro-ondas"
+      ]
+    },
+    {
+      "id": 107,
+      "palavras": [
+        "manteiga",
+        "ambulância",
+        "tesoura",
+        "cofrinho",
+        "borboleta"
+      ]
+    },
+    {
+      "id": 108,
+      "palavras": [
+        "foca",
+        "calafrio",
+        "arqueiro",
+        "troféu",
+        "herança"
+      ]
+    },
+    {
+      "id": 109,
+      "palavras": [
+        "chuveiro",
+        "gaveta",
+        "marionete",
+        "pastel",
+        "carteira"
+      ]
+    },
+    {
+      "id": 110,
+      "palavras": [
+        "aspirador",
+        "lhama",
+        "festival",
+        "vergonha",
+        "gigante"
+      ]
+    },
+    {
+      "id": 111,
+      "palavras": [
+        "biólogo",
+        "estrela-do-mar",
+        "ausência",
+        "cacto",
+        "ombro"
+      ]
+    },
+    {
+      "id": 112,
+      "palavras": [
+        "milkshake",
+        "prendedor",
+        "afilhado",
+        "bingo",
+        "samambaia"
+      ]
+    },
+    {
+      "id": 113,
+      "palavras": [
+        "vistoria",
+        "isqueiro",
+        "ética",
+        "bibliotecário",
+        "órgão"
+      ]
+    },
+    {
+      "id": 114,
+      "palavras": [
+        "rodízio",
+        "apresentador",
+        "quadra",
+        "artéria",
+        "prego"
+      ]
+    },
+    {
+      "id": 115,
+      "palavras": [
+        "revisão",
+        "mirante",
+        "soldado",
+        "falafel",
+        "âmbar"
+      ]
+    },
+    {
+      "id": 116,
+      "palavras": [
+        "hortelã",
+        "girino",
+        "mangue",
+        "redação",
+        "chuchu"
+      ]
+    },
+    {
+      "id": 117,
+      "palavras": [
+        "costela",
+        "peneira",
+        "aldeia",
+        "alce",
+        "lavanderia"
+      ]
+    },
+    {
+      "id": 118,
+      "palavras": [
+        "crânio",
+        "savana",
+        "bacalhau",
+        "faxineiro",
+        "multa"
+      ]
+    },
+    {
+      "id": 119,
+      "palavras": [
+        "torresmo",
+        "reboque",
+        "tampa",
+        "oásis",
+        "cegonha"
+      ]
+    },
+    {
+      "id": 120,
+      "palavras": [
+        "chaveiro",
+        "lince",
+        "bastidor",
+        "bife",
+        "viela"
+      ]
+    },
+    {
+      "id": 121,
+      "palavras": [
+        "pódio",
+        "camarão",
+        "casulo",
+        "ateliê",
+        "coentro"
+      ]
+    },
+    {
+      "id": 122,
+      "palavras": [
+        "espinho",
+        "codorna",
+        "incenso",
+        "muralha",
+        "acaso"
+      ]
+    },
+    {
+      "id": 123,
+      "palavras": [
+        "franja",
+        "rivalidade",
+        "marceneiro",
+        "quati",
+        "raiz"
+      ]
+    },
+    {
+      "id": 124,
+      "palavras": [
+        "alecrim",
+        "parafuso",
+        "pilates",
+        "refrão",
+        "sala"
+      ]
+    },
+    {
+      "id": 125,
+      "palavras": [
+        "subúrbio",
+        "javali",
+        "lógica",
+        "liquidação",
+        "broto"
+      ]
+    },
+    {
+      "id": 126,
+      "palavras": [
+        "assadeira",
+        "marinheiro",
+        "mariposa",
+        "pagode",
+        "tabu"
+      ]
+    },
+    {
+      "id": 127,
+      "palavras": [
+        "couve",
+        "escalada",
+        "sacola",
+        "sertão",
+        "balança"
+      ]
+    },
+    {
+      "id": 128,
+      "palavras": [
+        "herdeiro",
+        "calo",
+        "tradição",
+        "asa-delta",
+        "lambreta"
+      ]
+    },
+    {
+      "id": 129,
+      "palavras": [
+        "dirigível",
+        "acrobata",
+        "duna",
+        "partitura",
+        "cocada"
+      ]
+    },
+    {
+      "id": 130,
+      "palavras": [
+        "harpa",
+        "contador",
+        "morsa",
+        "marina",
+        "guincho"
+      ]
+    },
+    {
+      "id": 131,
+      "palavras": [
+        "despertador",
+        "cais",
+        "caixa",
+        "barbeiro",
+        "mangá"
+      ]
+    },
+    {
+      "id": 132,
+      "palavras": [
+        "condomínio",
+        "claquete",
+        "estação",
+        "sogra",
+        "brisa"
+      ]
+    },
+    {
+      "id": 133,
+      "palavras": [
+        "febre",
+        "banheiro",
+        "orca",
+        "batedeira",
+        "toca"
+      ]
+    },
+    {
+      "id": 134,
+      "palavras": [
+        "pincel",
+        "tatame",
+        "pelicano",
+        "litoral",
+        "sarcasmo"
+      ]
+    },
+    {
+      "id": 135,
+      "palavras": [
+        "risco",
+        "linha",
+        "cappuccino",
+        "sardinha",
+        "colheitadeira"
+      ]
+    },
+    {
+      "id": 136,
+      "palavras": [
+        "linguiça",
+        "bonde",
+        "coincidência",
+        "alongamento",
+        "segurança"
+      ]
+    },
+    {
+      "id": 137,
+      "palavras": [
+        "corredor",
+        "vagão",
+        "lixa",
+        "queixo",
+        "cogumelo"
+      ]
+    },
+    {
+      "id": 138,
+      "palavras": [
+        "lanterna",
+        "monção",
+        "promoção",
+        "enjoo",
+        "cantor"
+      ]
+    },
+    {
+      "id": 139,
+      "palavras": [
+        "arruela",
+        "recife",
+        "expectativa",
+        "manicure",
+        "violoncelo"
+      ]
+    },
+    {
+      "id": 140,
+      "palavras": [
+        "jazz",
+        "machado",
+        "ervilha",
+        "teia",
+        "vestiário"
+      ]
+    },
+    {
+      "id": 141,
+      "palavras": [
+        "cristal",
+        "palácio",
+        "fábula",
+        "quindim",
+        "funicular"
+      ]
+    },
+    {
+      "id": 142,
+      "palavras": [
+        "caatinga",
+        "lagosta",
+        "ansiedade",
+        "ginásio",
+        "orégano"
+      ]
+    },
+    {
+      "id": 143,
+      "palavras": [
+        "prateleira",
+        "calota",
+        "costureira",
+        "lenda",
+        "asilo"
+      ]
+    },
+    {
+      "id": 144,
+      "palavras": [
+        "figurino",
+        "ringue",
+        "azeite",
+        "costume",
+        "ruína"
+      ]
+    },
+    {
+      "id": 145,
+      "palavras": [
+        "enguia",
+        "monumento",
+        "pedreiro",
+        "acampamento",
+        "entrega"
+      ]
+    },
+    {
+      "id": 146,
+      "palavras": [
+        "férias",
+        "apelido",
+        "madrinha",
+        "raquete",
+        "chaleira"
+      ]
+    },
+    {
+      "id": 147,
+      "palavras": [
+        "empilhadeira",
+        "orçamento",
+        "pólen",
+        "brócolis",
+        "jarra"
+      ]
+    },
+    {
+      "id": 148,
+      "palavras": [
+        "furgão",
+        "jasmim",
+        "prazo",
+        "autógrafo",
+        "misto-quente"
+      ]
+    },
+    {
+      "id": 149,
+      "palavras": [
+        "acordeão",
+        "gêmeo",
+        "salário",
+        "enchente",
+        "templo"
+      ]
+    },
+    {
+      "id": 150,
+      "palavras": [
+        "jardineiro",
+        "alicate",
+        "diamante",
+        "caiaque",
+        "caipirinha"
+      ]
+    },
+    {
+      "id": 151,
+      "palavras": [
+        "repolho",
+        "cupom",
+        "enxada",
+        "verão",
+        "esgrima"
+      ]
+    },
+    {
+      "id": 152,
+      "palavras": [
+        "inspiração",
+        "espinafre",
+        "anoitecer",
+        "correspondência",
+        "gorila"
+      ]
+    },
+    {
+      "id": 153,
+      "palavras": [
+        "reggae",
+        "cachalote",
+        "veterano",
+        "monociclo",
+        "rosa"
+      ]
+    },
+    {
+      "id": 154,
+      "palavras": [
+        "rotatória",
+        "poltrona",
+        "pulso",
+        "dançarino",
+        "inverno"
+      ]
+    },
+    {
+      "id": 155,
+      "palavras": [
+        "entrevista",
+        "agachamento",
+        "gancho",
+        "doninha",
+        "alagamento"
+      ]
+    },
+    {
+      "id": 156,
+      "palavras": [
+        "gaivota",
+        "paçoca",
+        "termômetro",
+        "petróleo",
+        "tradutor"
+      ]
+    },
+    {
+      "id": 157,
+      "palavras": [
+        "semente",
+        "escanteio",
+        "catedral",
+        "jaguatirica",
+        "umbigo"
+      ]
+    },
+    {
+      "id": 158,
+      "palavras": [
+        "saxofone",
+        "padrinho",
+        "geleira",
+        "caracol",
+        "testa"
+      ]
+    },
+    {
+      "id": 159,
+      "palavras": [
+        "matrícula",
+        "concha",
+        "margarida",
+        "presidente",
+        "placar"
+      ]
+    },
+    {
+      "id": 160,
+      "palavras": [
+        "bambu",
+        "maracatu",
+        "baú",
+        "colecionador",
+        "flamingo"
+      ]
+    },
+    {
+      "id": 161,
+      "palavras": [
+        "talento",
+        "foice",
+        "documentário",
+        "esquina",
+        "lírio"
+      ]
+    },
+    {
+      "id": 162,
+      "palavras": [
+        "demissão",
+        "rena",
+        "animação",
+        "abridor",
+        "prefeito"
+      ]
+    },
+    {
+      "id": 163,
+      "palavras": [
+        "abóbora",
+        "calouro",
+        "orangotango",
+        "melodia",
+        "pingue-pongue"
+      ]
+    },
+    {
+      "id": 164,
+      "palavras": [
+        "bule",
+        "resenha",
+        "calçada",
+        "eletricista",
+        "kebab"
+      ]
+    },
+    {
+      "id": 165,
+      "palavras": [
+        "coceira",
+        "orquídea",
+        "ritmo",
+        "domador",
+        "feriado"
+      ]
+    },
+    {
+      "id": 166,
+      "palavras": [
+        "mula",
+        "patins",
+        "matemático",
+        "bochecha",
+        "arena"
+      ]
+    },
+    {
+      "id": 167,
+      "palavras": [
+        "texugo",
+        "astrônomo",
+        "picolé",
+        "clarinete",
+        "ninho"
+      ]
+    },
+    {
+      "id": 168,
+      "palavras": [
+        "rabanete",
+        "tamanduá",
+        "cílio",
+        "escritura",
+        "formigueiro"
+      ]
+    },
+    {
+      "id": 169,
+      "palavras": [
+        "harmonia",
+        "certeza",
+        "folha",
+        "sapateiro",
+        "calendário"
+      ]
+    },
+    {
+      "id": 170,
+      "palavras": [
+        "gambá",
+        "caçula",
+        "triângulo",
+        "waffle",
+        "mosteiro"
+      ]
+    },
+    {
+      "id": 171,
+      "palavras": [
+        "soldador",
+        "trompete",
+        "agenda",
+        "fóssil",
+        "arara"
+      ]
+    },
+    {
+      "id": 172,
+      "palavras": [
+        "castor",
+        "taekwondo",
+        "químico",
+        "pálpebra",
+        "começo"
+      ]
+    },
+    {
+      "id": 173,
+      "palavras": [
+        "alfinete",
+        "consequência",
+        "gaita",
+        "vaga-lume",
+        "sinuca"
+      ]
+    },
+    {
+      "id": 174,
+      "palavras": [
+        "farmacêutico",
+        "crepe",
+        "lição",
+        "capoeira",
+        "aurora"
+      ]
+    },
+    {
+      "id": 175,
+      "palavras": [
+        "escumadeira",
+        "senador",
+        "paraquedismo",
+        "esfiha",
+        "varanda"
+      ]
+    },
+    {
+      "id": 176,
+      "palavras": [
+        "punho",
+        "balde",
+        "veterinário",
+        "faroeste",
+        "champanhe"
+      ]
+    },
+    {
+      "id": 177,
+      "palavras": [
+        "vela",
+        "coala",
+        "ciclone",
+        "cambalhota",
+        "taco"
+      ]
+    },
+    {
+      "id": 178,
+      "palavras": [
+        "habilitação",
+        "extintor",
+        "mexilhão",
+        "bolero",
+        "polichinelo"
+      ]
+    },
+    {
+      "id": 179,
+      "palavras": [
+        "confeiteiro",
+        "intuição",
+        "mangueira",
+        "hipismo",
+        "suricato"
+      ]
+    },
+    {
+      "id": 180,
+      "palavras": [
+        "suspense",
+        "batimento",
+        "cesta",
+        "culpa",
+        "palpite"
+      ]
+    },
+    {
+      "id": 181,
+      "palavras": [
+        "novelo",
+        "seiva",
+        "sertanejo",
+        "iguana",
+        "presunto"
+      ]
+    },
+    {
+      "id": 182,
+      "palavras": [
+        "empréstimo",
+        "coque",
+        "baião",
+        "mala",
+        "vendedor"
+      ]
+    },
+    {
+      "id": 183,
+      "palavras": [
+        "ostra",
+        "ilustrador",
+        "ressaca",
+        "limite",
+        "varal"
+      ]
+    },
+    {
+      "id": 184,
+      "palavras": [
+        "pântano",
+        "badminton",
+        "poro",
+        "rumor",
+        "galho"
+      ]
+    },
+    {
+      "id": 185,
+      "palavras": [
+        "dúvida",
+        "cachaça",
+        "represa",
+        "cratera",
+        "intestino"
+      ]
+    },
+    {
+      "id": 186,
+      "palavras": [
+        "canela",
+        "covinha",
+        "sinfonia",
+        "colina",
+        "cumplicidade"
+      ]
+    },
+    {
+      "id": 187,
+      "palavras": [
+        "estepe",
+        "mina",
+        "halterofilismo",
+        "picanha",
+        "pulmão"
+      ]
+    },
+    {
+      "id": 188,
+      "palavras": [
+        "pênalti",
+        "interfone",
+        "fortaleza",
+        "bronze",
+        "coluna"
+      ]
+    },
+    {
+      "id": 189,
+      "palavras": [
+        "peru",
+        "equitação",
+        "reforma",
+        "quintal",
+        "vinagre"
+      ]
+    },
+    {
+      "id": 190,
+      "palavras": [
+        "careca",
+        "maquiagem",
+        "salva-vidas",
+        "revanche",
+        "rosquinha"
+      ]
+    },
+    {
+      "id": 191,
+      "palavras": [
+        "iate",
+        "terror",
+        "ritual",
+        "trilha",
+        "pele"
+      ]
+    },
+    {
+      "id": 192,
+      "palavras": [
+        "mosaico",
+        "requeijão",
+        "obelisco",
+        "contraste",
+        "dedal"
+      ]
+    },
+    {
+      "id": 193,
+      "palavras": [
+        "entregador",
+        "charge",
+        "laboratório",
+        "tocha",
+        "empate"
+      ]
+    },
+    {
+      "id": 194,
+      "palavras": [
+        "empada",
+        "mito",
+        "rolo-compressor",
+        "estreia",
+        "refeitório"
+      ]
+    },
+    {
+      "id": 195,
+      "palavras": [
+        "trilogia",
+        "poeta",
+        "exagero",
+        "salamandra",
+        "capital"
+      ]
+    },
+    {
+      "id": 196,
+      "palavras": [
+        "comediante",
+        "erosão",
+        "valsa",
+        "carona",
+        "ravioli"
+      ]
+    },
+    {
+      "id": 197,
+      "palavras": [
+        "tirinha",
+        "marreco",
+        "galeria",
+        "primo",
+        "karatê"
+      ]
+    },
+    {
+      "id": 198,
+      "palavras": [
+        "furadeira",
+        "guepardo",
+        "gengiva",
+        "quadriciclo",
+        "axé"
+      ]
+    },
+    {
+      "id": 199,
+      "palavras": [
+        "churros",
+        "general",
+        "conta",
+        "tornado",
+        "pônei"
+      ]
+    },
+    {
+      "id": 200,
+      "palavras": [
+        "snowboard",
+        "aposentadoria",
+        "escritor",
+        "calcanhar",
+        "quiabo"
+      ]
+    },
+    {
+      "id": 201,
+      "palavras": [
+        "vila",
+        "veia",
+        "salmão",
+        "malabarista",
+        "alívio"
+      ]
+    },
+    {
+      "id": 202,
+      "palavras": [
+        "amanhecer",
+        "penhasco",
+        "camping",
+        "bolha",
+        "lontra"
+      ]
+    },
+    {
+      "id": 203,
+      "palavras": [
+        "almôndega",
+        "regador",
+        "explorador",
+        "pupila",
+        "hiena"
+      ]
+    },
+    {
+      "id": 204,
+      "palavras": [
+        "infinito",
+        "cozinha",
+        "dívida",
+        "porteiro",
+        "berinjela"
+      ]
+    },
+    {
+      "id": 205,
+      "palavras": [
+        "estômago",
+        "ganso",
+        "porto",
+        "teimosia",
+        "punk"
+      ]
+    },
+    {
+      "id": 206,
+      "palavras": [
+        "espátula",
+        "fôlego",
+        "auditório",
+        "grão-de-bico",
+        "prata"
+      ]
+    },
+    {
+      "id": 207,
+      "palavras": [
+        "clipe",
+        "violino",
+        "bode",
+        "porão",
+        "gengibre"
+      ]
+    },
+    {
+      "id": 208,
+      "palavras": [
+        "ouro",
+        "canal",
+        "serrote",
+        "hematoma",
+        "centopeia"
+      ]
+    },
+    {
+      "id": 209,
+      "palavras": [
+        "jumento",
+        "lava",
+        "milho",
+        "avenida",
+        "rastelo"
+      ]
+    },
+    {
+      "id": 210,
+      "palavras": [
+        "fama",
+        "cinzeiro",
+        "marshmallow",
+        "cobre",
+        "fronteira"
+      ]
+    },
+    {
+      "id": 211,
+      "palavras": [
+        "cabeleireiro",
+        "carvão",
+        "arraia",
+        "sobrancelha",
+        "fósforo"
+      ]
+    },
+    {
+      "id": 212,
+      "palavras": [
+        "verniz",
+        "vizinho",
+        "chacal",
+        "tosse",
+        "desconto"
+      ]
+    },
+    {
+      "id": 213,
+      "palavras": [
+        "tango",
+        "cabra",
+        "alpinista",
+        "lealdade",
+        "limusine"
+      ]
+    },
+    {
+      "id": 214,
+      "palavras": [
+        "píer",
+        "sereno",
+        "quadril",
+        "siri",
+        "beterraba"
+      ]
+    },
+    {
+      "id": 215,
+      "palavras": [
+        "tinta",
+        "charrete",
+        "coliseu",
+        "drama",
+        "rim"
+      ]
+    },
+    {
+      "id": 216,
+      "palavras": [
+        "manjericão",
+        "rugby",
+        "guindaste",
+        "ralador",
+        "hino"
+      ]
+    },
+    {
+      "id": 217,
+      "palavras": [
+        "pinta",
+        "cola",
+        "xilofone",
+        "betoneira",
+        "choro"
+      ]
+    },
+    {
+      "id": 218,
+      "palavras": [
+        "enxofre",
+        "canoagem",
+        "rap",
+        "encomenda",
+        "veleiro"
+      ]
+    },
+    {
+      "id": 219,
+      "palavras": [
+        "carrinho-de-mão",
+        "granola",
+        "fígado",
+        "vidraceiro",
+        "hidroavião"
+      ]
+    },
+    {
+      "id": 220,
+      "palavras": [
+        "osso",
+        "recreio",
+        "teoria",
+        "ferro-de-passar",
+        "jato"
+      ]
+    }
+  ]
+}

@@ -1,10 +1,9 @@
-import {initializeApp} from "firebase-admin/app";
-import {FieldValue, getFirestore} from "firebase-admin/firestore";
+import {FieldValue} from "firebase-admin/firestore";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
+import {db} from "./firebaseAdmin";
 
-initializeApp();
+export * from "./soUma";
 
-const db = getFirestore();
 const region = "southamerica-east1";
 const spyCount: Record<number, number> = {
   5: 2,

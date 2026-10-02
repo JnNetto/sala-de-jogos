@@ -8,6 +8,7 @@ class JogosDisponiveis {
   static const String idPergunta = 'pergunta_impostora';
   static const String idQuiz = 'quiz_da_vez';
   static const String idResistencia = 'resistencia';
+  static const String idSoUma = 'so_uma';
 
   static const List<JogoDisponivel> todos = [
     JogoDisponivel(
@@ -40,6 +41,14 @@ class JogosDisponiveis {
       descricao: AppConstants.jogoResistenciaDescricao,
       icone: Icons.shield_outlined,
       cor: AppTheme.warningColor,
+      disponivel: true,
+    ),
+    JogoDisponivel(
+      id: idSoUma,
+      nome: AppConstants.jogoSoUmaNome,
+      descricao: AppConstants.jogoSoUmaDescricao,
+      icone: Icons.lightbulb_outline,
+      cor: AppTheme.accentColor,
       disponivel: true,
     ),
   ];

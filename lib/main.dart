@@ -17,6 +17,7 @@ import 'presentation/providers/quiz_configuracao_provider.dart';
 import 'presentation/providers/quiz_partida_provider.dart';
 import 'presentation/providers/resistencia_partida_provider.dart';
 import 'presentation/providers/resistencia_sala_provider.dart';
+import 'presentation/providers/lobisomem_partida_provider.dart';
 import 'presentation/providers/so_uma_partida_provider.dart';
 import 'presentation/providers/so_uma_sala_provider.dart';
 import 'presentation/providers/theme_provider.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ResistenciaSalaProvider()),
         ChangeNotifierProvider(create: (_) => SoUmaPartidaProvider()),
         ChangeNotifierProvider(create: (_) => SoUmaSalaProvider()),
+        ChangeNotifierProvider(create: (_) => LobisomemPartidaProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {

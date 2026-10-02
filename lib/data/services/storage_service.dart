@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/lobisomem_constants.dart';
 import '../../core/constants/pergunta_impostora_constants.dart';
 import '../../core/constants/quiz_da_vez_constants.dart';
 import '../models/configuracao_partida.dart';
 import '../models/configuracao_pergunta_impostora.dart';
 import '../models/configuracao_quiz.dart';
 import '../models/estatisticas.dart';
+import '../models/lobisomem_configuracao.dart';
 
 class StorageService {
   static StorageService? _instance;
@@ -241,6 +243,28 @@ class StorageService {
 
   Future<bool> limparQuizPerguntasUsadas() async {
     return saveQuizPerguntasUsadas([]);
+  }
+
+  Future<LobisomemConfiguracao> getConfiguracaoLobisomem() async {
+    final json = _prefs?.getString(LobisomemConstants.prefsKeyConfiguracao);
+    if (json == null) return const LobisomemConfiguracao();
+    try {
+      return LobisomemConfiguracao.fromJson(jsonDecode(json));
+    } catch (_) {
+      return const LobisomemConfiguracao();
+    }
+  }
+
+  Future<bool> saveConfiguracaoLobisomem(LobisomemConfiguracao config) async {
+    try {
+      return await _prefs?.setString(
+            LobisomemConstants.prefsKeyConfiguracao,
+            jsonEncode(config.toJson()),
+          ) ??
+          false;
+    } catch (_) {
+      return false;
+    }
   }
 
   String? getNomeJogador() {

@@ -22,6 +22,10 @@ class AppConstants {
   static const String jogoSoUmaDescricao =
       'Dê uma pista de uma única palavra para a palavra certa da carta';
 
+  static const String jogoLobisomemNome = 'Lobisomem';
+  static const String jogoLobisomemDescricao =
+      'A aldeia discute de dia e os lobisomens atacam à noite';
+
   static const int minJogadores = 4;
   static const int maxJogadores = 12;
   static const int minEspioes = 1;

@@ -8,6 +8,7 @@ import 'impostor_home_screen.dart';
 import 'pergunta_impostora/pergunta_home_screen.dart';
 import 'quiz_da_vez/quiz_home_screen.dart';
 import 'resistencia/resistencia_home_screen.dart';
+import 'lobisomem/lobisomem_home_screen.dart';
 import 'so_uma/so_uma_home_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -38,6 +39,11 @@ class HomeScreen extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SoUmaHomeScreen()),
+      );
+    } else if (jogoId == JogosDisponiveis.idLobisomem) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LobisomemHomeScreen()),
       );
     }
   }

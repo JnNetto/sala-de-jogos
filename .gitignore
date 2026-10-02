@@ -68,3 +68,4 @@ functions/.runtimeconfig.json
 
 # Local analysis exports
 /analise_*.json
+regras-completas-werewolf.md

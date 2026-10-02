@@ -13,12 +13,10 @@ import 'resistencia_votacao_remota_screen.dart';
 
 class ResistenciaSalaRouterScreen extends StatefulWidget {
   final bool restaurarUltimaSala;
-  final bool revelarPapelAoEntrar;
 
   const ResistenciaSalaRouterScreen({
     super.key,
     this.restaurarUltimaSala = false,
-    this.revelarPapelAoEntrar = false,
   });
 
   @override
@@ -29,9 +27,6 @@ class ResistenciaSalaRouterScreen extends StatefulWidget {
 class _ResistenciaSalaRouterScreenState
     extends State<ResistenciaSalaRouterScreen> {
   late final Future<bool> _restauracaoFuture;
-  final Map<String, bool> _papelReveladoCache = {};
-  final Map<String, bool> _resultadoPropostaCache = {};
-  final Map<String, bool> _resultadoMissaoCache = {};
 
   @override
   void initState() {
@@ -108,23 +103,6 @@ class _ResistenciaSalaRouterScreenState
                   );
                 }
 
-                final gameId = estado.gameId;
-                if (estado.phase != 'over') {
-                  final cached = _papelReveladoCache[gameId];
-                  if (cached != null) {
-                    if (!cached) {
-                      return ResistenciaRevelacaoRemotaScreen(gameId: gameId);
-                    }
-
-                    return _telaComResultadosPendentes(provider, estado);
-                  }
-
-                  _carregarPapelRevelado(provider, gameId);
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
                 return _telaComResultadosPendentes(provider, estado);
               },
             );
@@ -134,67 +112,55 @@ class _ResistenciaSalaRouterScreenState
     );
   }
 
-  Future<void> _carregarPapelRevelado(
-    ResistenciaSalaProvider provider,
-    String gameId,
-  ) async {
-    if (_papelReveladoCache.containsKey(gameId)) return;
-    final revelado = await provider.papelReveladoNestaPartida(gameId);
-    if (!mounted) return;
-    setState(() => _papelReveladoCache[gameId] = revelado);
-  }
-
-  Future<void> _carregarResultadoProposta(
-    ResistenciaSalaProvider provider,
-    String gameId,
-    String proposalId,
-  ) async {
-    final key = '$gameId:$proposalId';
-    if (_resultadoPropostaCache.containsKey(key)) return;
-    final visto = await provider.resultadoPropostaVisto(gameId, proposalId);
-    if (!mounted) return;
-    setState(() => _resultadoPropostaCache[key] = visto);
-  }
-
-  Future<void> _carregarResultadoMissao(
-    ResistenciaSalaProvider provider,
-    String gameId,
-    int missionCount,
-  ) async {
-    final key = '$gameId:$missionCount';
-    if (_resultadoMissaoCache.containsKey(key)) return;
-    final visto = await provider.resultadoMissaoVisto(gameId, missionCount);
-    if (!mounted) return;
-    setState(() => _resultadoMissaoCache[key] = visto);
-  }
-
   Widget _telaComResultadosPendentes(
     ResistenciaSalaProvider provider,
     ResistenciaEstadoRemoto estado,
   ) {
     final gameId = estado.gameId;
-    final lastProposalId = estado.lastProposalId;
-    if (lastProposalId != null) {
-      final proposalKey = '$gameId:$lastProposalId';
-      final proposalSeen = _resultadoPropostaCache[proposalKey];
-      if (proposalSeen == null) {
-        _carregarResultadoProposta(provider, gameId, lastProposalId);
+
+    if (estado.phase != 'over') {
+      final papelVisto = provider.papelReveladoSync(gameId);
+      if (papelVisto == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          provider.garantirPapelReveladoCarregado(gameId);
+        });
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
-      if (!proposalSeen) {
+      if (!papelVisto) {
+        return ResistenciaRevelacaoRemotaScreen(gameId: gameId);
+      }
+    }
+
+    final lastProposalId = estado.lastProposalId;
+    if (lastProposalId != null) {
+      final propostaVista = provider.resultadoPropostaVistoSync(
+        gameId,
+        lastProposalId,
+      );
+      if (propostaVista == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          provider.garantirResultadoPropostaCarregado(gameId, lastProposalId);
+        });
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
+      if (!propostaVista) {
         return const ResistenciaVotacaoRemotaScreen();
       }
     }
 
     final missionCount = estado.missionResults.length;
     if (missionCount > 0) {
-      final missionKey = '$gameId:$missionCount';
-      final missionSeen = _resultadoMissaoCache[missionKey];
-      if (missionSeen == null) {
-        _carregarResultadoMissao(provider, gameId, missionCount);
+      final missaoVista = provider.resultadoMissaoVistoSync(
+        gameId,
+        missionCount,
+      );
+      if (missaoVista == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          provider.garantirResultadoMissaoCarregado(gameId, missionCount);
+        });
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
-      if (!missionSeen) {
+      if (!missaoVista) {
         return const ResistenciaMissaoRemotaScreen();
       }
     }
@@ -213,7 +179,7 @@ class _ResistenciaSalaRouterScreenState
       case 'over':
         return const ResistenciaFimRemotoScreen();
       default:
-        return const ResistenciaRevelacaoRemotaScreen();
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/resistencia_sala_provider.dart';
-import '../screens/resistencia/resistencia_sala_router_screen.dart';
 
 class ResistenciaAbortAction extends StatelessWidget {
   const ResistenciaAbortAction({super.key});
@@ -51,16 +50,11 @@ class ResistenciaAbortAction extends StatelessWidget {
     );
     if (confirmar != true || !context.mounted) return;
 
-    final navigator = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final ok = await provider.abortarPartidaRemota();
     if (!context.mounted) return;
 
-    if (ok) {
-      navigator.pushReplacement(
-        MaterialPageRoute(builder: (_) => const ResistenciaSalaRouterScreen()),
-      );
-    } else if (provider.erro != null) {
+    if (!ok && provider.erro != null) {
       messenger.showSnackBar(
         SnackBar(content: Text(provider.erro!), backgroundColor: Colors.red),
       );

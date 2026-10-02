@@ -3,10 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../../data/models/resistencia_estado_remoto.dart';
 import '../../../data/models/resistencia_jogador_remoto.dart';
-import '../../../data/models/resistencia_sala.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/primary_button.dart';
-import 'resistencia_lobby_remoto_screen.dart';
 
 class ResistenciaFimRemotoScreen extends StatelessWidget {
   const ResistenciaFimRemotoScreen({super.key});
@@ -23,42 +21,33 @@ class ResistenciaFimRemotoScreen extends StatelessWidget {
         body: SafeArea(
           child: Consumer<ResistenciaSalaProvider>(
             builder: (context, provider, _) {
-              return StreamBuilder<ResistenciaSala?>(
-                stream: provider.observarSalaAtual(),
-                initialData: provider.sala,
-                builder: (context, salaSnapshot) {
-                  final sala = salaSnapshot.data;
-                  _navegarSeVoltouAoLobby(context, sala);
+              return StreamBuilder<ResistenciaEstadoRemoto?>(
+                stream: provider.observarEstadoAtual(),
+                initialData: provider.estado,
+                builder: (context, estadoSnapshot) {
+                  final estado = estadoSnapshot.data;
+                  if (estado == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                  return StreamBuilder<ResistenciaEstadoRemoto?>(
-                    stream: provider.observarEstadoAtual(),
-                    initialData: provider.estado,
-                    builder: (context, estadoSnapshot) {
-                      final estado = estadoSnapshot.data;
-                      if (estado == null) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      return StreamBuilder<List<ResistenciaJogadorRemoto>>(
-                        stream: provider.observarJogadoresAtuais(),
-                        initialData: provider.jogadores,
-                        builder: (context, jogadoresSnapshot) {
-                          final jogadores =
-                              jogadoresSnapshot.data ?? provider.jogadores;
-                          return ListView(
-                            padding: const EdgeInsets.all(16),
-                            children: [
-                              _ResumoFinal(estado: estado),
-                              const SizedBox(height: 16),
-                              _PlacarFinal(estado: estado),
-                              const SizedBox(height: 16),
-                              _RevelacaoPapeis(jogadores: jogadores),
-                              const SizedBox(height: 16),
-                              _VoltarLobbyCard(provider: provider),
-                              const SizedBox(height: 24),
-                            ],
-                          );
-                        },
+                  return StreamBuilder<List<ResistenciaJogadorRemoto>>(
+                    stream: provider.observarJogadoresAtuais(),
+                    initialData: provider.jogadores,
+                    builder: (context, jogadoresSnapshot) {
+                      final jogadores =
+                          jogadoresSnapshot.data ?? provider.jogadores;
+                      return ListView(
+                        padding: const EdgeInsets.all(16),
+                        children: [
+                          _ResumoFinal(estado: estado),
+                          const SizedBox(height: 16),
+                          _PlacarFinal(estado: estado),
+                          const SizedBox(height: 16),
+                          _RevelacaoPapeis(jogadores: jogadores),
+                          const SizedBox(height: 16),
+                          _VoltarLobbyCard(provider: provider),
+                          const SizedBox(height: 24),
+                        ],
                       );
                     },
                   );
@@ -69,16 +58,6 @@ class ResistenciaFimRemotoScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _navegarSeVoltouAoLobby(BuildContext context, ResistenciaSala? sala) {
-    if (sala?.status != 'lobby') return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!context.mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const ResistenciaLobbyRemotoScreen()),
-      );
-    });
   }
 }
 

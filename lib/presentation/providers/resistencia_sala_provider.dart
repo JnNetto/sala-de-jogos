@@ -22,6 +22,10 @@ class ResistenciaSalaProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _erro;
   DateTime? _ultimaEntradaSalaEm;
+  final Map<String, bool> _papelReveladoCache = {};
+  final Map<String, bool> _resultadoPropostaCache = {};
+  final Map<String, bool> _resultadoMissaoCache = {};
+  final Set<String> _marcadoresEmCarga = {};
 
   ResistenciaSalaProvider({ResistenciaFirebaseService? service})
     : _service = service ?? ResistenciaFirebaseService();
@@ -170,7 +174,9 @@ class ResistenciaSalaProvider extends ChangeNotifier {
   Future<bool> voltarAoLobbyRemoto() async {
     final sala = _sala;
     if (sala == null) return false;
-    return _executar(() => _service.voltarAoLobby(sala.id));
+    final ok = await _executar(() => _service.voltarAoLobby(sala.id));
+    if (ok) limparMarcadoresPartida();
+    return ok;
   }
 
   Future<bool> sairDaSalaRemota() async {
@@ -194,7 +200,9 @@ class ResistenciaSalaProvider extends ChangeNotifier {
   Future<bool> abortarPartidaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
-    return _executar(() => _service.abortarPartida(sala.id));
+    final ok = await _executar(() => _service.abortarPartida(sala.id));
+    if (ok) limparMarcadoresPartida();
+    return ok;
   }
 
   Future<void> esquecerUltimaSala() async {
@@ -206,16 +214,93 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     _estado = null;
     _proposta = null;
     _ultimaEntradaSalaEm = null;
+    limparMarcadoresPartida();
     notifyListeners();
+  }
+
+  void limparMarcadoresPartida() {
+    _papelReveladoCache.clear();
+    _resultadoPropostaCache.clear();
+    _resultadoMissaoCache.clear();
+    _marcadoresEmCarga.clear();
+  }
+
+  bool? papelReveladoSync(String gameId) {
+    if (gameId.isEmpty) return false;
+    return _papelReveladoCache[gameId];
+  }
+
+  bool? resultadoPropostaVistoSync(String gameId, String proposalId) {
+    if (gameId.isEmpty || proposalId.isEmpty) return false;
+    return _resultadoPropostaCache['$gameId:$proposalId'];
+  }
+
+  bool? resultadoMissaoVistoSync(String gameId, int missionCount) {
+    if (gameId.isEmpty || missionCount <= 0) return false;
+    return _resultadoMissaoCache['$gameId:$missionCount'];
+  }
+
+  Future<void> garantirPapelReveladoCarregado(String gameId) async {
+    if (gameId.isEmpty || _papelReveladoCache.containsKey(gameId)) return;
+    if (!_marcadoresEmCarga.add('papel:$gameId')) return;
+    try {
+      await papelReveladoNestaPartida(gameId);
+      notifyListeners();
+    } finally {
+      _marcadoresEmCarga.remove('papel:$gameId');
+    }
+  }
+
+  Future<void> garantirResultadoPropostaCarregado(
+    String gameId,
+    String proposalId,
+  ) async {
+    final key = '$gameId:$proposalId';
+    if (gameId.isEmpty ||
+        proposalId.isEmpty ||
+        _resultadoPropostaCache.containsKey(key)) {
+      return;
+    }
+    if (!_marcadoresEmCarga.add('proposta:$key')) return;
+    try {
+      await resultadoPropostaVisto(gameId, proposalId);
+      notifyListeners();
+    } finally {
+      _marcadoresEmCarga.remove('proposta:$key');
+    }
+  }
+
+  Future<void> garantirResultadoMissaoCarregado(
+    String gameId,
+    int missionCount,
+  ) async {
+    final key = '$gameId:$missionCount';
+    if (gameId.isEmpty ||
+        missionCount <= 0 ||
+        _resultadoMissaoCache.containsKey(key)) {
+      return;
+    }
+    if (!_marcadoresEmCarga.add('missao:$key')) return;
+    try {
+      await resultadoMissaoVisto(gameId, missionCount);
+      notifyListeners();
+    } finally {
+      _marcadoresEmCarga.remove('missao:$key');
+    }
   }
 
   Future<bool> papelReveladoNestaPartida(String gameId) async {
     if (gameId.isEmpty) return false;
+    final cached = _papelReveladoCache[gameId];
+    if (cached != null) return cached;
     final sala = _sala;
     final uid = _service.uid;
     if (sala == null || uid == null) return false;
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_papelReveladoKey(sala.id, uid, gameId)) ?? false;
+    final visto =
+        prefs.getBool(_papelReveladoKey(sala.id, uid, gameId)) ?? false;
+    _papelReveladoCache[gameId] = visto;
+    return visto;
   }
 
   Future<void> marcarPapelRevelado(String gameId) async {
@@ -225,18 +310,26 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     if (sala == null || uid == null) return;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_papelReveladoKey(sala.id, uid, gameId), true);
+    _papelReveladoCache[gameId] = true;
+    notifyListeners();
   }
 
   Future<bool> resultadoPropostaVisto(String gameId, String proposalId) async {
     if (gameId.isEmpty || proposalId.isEmpty) return false;
+    final key = '$gameId:$proposalId';
+    final cached = _resultadoPropostaCache[key];
+    if (cached != null) return cached;
     final sala = _sala;
     final uid = _service.uid;
     if (sala == null || uid == null) return false;
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(
+    final visto =
+        prefs.getBool(
           _resultadoPropostaKey(sala.id, uid, gameId, proposalId),
         ) ??
         false;
+    _resultadoPropostaCache[key] = visto;
+    return visto;
   }
 
   Future<void> marcarResultadoPropostaVisto(
@@ -252,18 +345,26 @@ class ResistenciaSalaProvider extends ChangeNotifier {
       _resultadoPropostaKey(sala.id, uid, gameId, proposalId),
       true,
     );
+    _resultadoPropostaCache['$gameId:$proposalId'] = true;
+    notifyListeners();
   }
 
   Future<bool> resultadoMissaoVisto(String gameId, int missionCount) async {
     if (gameId.isEmpty || missionCount <= 0) return false;
+    final key = '$gameId:$missionCount';
+    final cached = _resultadoMissaoCache[key];
+    if (cached != null) return cached;
     final sala = _sala;
     final uid = _service.uid;
     if (sala == null || uid == null) return false;
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(
+    final visto =
+        prefs.getBool(
           _resultadoMissaoKey(sala.id, uid, gameId, missionCount),
         ) ??
         false;
+    _resultadoMissaoCache[key] = visto;
+    return visto;
   }
 
   Future<void> marcarResultadoMissaoVisto(
@@ -279,6 +380,8 @@ class ResistenciaSalaProvider extends ChangeNotifier {
       _resultadoMissaoKey(sala.id, uid, gameId, missionCount),
       true,
     );
+    _resultadoMissaoCache['$gameId:$missionCount'] = true;
+    notifyListeners();
   }
 
   Future<void> _salvarUltimaSala(String roomId) async {

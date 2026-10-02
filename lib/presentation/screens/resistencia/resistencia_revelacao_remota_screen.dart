@@ -5,7 +5,6 @@ import '../../../data/models/resistencia_jogador_remoto.dart';
 import '../../../data/models/resistencia_privado.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/resistencia_abort_action.dart';
-import 'resistencia_sala_router_screen.dart';
 
 class ResistenciaRevelacaoRemotaScreen extends StatelessWidget {
   final String gameId;
@@ -198,11 +197,6 @@ class _RevelacaoRemotaConteudoState extends State<_RevelacaoRemotaConteudo>
   Future<void> _mostrarProximoPasso(BuildContext context) async {
     await context.read<ResistenciaSalaProvider>().marcarPapelRevelado(
       widget.gameId,
-    );
-    if (!context.mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const ResistenciaSalaRouterScreen()),
     );
   }
 }

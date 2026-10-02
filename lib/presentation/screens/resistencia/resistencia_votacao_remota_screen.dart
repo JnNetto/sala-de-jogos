@@ -7,7 +7,6 @@ import '../../../data/models/resistencia_proposta_remota.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/resistencia_abort_action.dart';
-import 'resistencia_sala_router_screen.dart';
 
 class ResistenciaVotacaoRemotaScreen extends StatefulWidget {
   const ResistenciaVotacaoRemotaScreen({super.key});
@@ -172,10 +171,6 @@ class _ResistenciaVotacaoRemotaScreenState
     ResistenciaPropostaRemota proposta,
   ) async {
     await provider.marcarResultadoPropostaVisto(estado.gameId, proposta.id);
-    if (!context.mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const ResistenciaSalaRouterScreen()),
-    );
   }
 }
 

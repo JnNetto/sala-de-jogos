@@ -8,7 +8,6 @@ import '../../../data/models/resistencia_proposta_remota.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/resistencia_abort_action.dart';
-import 'resistencia_sala_router_screen.dart';
 
 class ResistenciaMissaoRemotaScreen extends StatefulWidget {
   const ResistenciaMissaoRemotaScreen({super.key});
@@ -177,10 +176,6 @@ class _ResistenciaMissaoRemotaScreenState
       estado.gameId,
       estado.missionResults.length,
     );
-    if (!context.mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const ResistenciaSalaRouterScreen()),
-    );
   }
 }
 
@@ -285,8 +280,7 @@ class _ControleMissao extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final aguardando =
-        cartaEnviada || estado.submittedCount >= estado.expectedCount;
+    final aguardando = cartaEnviada;
     final podeSabotar = privado.team == 'evil';
     return Card(
       margin: EdgeInsets.zero,

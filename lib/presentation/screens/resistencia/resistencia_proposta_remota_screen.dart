@@ -6,9 +6,6 @@ import '../../../data/models/resistencia_jogador_remoto.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/resistencia_abort_action.dart';
-import 'resistencia_fim_remoto_screen.dart';
-import 'resistencia_missao_remota_screen.dart';
-import 'resistencia_votacao_remota_screen.dart';
 
 class ResistenciaPropostaRemotaScreen extends StatefulWidget {
   const ResistenciaPropostaRemotaScreen({super.key});
@@ -21,7 +18,6 @@ class ResistenciaPropostaRemotaScreen extends StatefulWidget {
 class _ResistenciaPropostaRemotaScreenState
     extends State<ResistenciaPropostaRemotaScreen> {
   final Set<String> _selecionados = {};
-  bool _navegouVotacao = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +40,6 @@ class _ResistenciaPropostaRemotaScreenState
                   if (estado == null) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  _navegarSeNecessario(context, estado);
 
                   return StreamBuilder<List<ResistenciaJogadorRemoto>>(
                     stream: provider.observarJogadoresAtuais(),
@@ -56,7 +51,7 @@ class _ResistenciaPropostaRemotaScreenState
                       final souLider = provider.uid == estado.leaderUid;
 
                       if (estado.phase != 'proposing') {
-                        return _AguardandoProximaFase(estado: estado);
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       return ListView(
@@ -123,45 +118,11 @@ class _ResistenciaPropostaRemotaScreenState
     final ok = await provider.proporEquipeRemota(_selecionados.toList());
     if (!context.mounted) return;
 
-    if (ok) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const ResistenciaVotacaoRemotaScreen(),
-        ),
-      );
-    } else if (provider.erro != null) {
+    if (!ok && provider.erro != null) {
       messenger.showSnackBar(
         SnackBar(content: Text(provider.erro!), backgroundColor: Colors.red),
       );
     }
-  }
-
-  void _navegarSeNecessario(
-    BuildContext context,
-    ResistenciaEstadoRemoto estado,
-  ) {
-    if (_navegouVotacao || estado.currentProposalId == null) {
-      return;
-    }
-    if (estado.phase != 'voting' &&
-        estado.phase != 'mission' &&
-        estado.phase != 'over') {
-      return;
-    }
-
-    _navegouVotacao = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!context.mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => estado.phase == 'mission'
-              ? const ResistenciaMissaoRemotaScreen()
-              : estado.phase == 'over'
-              ? const ResistenciaFimRemotoScreen()
-              : const ResistenciaVotacaoRemotaScreen(),
-        ),
-      );
-    });
   }
 
   ResistenciaJogadorRemoto? _buscarJogador(
@@ -370,25 +331,6 @@ class _AguardandoLider extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AguardandoProximaFase extends StatelessWidget {
-  final ResistenciaEstadoRemoto estado;
-
-  const _AguardandoProximaFase({required this.estado});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Text(
-          'Fase atual: ${estado.phase}.',
-          textAlign: TextAlign.center,
         ),
       ),
     );

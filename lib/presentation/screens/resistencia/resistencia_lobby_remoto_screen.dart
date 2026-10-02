@@ -5,7 +5,6 @@ import '../../../data/models/resistencia_jogador_remoto.dart';
 import '../../../data/models/resistencia_sala.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/primary_button.dart';
-import 'resistencia_sala_router_screen.dart';
 
 class ResistenciaLobbyRemotoScreen extends StatefulWidget {
   const ResistenciaLobbyRemotoScreen({super.key});
@@ -17,8 +16,6 @@ class ResistenciaLobbyRemotoScreen extends StatefulWidget {
 
 class _ResistenciaLobbyRemotoScreenState
     extends State<ResistenciaLobbyRemotoScreen> {
-  bool _navegouParaRevelacao = false;
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -44,7 +41,6 @@ class _ResistenciaLobbyRemotoScreenState
                 initialData: sala,
                 builder: (context, salaSnapshot) {
                   final salaAtual = salaSnapshot.data ?? sala;
-                  _navegarSePartidaIniciou(context, salaAtual);
 
                   return StreamBuilder<List<ResistenciaJogadorRemoto>>(
                     stream: provider.observarJogadoresAtuais(),
@@ -90,7 +86,6 @@ class _ResistenciaLobbyRemotoScreenState
                             onRemover: (uid) =>
                                 _removerJogador(context, provider, uid),
                           ),
-
                           const SizedBox(height: 24),
                           if (provider.souHost)
                             PrimaryButton(
@@ -125,16 +120,7 @@ class _ResistenciaLobbyRemotoScreenState
     final ok = await provider.iniciarPartidaRemota();
     if (!context.mounted) return;
 
-    if (ok) {
-      messenger.showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Partida iniciada. Revelação remota vem no próximo passo.',
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else if (provider.erro != null) {
+    if (!ok && provider.erro != null) {
       messenger.showSnackBar(
         SnackBar(content: Text(provider.erro!), backgroundColor: Colors.red),
       );
@@ -188,21 +174,6 @@ class _ResistenciaLobbyRemotoScreenState
       await provider.esquecerUltimaSala();
       if (!context.mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
-    });
-  }
-
-  void _navegarSePartidaIniciou(BuildContext context, ResistenciaSala sala) {
-    if (_navegouParaRevelacao || sala.status != 'playing') return;
-    _navegouParaRevelacao = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!context.mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>
-              const ResistenciaSalaRouterScreen(revelarPapelAoEntrar: true),
-        ),
-      );
     });
   }
 }

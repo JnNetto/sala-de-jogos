@@ -669,7 +669,9 @@ export const playMissionCard = onCall({region}, async (req) => {
     }
 
     const proposalRef = db.doc(`rooms/${roomId}/proposals/${proposalId}`);
-    const secretRef = db.doc(`rooms/${roomId}/secret/mission_${stateDoc.get("round")}`);
+    // A proposal ID is unique across rounds and reused-room games. Using only
+    // the round here caused cards from an earlier game to be counted again.
+    const secretRef = db.doc(`rooms/${roomId}/secret/mission_${proposalId}`);
     const proposalDoc = await tx.get(proposalRef);
     const secretDoc = await tx.get(secretRef);
     const reveals = await readReveals(tx, roomId, playersSnap);

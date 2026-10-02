@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/service_locator.dart';
+import 'firebase_options.dart';
 import 'firebase_options_env.dart';
 import 'presentation/providers/categoria_provider.dart';
 import 'presentation/providers/configuracao_provider.dart';
@@ -19,10 +20,18 @@ import 'presentation/providers/resistencia_sala_provider.dart';
 import 'presentation/providers/theme_provider.dart';
 import 'presentation/screens/splash_screen.dart';
 
+FirebaseOptions _firebaseOptions() {
+  try {
+    return EnvFirebaseOptions.currentPlatform;
+  } on StateError {
+    return DefaultFirebaseOptions.currentPlatform;
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: EnvFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: _firebaseOptions());
 
   // Configurar app para funcionar apenas em modo retrato
   await SystemChrome.setPreferredOrientations([

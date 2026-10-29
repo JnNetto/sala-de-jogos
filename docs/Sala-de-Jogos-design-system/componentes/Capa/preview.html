@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css">
+<meta charset="utf-8">
+<title>Sala de Jogos</title>
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--fundo); color:var(--texto); font-family:var(--font-texto); overflow:hidden; }
+  .cover { position:relative; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; width:480px; height:288px; }
+  .moldura { fill:var(--janela-barra); }
+  .lampada { fill:var(--lampada); }
+  .rosa { fill:var(--rosa); }
+  .menta { fill:var(--menta); }
+  .violeta { fill:var(--violeta); }
+  .fio { fill:none; stroke:var(--linha-forte); stroke-width:1.5; }
+  .soq { fill:var(--linha-forte); }
+  .bloco-xl { rx:var(--raio-xl); }
+  .bloco-md { rx:var(--raio-md); }
+  .words { position:absolute; left:var(--espaco-6); bottom:var(--espaco-6); max-width:440px; }
+  .name { margin:0; font-family:var(--font-display); font-size:96px; line-height:.92; font-weight:700; color:var(--texto); }
+  .tag { margin:var(--espaco-2) 0 0 4px; font-size:14px; line-height:20px; font-weight:600; color:var(--texto-2); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      janela-barra 216x216 (a moldura) · lampada, rosa, menta, violeta 92x92 cada, os quatro vidros acesos · cerca de 30% de 960x288
+  arrangement grade modular 2x2 encaixada numa moldura, como a janela da marca, assentada a espaco-3 do rodapé
+  pattern     lampadas do varal ("cada jogo e uma luz"): 12 pilulas 12x20 rx 6 (raio-pill) nas quatro cores dos vidros, penduradas num fio linha-forte que sangra pela direita
+  scales      inset e gap da janela espaco-3 / espaco-2; cantos raio-xl na moldura, raio-md nos vidros, raio-pill nas lampadas
+-->
+<path class="fio" d="M-8 12 Q 240 44 496 8"/>
+<rect class="soq" x="10" y="14" width="6" height="6" rx="2"/><rect class="lampada pill" x="7" y="19" width="12" height="20" rx="6"/>
+<rect class="soq" x="51" y="18" width="6" height="6" rx="2"/><rect class="rosa pill" x="48" y="23" width="12" height="20" rx="6"/>
+<rect class="soq" x="93" y="21" width="6" height="6" rx="2"/><rect class="menta pill" x="90" y="26" width="12" height="20" rx="6"/>
+<rect class="soq" x="134" y="24" width="6" height="6" rx="2"/><rect class="violeta pill" x="131" y="29" width="12" height="20" rx="6"/>
+<rect class="soq" x="176" y="25" width="6" height="6" rx="2"/><rect class="lampada pill" x="173" y="30" width="12" height="20" rx="6"/>
+<rect class="soq" x="218" y="26" width="6" height="6" rx="2"/><rect class="rosa pill" x="215" y="31" width="12" height="20" rx="6"/>
+<rect class="soq" x="260" y="26" width="6" height="6" rx="2"/><rect class="menta pill" x="257" y="31" width="12" height="20" rx="6"/>
+<rect class="soq" x="302" y="24" width="6" height="6" rx="2"/><rect class="violeta pill" x="299" y="29" width="12" height="20" rx="6"/>
+<rect class="soq" x="344" y="22" width="6" height="6" rx="2"/><rect class="lampada pill" x="341" y="27" width="12" height="20" rx="6"/>
+<rect class="soq" x="387" y="19" width="6" height="6" rx="2"/><rect class="rosa pill" x="384" y="24" width="12" height="20" rx="6"/>
+<rect class="soq" x="429" y="15" width="6" height="6" rx="2"/><rect class="menta pill" x="426" y="20" width="12" height="20" rx="6"/>
+<rect class="soq" x="472" y="10" width="6" height="6" rx="2"/><rect class="violeta pill" x="469" y="15" width="12" height="20" rx="6"/>
+<rect class="moldura bloco-xl" x="168" y="60" width="216" height="216" rx="24"/>
+<rect class="lampada bloco-md" x="180" y="72" width="92" height="92" rx="14"/>
+<rect class="rosa bloco-md" x="280" y="72" width="92" height="92" rx="14"/>
+<rect class="menta bloco-md" x="180" y="172" width="92" height="92" rx="14"/>
+<rect class="violeta bloco-md" x="280" y="172" width="92" height="92" rx="14"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Sala de<br>Jogos</h1>
+<p class="tag">Uma sala à noite, luzes acesas e os amigos em volta.</p>
+</div>
+</div>
+</body>
+</html>

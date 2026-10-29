@@ -3,32 +3,28 @@ class AppConstants {
   static const String appVersion = '1.3.0';
 
   static const String jogoEspiaoNome = 'Quem é o Espião?';
-  static const String jogoEspiaoDescricao =
-      'Descubra quem está mentindo na rodada';
+  static const String jogoEspiaoDescricao = 'Um de vocês não sabe onde está.';
 
   static const String jogoPerguntaNome = 'Pergunta Impostora';
   static const String jogoPerguntaDescricao =
-      'Todos respondem a mesma pergunta... exceto um';
+      'Alguém respondeu outra pergunta.';
 
   static const String jogoQuizNome = 'Quiz da Vez';
-  static const String jogoQuizDescricao =
-      'Responda ou passe — quem erra perde pontos';
+  static const String jogoQuizDescricao = 'Perguntas rápidas, um celular.';
 
   static const String jogoResistenciaNome = 'A Resistência';
-  static const String jogoResistenciaDescricao =
-      'Monte equipes secretas e sabote missões';
+  static const String jogoResistenciaDescricao = 'Missões, votos e traidores.';
 
   static const String jogoSoUmaNome = 'Só uma!';
-  static const String jogoSoUmaDescricao =
-      'Dê uma pista de uma única palavra para a palavra certa da carta';
+  static const String jogoSoUmaDescricao = 'Uma dica cada, sem repetir.';
 
   static const String jogoLobisomemNome = 'Lobisomem';
   static const String jogoLobisomemDescricao =
-      'A aldeia discute de dia e os lobisomens atacam à noite';
+      'A aldeia dorme, os lobos caçam.';
 
   static const String jogoAneisNome = 'Nos Anéis';
   static const String jogoAneisDescricao =
-      'Encaixe as cartas no diagrama e descubra as regras secretas';
+      'Encaixe as cartas e descubra as regras.';
 
   static const int minJogadores = 4;
   static const int maxJogadores = 12;

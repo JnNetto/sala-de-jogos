@@ -7,9 +7,12 @@ import '../../data/models/so_uma_estado_remoto.dart';
 import '../../data/models/so_uma_jogador_remoto.dart';
 import '../../data/models/so_uma_rodada_remota.dart';
 import '../../data/models/so_uma_sala.dart';
+import '../../data/services/sala_erro.dart';
 import '../../data/services/so_uma_firebase_service.dart';
 
-class SoUmaSalaProvider extends ChangeNotifier {
+import 'sala_online.dart';
+
+class SoUmaSalaProvider extends ChangeNotifier implements SalaOnline {
   final SoUmaFirebaseService _service;
 
   SoUmaSala? _sala;
@@ -28,11 +31,16 @@ class SoUmaSalaProvider extends ChangeNotifier {
   List<SoUmaJogadorRemoto> get jogadores => _jogadores;
   SoUmaEstadoRemoto? get estado => _estado;
   SoUmaRodadaRemota? get rodada => _rodada;
+  @override
   bool get isLoading => _isLoading;
+  @override
   String? get erro => _erro;
+  @override
   String? get uid => _service.uid;
+  @override
   bool get souHost => _sala != null && _sala!.hostUid == _service.uid;
   bool get souAdivinhador => _estado != null && _estado!.guesserUid == uid;
+  @override
   bool get podeIniciar =>
       souHost &&
       _sala?.status == 'lobby' &&
@@ -44,6 +52,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
     return DateTime.now().difference(entrada) > const Duration(seconds: 3);
   }
 
+  @override
   Future<bool> criarSala(String nome) async {
     return _executar(() async {
       _sala = await _service.criarSala(displayName: nome.trim());
@@ -52,6 +61,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
     });
   }
 
+  @override
   Future<bool> entrarNaSala({
     required String codigo,
     required String nome,
@@ -129,6 +139,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
     });
   }
 
+  @override
   Future<bool> iniciarPartidaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -180,6 +191,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
     );
   }
 
+  @override
   Future<bool> voltarAoLobbyRemoto() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -188,6 +200,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
     return ok;
   }
 
+  @override
   Future<bool> sairDaSalaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -199,6 +212,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
     return ok;
   }
 
+  @override
   Future<bool> removerJogadorRemoto(String targetUid) async {
     final sala = _sala;
     if (sala == null) return false;
@@ -207,6 +221,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
     );
   }
 
+  @override
   Future<bool> abortarPartidaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -302,7 +317,7 @@ class SoUmaSalaProvider extends ChangeNotifier {
       await action();
       return true;
     } on FirebaseFunctionsException catch (e) {
-      _erro = e.message ?? _traduzirErro(e.code);
+      _erro = e.message ?? traduzirErroSala(e.code);
       return false;
     } catch (e) {
       _erro = e.toString();
@@ -310,27 +325,6 @@ class SoUmaSalaProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
-    }
-  }
-
-  String _traduzirErro(String code) {
-    switch (code) {
-      case 'unauthenticated':
-        return 'Não foi possível autenticar.';
-      case 'not-found':
-        return 'Sala não encontrada.';
-      case 'failed-precondition':
-        return 'A sala não está disponível.';
-      case 'permission-denied':
-        return 'Você não pode fazer isso nesta sala.';
-      case 'invalid-argument':
-        return 'Confira os dados e tente novamente.';
-      case 'already-exists':
-        return 'Essa ação já foi registrada.';
-      case 'resource-exhausted':
-        return 'Tente novamente em instantes.';
-      default:
-        return 'Erro ao acessar a sala.';
     }
   }
 }

@@ -1,0 +1,198 @@
+/* Sala de Jogos — generated from tokens.json */
+:root, [data-theme="noite"] {
+  --fundo: #0d0f2b;
+  --ceu-topo: #070822;
+  --ceu-brilho: #1e1d5c;
+  --estrela: #b9b6f2;
+  --superficie: #181b4a;
+  --superficie-elevada: #222664;
+  --superficie-funda: #12143a;
+  --linha: #2b2f70;
+  --linha-forte: #6a6fc4;
+  --contorno: #05061a;
+  --texto: #f1eeff;
+  --texto-2: #b7b5e6;
+  --texto-3: #8a8cc8;
+  --janela-barra: #262a6e;
+  --janela-barra-texto: #d9d6ff;
+  --primaria: #ffc94d;
+  --primaria-labio: #c9922a;
+  --primaria-tinta: #ffc94d;
+  --sobre-cor: #0d0f2b;
+  --marca: #8f7cff;
+  --marca-suave: #221c5a;
+  --foco: var(--marca);
+  --violeta: #8f7cff;
+  --violeta-tinta: #9a8aff;
+  --violeta-suave: #221c5a;
+  --rosa: #ff77b7;
+  --rosa-tinta: #ff77b7;
+  --rosa-suave: #3d1c4f;
+  --menta: #4fe3a6;
+  --menta-tinta: #4fe3a6;
+  --menta-suave: #123b45;
+  --brasa: #ff8f55;
+  --brasa-tinta: #ff8f55;
+  --brasa-suave: #3e2340;
+  --lampada: #ffc94d;
+  --lampada-tinta: #ffc94d;
+  --lampada-suave: #3a2e3e;
+  --luar: #67d6f0;
+  --luar-tinta: #67d6f0;
+  --luar-suave: #143552;
+  --ceu: #5fa2ff;
+  --ceu-tinta: #5fa2ff;
+  --ceu-suave: #1b2b66;
+  --carmim: #ff5d73;
+  --carmim-tinta: #ff5d73;
+  --carmim-suave: #3f1a3c;
+  --jogo-espiao: var(--violeta);
+  --jogo-impostora: var(--rosa);
+  --jogo-quiz: var(--menta);
+  --jogo-resistencia: var(--brasa);
+  --jogo-souma: var(--lampada);
+  --jogo-lobisomem: var(--luar);
+  --jogo-aneis: var(--ceu);
+  --sucesso: var(--menta);
+  --erro: var(--carmim);
+  --aviso: var(--lampada);
+  --info: var(--ceu);
+  --papel-espiao: var(--carmim);
+  --papel-civil: var(--ceu);
+  --anel-palavra: var(--ceu);
+  --anel-atributo: var(--lampada);
+  --anel-contexto: var(--rosa);
+  --anel-nenhum: var(--texto-3);
+  --veu: #070822cc;
+  --sombra-card: inset 0 1px 0 #ffffff14, 0 10px 28px #04051a99;
+  --sombra-flutuante: inset 0 1px 0 #ffffff1f, 0 18px 44px #04051acc;
+  --labio-primaria: 0 4px 0 #c9922a, 0 8px 22px #ffc94d40;
+  --brilho-jogo: 0 0 28px #8f7cff59;
+}
+[data-theme="dia"] {
+  --fundo: #f4eee3;
+  --ceu-topo: #fbf6ec;
+  --ceu-brilho: #efe4f6;
+  --estrela: #d9cdb8;
+  --superficie: #fffbf4;
+  --superficie-elevada: #ffffff;
+  --superficie-funda: #ebe3d4;
+  --linha: #ddd2bf;
+  --linha-forte: #1b1d5c;
+  --contorno: #1b1d5c;
+  --texto: #1b1d5c;
+  --texto-2: #4a4c86;
+  --texto-3: #5f6196;
+  --janela-barra: #2335c7;
+  --janela-barra-texto: #fff6e6;
+  --primaria: #ffc94d;
+  --primaria-labio: #1b1d5c;
+  --primaria-tinta: #8a5a00;
+  --sobre-cor: #1b1d5c;
+  --marca: #5b47f0;
+  --marca-suave: #e9e5ff;
+  --foco: var(--marca);
+  --violeta: #8f7cff;
+  --violeta-tinta: #5b47f0;
+  --violeta-suave: #e9e5ff;
+  --rosa: #ff77b7;
+  --rosa-tinta: #be2a6e;
+  --rosa-suave: #ffe4f0;
+  --menta: #4fe3a6;
+  --menta-tinta: #08744a;
+  --menta-suave: #ddf7ea;
+  --brasa: #ff8f55;
+  --brasa-tinta: #b0440e;
+  --brasa-suave: #ffe6d6;
+  --lampada: #ffc94d;
+  --lampada-tinta: #8a5a00;
+  --lampada-suave: #fff1cc;
+  --luar: #67d6f0;
+  --luar-tinta: #096c88;
+  --luar-suave: #dbf4fa;
+  --ceu: #5fa2ff;
+  --ceu-tinta: #1f5fd6;
+  --ceu-suave: #e0ecff;
+  --carmim: #ff5d73;
+  --carmim-tinta: #c22440;
+  --carmim-suave: #ffe1e5;
+  --jogo-espiao: var(--violeta);
+  --jogo-impostora: var(--rosa);
+  --jogo-quiz: var(--menta);
+  --jogo-resistencia: var(--brasa);
+  --jogo-souma: var(--lampada);
+  --jogo-lobisomem: var(--luar);
+  --jogo-aneis: var(--ceu);
+  --sucesso: var(--menta);
+  --erro: var(--carmim);
+  --aviso: var(--lampada);
+  --info: var(--ceu);
+  --papel-espiao: var(--carmim);
+  --papel-civil: var(--ceu);
+  --anel-palavra: var(--ceu);
+  --anel-atributo: var(--lampada);
+  --anel-contexto: var(--rosa);
+  --anel-nenhum: var(--texto-3);
+  --veu: #1b1d5c99;
+  --sombra-card: 0 3px 0 #1b1d5c;
+  --sombra-flutuante: 0 6px 0 #1b1d5c;
+  --labio-primaria: 0 4px 0 #1b1d5c;
+  --brilho-jogo: none;
+}
+:root {
+  --espaco-1: 4px;
+  --espaco-2: 8px;
+  --espaco-3: 12px;
+  --espaco-4: 16px;
+  --espaco-5: 20px;
+  --espaco-6: 24px;
+  --espaco-8: 32px;
+  --espaco-12: 48px;
+  --espaco-16: 64px;
+  --margem-tela: 20px;
+  --alvo-toque: 48px;
+  --raio-xs: 6px;
+  --raio-sm: 10px;
+  --raio-md: 14px;
+  --raio-lg: 18px;
+  --raio-xl: 24px;
+  --raio-2xl: 32px;
+  --raio-pill: 999px;
+  --borda-fina: 1.5px;
+  --borda-controle: 2px;
+  --borda-foco: 2px;
+  --dur-instante: 80ms;
+  --dur-rapida: 140ms;
+  --dur-base: 220ms;
+  --dur-media: 320ms;
+  --dur-lenta: 450ms;
+  --dur-dramatica: 640ms;
+  --dur-ambiente: 3200ms;
+  --curva-padrao: cubic-bezier(0.2,0,0,1);
+  --curva-entrada: cubic-bezier(0.05,0.7,0.1,1);
+  --curva-saida: cubic-bezier(0.3,0,0.8,0.15);
+  --curva-pulo: cubic-bezier(0.34,1.56,0.64,1);
+  --opac-desabilitado: 0.4;
+  --opac-suave: 0.15;
+  --font-display: "Pixelify Sans", "Nunito", system-ui, sans-serif;
+  --font-texto: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.displayLarge { font-family: var(--font-display); font-size: 40px; line-height: 44px; font-weight: 700; }
+.displayMedium { font-family: var(--font-display); font-size: 32px; line-height: 36px; font-weight: 600; }
+.displaySmall { font-family: var(--font-display); font-size: 26px; line-height: 30px; font-weight: 600; }
+.hud { font-family: var(--font-display); font-size: 20px; line-height: 24px; font-weight: 500; letter-spacing: 1px; }
+.labelMedium { font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 500; letter-spacing: 1px; }
+.labelSmall { font-family: var(--font-display); font-size: 11px; line-height: 14px; font-weight: 500; letter-spacing: 1.2px; }
+.revelacao { font-family: var(--font-texto); font-size: 40px; line-height: 46px; font-weight: 900; letter-spacing: 0.5px; }
+.headlineLarge { font-family: var(--font-texto); font-size: 28px; line-height: 34px; font-weight: 900; letter-spacing: -0.4px; }
+.headlineMedium { font-family: var(--font-texto); font-size: 24px; line-height: 30px; font-weight: 900; letter-spacing: -0.2px; }
+.headlineSmall { font-family: var(--font-texto); font-size: 20px; line-height: 26px; font-weight: 800; }
+.titleLarge { font-family: var(--font-texto); font-size: 18px; line-height: 24px; font-weight: 800; }
+.titleMedium { font-family: var(--font-texto); font-size: 16px; line-height: 22px; font-weight: 800; }
+.titleSmall { font-family: var(--font-texto); font-size: 14px; line-height: 20px; font-weight: 800; }
+.bodyLarge { font-family: var(--font-texto); font-size: 16px; line-height: 24px; font-weight: 600; }
+.bodyMedium { font-family: var(--font-texto); font-size: 14px; line-height: 20px; font-weight: 600; }
+.bodySmall { font-family: var(--font-texto); font-size: 12px; line-height: 16px; font-weight: 700; }
+.labelLarge { font-family: var(--font-texto); font-size: 16px; line-height: 20px; font-weight: 900; letter-spacing: 0.2px; }
+@font-face { font-family: "Pixelify Sans"; src: url("../fontes/PixelifySans-Variable.ttf") format("truetype"); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Nunito"; src: url("../fontes/Nunito-Variable.ttf") format("truetype"); font-weight: 200 1000; font-style: normal; font-display: swap; }

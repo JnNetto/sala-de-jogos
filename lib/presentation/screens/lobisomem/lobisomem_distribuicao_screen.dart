@@ -26,10 +26,7 @@ class _LobisomemDistribuicaoScreenState
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: lobisomemAppBar(
-          context: context,
-          title: 'Revelação de Papéis',
-        ),
+        appBar: lobisomemAppBar(context: context, title: 'Revelação de Papéis'),
         body: Consumer<LobisomemPartidaProvider>(
           builder: (context, provider, _) {
             final partida = provider.partida;
@@ -60,7 +57,9 @@ class _LobisomemDistribuicaoScreenState
                     ),
                     const SizedBox(height: 16),
                     if (precisaLista) ...[
-                      Expanded(child: _ListaEspeciaisPublica(especiais: especiais)),
+                      Expanded(
+                        child: _ListaEspeciaisPublica(especiais: especiais),
+                      ),
                       PrimaryButton(
                         text: 'Começar revelação individual',
                         icon: Icons.visibility,

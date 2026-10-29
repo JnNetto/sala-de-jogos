@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>Deslizante</title></head>
+<body>
+
+<div class="sj-palco col" style="max-width:420px;padding-top:56px">
+  <div class="sj-slider" id="s" style="--p:45%">
+    <div class="sj-slider__trilho"></div><div class="sj-slider__cheio"></div>
+    <div class="sj-slider__marcas"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sj-slider__polegar"></div><div class="sj-slider__balao" id="v">7</div>
+    <input type="range" min="3" max="12" value="7" aria-label="Número de jogadores">
+  </div>
+</div>
+<script>
+var s=document.getElementById('s'),i=s.querySelector('input'),v=document.getElementById('v');
+function up(){var p=(i.value-i.min)/(i.max-i.min);s.style.setProperty('--p','calc('+(p*100)+'% + '+(14-28*p)+'px)');v.textContent=i.value;}
+i.addEventListener('input',up);['pointerdown','touchstart'].forEach(function(e){i.addEventListener(e,function(){s.classList.add('is-arrastando');});});
+['pointerup','touchend','pointercancel','blur'].forEach(function(e){i.addEventListener(e,function(){s.classList.remove('is-arrastando');});});up();
+</script>
+</body>
+</html>

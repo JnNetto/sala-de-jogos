@@ -8,6 +8,7 @@ import '../../data/models/resistencia_privado.dart';
 import '../../data/models/resistencia_proposta_remota.dart';
 import '../../data/models/resistencia_sala.dart';
 import '../../data/services/resistencia_firebase_service.dart';
+import '../../data/services/sala_erro.dart';
 
 class ResistenciaSalaProvider extends ChangeNotifier {
   static const String _ultimaSalaKey = 'resistencia_ultima_sala_id';
@@ -420,7 +421,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
       await action();
       return true;
     } on FirebaseFunctionsException catch (e) {
-      _erro = e.message ?? _traduzirErro(e.code);
+      _erro = e.message ?? traduzirErroSala(e.code);
       return false;
     } catch (e) {
       _erro = e.toString();
@@ -428,27 +429,6 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
-    }
-  }
-
-  String _traduzirErro(String code) {
-    switch (code) {
-      case 'unauthenticated':
-        return 'Não foi possível autenticar.';
-      case 'not-found':
-        return 'Sala não encontrada.';
-      case 'failed-precondition':
-        return 'A sala não está disponível.';
-      case 'permission-denied':
-        return 'Você não pode fazer isso nesta sala.';
-      case 'invalid-argument':
-        return 'Confira os dados e tente novamente.';
-      case 'already-exists':
-        return 'Essa ação já foi registrada.';
-      case 'resource-exhausted':
-        return 'Tente novamente em instantes.';
-      default:
-        return 'Erro ao acessar a sala.';
     }
   }
 }

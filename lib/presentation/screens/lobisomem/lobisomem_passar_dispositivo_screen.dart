@@ -26,11 +26,7 @@ class LobisomemPassarDispositivoScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Spacer(),
-          Icon(
-            icone,
-            size: 100,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          Icon(icone, size: 100, color: Theme.of(context).colorScheme.primary),
           const SizedBox(height: 32),
           Text(
             titulo,

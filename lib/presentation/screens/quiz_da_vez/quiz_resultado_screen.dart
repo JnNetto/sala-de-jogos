@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/quiz_partida_provider.dart';
 import '../../widgets/primary_button.dart';
 import 'quiz_configuracao_screen.dart';
+import '../../navegacao.dart';
 
 class QuizResultadoScreen extends StatelessWidget {
   const QuizResultadoScreen({super.key});
@@ -89,7 +90,7 @@ class QuizResultadoScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (_) => const QuizConfiguracaoScreen(),
                           ),
-                          (r) => r.isFirst,
+                          ehBaseDosJogos,
                         );
                       },
                     ),

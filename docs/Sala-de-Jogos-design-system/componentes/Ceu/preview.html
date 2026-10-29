@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>Ceu</title></head>
+<body>
+
+<div class="sj-ceu" id="ceu" style="height:300px">
+  <div class="sj-varal" id="v" style="position:absolute;left:0;right:0;top:0"></div>
+</div>
+<script>
+function varal(el, cores, acesas, op){
+  op = op || {};
+  var w = el.clientWidth || 600, h = 44, sag = op.sag || 12, n = cores.length;
+  var NS = 'http://www.w3.org/2000/svg';
+  var s = '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><defs><filter id="bl'+(op.id||'')+'" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="5"/></filter></defs>';
+  s += '<path class="fio" d="M0 6 Q '+(w/2)+' '+(6+sag*2)+' '+w+' 6"/>';
+  for (var i=0;i<n;i++){
+    var t=(i+0.5)/n, x=2*(1-t)*t*(w/2)+t*t*w, y=(1-t)*(1-t)*6+2*(1-t)*t*(6+sag*2)+t*t*6;
+    var cls=(acesas===true||(typeof acesas==='number'&&i<acesas))?'acesa':'';
+    if (op.cintila && cls) cls+=' cintila';
+    s += '<g data-i="'+i+'" class="'+cls+'" style="--cor:var(--'+cores[i]+');'+(op.cintila?'--d:'+(i*370%1900)+'ms':'')+'">'
+      + '<circle class="halo" cx="'+x.toFixed(1)+'" cy="'+(y+12).toFixed(1)+'" r="10" filter="url(#bl'+(op.id||'')+')" style="animation-delay:var(--d,0ms)"/>'
+      + '<rect class="soquete" x="'+(x-3).toFixed(1)+'" y="'+(y-1).toFixed(1)+'" width="6" height="5" rx="1.5"/>'
+      + '<ellipse class="bulbo" cx="'+x.toFixed(1)+'" cy="'+(y+11).toFixed(1)+'" rx="5" ry="7"/></g>';
+  }
+  el.innerHTML = s + '</svg>';
+}
+
+var ceu=document.getElementById('ceu');var pos=[[8,30],[22,60],[40,22],[55,74],[70,40],[86,64],[93,20],[14,82],[32,46],[64,88],[78,14],[48,56],[90,84],[5,58],[60,30],[26,90],[83,48],[36,70]];
+pos.forEach(function(p,i){var s=document.createElement('span');s.className='sj-estrela'+(i%3?' p':'')+(i%4===0?' cintila':'');s.style.left=p[0]+'%';s.style.top=p[1]+'%';s.style.animationDelay=(i*430%3200)+'ms';ceu.appendChild(s);});
+var roda=['lampada','rosa','menta','violeta','brasa','luar','ceu'],cs=[];for(var i=0;i<14;i++)cs.push(roda[i%7]);varal(document.getElementById('v'),cs,true,{cintila:true,id:'c',sag:14});
+</script>
+</body>
+</html>

@@ -38,8 +38,7 @@ class _LobisomemDiscussaoScreenState extends State<LobisomemDiscussaoScreen> {
               return const Center(child: Text('Partida não iniciada'));
             }
 
-            final temTimer =
-                partida.configuracao.timerDiscussaoMinutos != null;
+            final temTimer = partida.configuracao.timerDiscussaoMinutos != null;
             final tempoRestante = partida.discussaoSegundosRestantes;
 
             if (temTimer && tempoRestante <= 0 && !_navegou) {
@@ -117,7 +116,9 @@ class _LobisomemDiscussaoScreenState extends State<LobisomemDiscussaoScreen> {
                               if (partida.discussaoPausada)
                                 Text(
                                   'Pausado',
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
                                 ),
                             ],
                           ),

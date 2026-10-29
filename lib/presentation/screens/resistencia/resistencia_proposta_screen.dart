@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/resistencia_constants.dart';
 import '../../../data/models/resistencia_partida.dart';
 import '../../providers/resistencia_partida_provider.dart';
 import '../../widgets/primary_button.dart';
 import 'resistencia_votacao_screen.dart';
+import '../../navegacao.dart';
 
 class ResistenciaPropostaScreen extends StatelessWidget {
   const ResistenciaPropostaScreen({super.key});
@@ -99,7 +101,7 @@ class ResistenciaPropostaScreen extends StatelessWidget {
 
     if (confirmed == true && context.mounted) {
       context.read<ResistenciaPartidaProvider>().limparPartida();
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil(ehBaseDosJogos);
     }
   }
 }
@@ -205,7 +207,10 @@ class _ResumoRodada extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final falhasNecessarias =
-        partida.missaoAtual == 4 && partida.quantidadeJogadores >= 7 ? 2 : 1;
+        ResistenciaConstants.fracassosNecessariosParaFalhar(
+          missao: partida.missaoAtual,
+          quantidadeJogadores: partida.quantidadeJogadores,
+        );
 
     return Card(
       margin: EdgeInsets.zero,

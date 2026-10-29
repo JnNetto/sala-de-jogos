@@ -1,463 +1,249 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/aneis_constants.dart';
+import '../../../core/theme/sala_tokens.dart';
 import '../../../data/models/aneis_jogador_remoto.dart';
 import '../../../data/models/aneis_sala.dart';
 import '../../providers/aneis_sala_provider.dart';
-import '../../widgets/primary_button.dart';
-import 'aneis_sala_router_screen.dart';
+import '../../widgets/sala/botao_opcao.dart';
+import '../../widgets/sala/cartao_config.dart';
+import '../../widgets/sala/jogador_sala.dart';
+import '../../widgets/sala/pressionavel.dart';
+import '../../widgets/sala/sala_online.dart';
 
-class AneisLobbyRemotoScreen extends StatefulWidget {
-  const AneisLobbyRemotoScreen({super.key});
-
-  @override
-  State<AneisLobbyRemotoScreen> createState() => _AneisLobbyRemotoScreenState();
-}
-
-class _AneisLobbyRemotoScreenState extends State<AneisLobbyRemotoScreen> {
-  bool _navegouParaPartida = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Lobby Online'),
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => _sairDaSala(context),
-          ),
-        ),
-        body: SafeArea(
-          child: Consumer<AneisSalaProvider>(
-            builder: (context, provider, _) {
-              final sala = provider.sala;
-              if (sala == null) {
-                return const Center(child: Text('Sala não carregada'));
-              }
-
-              return StreamBuilder<AneisSala?>(
-                stream: provider.observarSalaAtual(),
-                initialData: sala,
-                builder: (context, salaSnapshot) {
-                  final salaAtual = salaSnapshot.data ?? sala;
-                  _navegarSePartidaIniciou(context, salaAtual);
-
-                  return StreamBuilder<List<AneisJogadorRemoto>>(
-                    stream: provider.observarJogadoresAtuais(),
-                    initialData: provider.jogadores,
-                    builder: (context, jogadoresSnapshot) {
-                      final jogadores = jogadoresSnapshot.data ?? const [];
-                      _navegarSeFuiRemovido(
-                        context,
-                        provider,
-                        jogadores,
-                        jogadoresSnapshot.hasData,
-                      );
-
-                      return ListView(
-                        padding: const EdgeInsets.all(24),
-                        children: [
-                          Icon(
-                            Icons.filter_tilt_shift,
-                            size: 84,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            salaAtual.codigo,
-                            style: Theme.of(context).textTheme.displayLarge,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            provider.souHost
-                                ? 'Compartilhe este código com os jogadores.'
-                                : 'Aguarde o host iniciar a partida.',
-                            style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(color: Colors.grey[600]),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
-                          _ComoJogarCard(knowerMode: provider.knowerMode),
-                          const SizedBox(height: 16),
-                          _JogadoresCard(
-                            jogadores: jogadores,
-                            hostUid: salaAtual.hostUid,
-                            meuUid: provider.uid,
-                            souHost: provider.souHost,
-                            onRemover: (uid) =>
-                                _removerJogador(context, provider, uid),
-                          ),
-                          if (provider.souHost) ...[
-                            const SizedBox(height: 16),
-                            _KnowerModeCard(
-                              valor: provider.knowerMode,
-                              knowerUid: provider.knowerUidEscolhido,
-                              jogadores: jogadores,
-                              onChanged: provider.definirKnowerMode,
-                              onKnowerUid: provider.definirKnowerUid,
-                            ),
-                            const SizedBox(height: 16),
-                            _DificuldadeCard(
-                              valor: provider.dificuldade,
-                              onChanged: provider.definirDificuldade,
-                            ),
-                          ],
-                          const SizedBox(height: 24),
-                          if (provider.souHost)
-                            PrimaryButton(
-                              text: 'Iniciar Partida Online',
-                              icon: Icons.play_arrow,
-                              isLoading: provider.isLoading,
-                              onPressed: provider.podeIniciar
-                                  ? () => _iniciar(context, provider)
-                                  : null,
-                            )
-                          else
-                            const _AguardandoHost(),
-                          const SizedBox(height: 24),
-                        ],
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _iniciar(
-    BuildContext context,
-    AneisSalaProvider provider,
-  ) async {
-    final messenger = ScaffoldMessenger.of(context);
-    final ok = await provider.iniciarPartidaRemota();
-    if (!context.mounted) return;
-
-    if (!ok && provider.erro != null) {
-      messenger.showSnackBar(
-        SnackBar(content: Text(provider.erro!), backgroundColor: Colors.red),
-      );
-    }
-  }
-
-  Future<void> _sairDaSala(BuildContext context) async {
-    final provider = context.read<AneisSalaProvider>();
-    final navigator = Navigator.of(context);
-    final messenger = ScaffoldMessenger.of(context);
-    final ok = await provider.sairDaSalaRemota();
-    if (!context.mounted) return;
-    if (ok) {
-      navigator.popUntil((route) => route.isFirst);
-    } else if (provider.erro != null) {
-      messenger.showSnackBar(
-        SnackBar(content: Text(provider.erro!), backgroundColor: Colors.red),
-      );
-    }
-  }
-
-  Future<void> _removerJogador(
-    BuildContext context,
-    AneisSalaProvider provider,
-    String uid,
-  ) async {
-    final messenger = ScaffoldMessenger.of(context);
-    final ok = await provider.removerJogadorRemoto(uid);
-    if (!context.mounted) return;
-    if (!ok && provider.erro != null) {
-      messenger.showSnackBar(
-        SnackBar(content: Text(provider.erro!), backgroundColor: Colors.red),
-      );
-    }
-  }
-
-  void _navegarSeFuiRemovido(
-    BuildContext context,
-    AneisSalaProvider provider,
-    List<AneisJogadorRemoto> jogadores,
-    bool listaCarregada,
-  ) {
-    final uid = provider.uid;
-    if (!listaCarregada || uid == null) return;
-    if (!provider.podeDetectarRemocao) return;
-    if (jogadores.isEmpty) return;
-    if (jogadores.any((jogador) => jogador.uid == uid)) return;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!context.mounted) return;
-      await provider.esquecerUltimaSala();
-      if (!context.mounted) return;
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    });
-  }
-
-  void _navegarSePartidaIniciou(BuildContext context, AneisSala sala) {
-    if (_navegouParaPartida || sala.status != 'playing') return;
-    _navegouParaPartida = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!context.mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const AneisSalaRouterScreen()),
-      );
-    });
-  }
-}
-
-class _ComoJogarCard extends StatelessWidget {
-  final String knowerMode;
-
-  const _ComoJogarCard({required this.knowerMode});
-
-  @override
-  Widget build(BuildContext context) {
-    final knowerHumano = knowerMode != AneisConstants.knowerApp;
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Como jogar', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Text(
-              knowerHumano
-                  ? 'Uma pessoa é sorteada como Knower: vê as regras, recebe cartas aleatórias, coloca 3 pistas e decide onde cada palavra dos outros vai. Os Finders tentam esvaziar a mão acertando a região.'
-                  : 'O próprio jogo é o Knower: ninguém vê as regras. Encaixe uma carta da mão na região certa. Acerte e jogue de novo; erre e a carta vai sozinha para o lugar certo.',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _KnowerModeCard extends StatelessWidget {
-  final String valor;
-  final String? knowerUid;
-  final List<AneisJogadorRemoto> jogadores;
-  final ValueChanged<String> onChanged;
-  final ValueChanged<String?> onKnowerUid;
-
-  const _KnowerModeCard({
-    required this.valor,
-    required this.knowerUid,
+/// O lobby do Nos Anéis: o comum das salas online e, para o host, quem
+/// sabe as regras e a dificuldade.
+class AneisLobbyRemotoScreen extends StatelessWidget {
+  const AneisLobbyRemotoScreen({
+    super.key,
+    required this.sala,
     required this.jogadores,
-    required this.onChanged,
-    required this.onKnowerUid,
   });
 
+  final AneisSala sala;
+  final List<AneisJogadorRemoto> jogadores;
+
   @override
   Widget build(BuildContext context) {
-    final uidsValidos = jogadores.map((jogador) => jogador.uid).toSet();
-    final selecionado =
-        knowerUid != null && uidsValidos.contains(knowerUid) ? knowerUid : null;
+    return LobbyOnline(
+      nomeDoJogo: AneisConstants.jogoNome,
+      matiz: Matiz.ceu,
+      sala: context.watch<AneisSalaProvider>(),
+      codigo: sala.codigo,
+      hostUid: sala.hostUid,
+      jogadores: [
+        for (final (i, j) in jogadores.indexed)
+          (uid: j.uid, nome: j.displayName, indice: j.seat ?? i),
+      ],
+      minimo: AneisConstants.minJogadores,
+      maximo: AneisConstants.maxJogadores,
+      enquantoEspera:
+          'Cada anel tem uma regra secreta. Na sua vez, coloque uma carta '
+          'da mão na região que achar certa. Acertou, joga de novo. Quem '
+          'esvaziar a mão primeiro vence.',
+      ajustesDoHost: _AjustesDoHost(jogadores: jogadores),
+    );
+  }
+}
 
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Quem é o Knower',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 12),
-            SegmentedButton<String>(
-              showSelectedIcon: false,
-              segments: const [
-                ButtonSegment(
-                  value: AneisConstants.knowerJogador,
-                  label: Text('Jogador'),
-                ),
-                ButtonSegment(
-                  value: AneisConstants.knowerApp,
-                  label: Text('O jogo'),
-                ),
-              ],
-              selected: {valor},
-              onSelectionChanged: (selecao) => onChanged(selecao.first),
-            ),
-            if (valor == AneisConstants.knowerJogador) ...[
-              const SizedBox(height: 12),
-              InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Pessoa',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String?>(
-                    isExpanded: true,
-                    value: selecionado,
-                    items: [
-                      const DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text('Aleatório'),
-                      ),
-                      for (final jogador in jogadores)
-                        DropdownMenuItem<String?>(
-                          value: jogador.uid,
-                          child: Text(jogador.displayName),
+/// O "Como vai ser?" do host: quem sabe as regras e a dificuldade.
+class _AjustesDoHost extends StatelessWidget {
+  const _AjustesDoHost({required this.jogadores});
+
+  final List<AneisJogadorRemoto> jogadores;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.cores;
+    final texto = Theme.of(context).textTheme;
+    final luz = c.luz(Matiz.ceu);
+    final provider = context.watch<AneisSalaProvider>();
+    final modo = provider.knowerMode;
+    final porJogador = modo == AneisConstants.knowerJogador;
+    final escolhido = provider.knowerUidEscolhido;
+    final valido = jogadores.any((j) => j.uid == escolhido) ? escolhido : null;
+
+    void escolher(VoidCallback mudar) {
+      HapticFeedback.selectionClick();
+      mudar();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Como vai ser?', style: texto.headlineSmall),
+        const SizedBox(height: Espaco.e3),
+        CartaoConfig(
+          icone: Symbols.visibility_rounded,
+          titulo: 'Quem sabe as regras',
+          subtitulo: AneisConstants.descricaoKnowerMode(modo),
+          luz: luz,
+          controle: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: BotaoOpcao(
+                      rotulo: 'Um jogador',
+                      icone: Symbols.person_rounded,
+                      selecionado: porJogador,
+                      luz: luz,
+                      aoTocar: () => escolher(
+                        () => provider.definirKnowerMode(
+                          AneisConstants.knowerJogador,
                         ),
-                    ],
-                    onChanged: onKnowerUid,
-                  ),
-                ),
-              ),
-            ],
-            const SizedBox(height: 12),
-            Text(
-              AneisConstants.descricaoKnowerMode(valor),
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DificuldadeCard extends StatelessWidget {
-  final String valor;
-  final ValueChanged<String> onChanged;
-
-  const _DificuldadeCard({required this.valor, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Dificuldade', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 12),
-            SegmentedButton<String>(
-              segments: [
-                for (final item in AneisConstants.dificuldades)
-                  ButtonSegment(
-                    value: item,
-                    label: Text(AneisConstants.rotuloDificuldade(item)),
-                  ),
-              ],
-              selected: {valor},
-              onSelectionChanged: (selecao) => onChanged(selecao.first),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _JogadoresCard extends StatelessWidget {
-  final List<AneisJogadorRemoto> jogadores;
-  final String hostUid;
-  final String? meuUid;
-  final bool souHost;
-  final ValueChanged<String> onRemover;
-
-  const _JogadoresCard({
-    required this.jogadores,
-    required this.hostUid,
-    required this.meuUid,
-    required this.souHost,
-    required this.onRemover,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Jogadores',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Text('${jogadores.length}/${AneisConstants.maxJogadores}'),
-              ],
-            ),
-            const SizedBox(height: 12),
-            if (jogadores.isEmpty)
-              const Text('Nenhum jogador conectado ainda.')
-            else
-              for (final jogador in jogadores)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    child: Text(
-                      jogador.seat != null ? '${jogador.seat! + 1}' : '?',
+                      ),
                     ),
                   ),
-                  title: Text(jogador.displayName),
-                  subtitle: jogador.uid == meuUid ? const Text('Você') : null,
-                  trailing: jogador.uid == hostUid
-                      ? const Chip(label: Text('Host'))
-                      : souHost
-                      ? IconButton(
-                          tooltip: 'Remover jogador',
-                          icon: const Icon(Icons.person_remove),
-                          onPressed: () => onRemover(jogador.uid),
-                        )
-                      : null,
-                ),
-            if (jogadores.length < AneisConstants.minJogadores) ...[
-              const SizedBox(height: 8),
-              Text(
-                'Mínimo de ${AneisConstants.minJogadores} jogadores para iniciar.',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: Colors.orange),
+                  const SizedBox(width: Espaco.e2),
+                  Expanded(
+                    child: BotaoOpcao(
+                      rotulo: 'O jogo',
+                      icone: Symbols.smart_toy_rounded,
+                      selecionado: !porJogador,
+                      luz: luz,
+                      aoTocar: () => escolher(
+                        () => provider.definirKnowerMode(
+                          AneisConstants.knowerApp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              if (porJogador) ...[
+                const SizedBox(height: Espaco.e4),
+                Text(
+                  'QUEM VAI SER',
+                  style: texto.labelSmall?.copyWith(color: c.texto3),
+                ),
+                const SizedBox(height: Espaco.e2),
+                Wrap(
+                  spacing: Espaco.e2,
+                  runSpacing: Espaco.e2,
+                  children: [
+                    _Escolha(
+                      selecionada: valido == null,
+                      aoTocar: () =>
+                          escolher(() => provider.definirKnowerUid(null)),
+                      inicio: Icon(
+                        Symbols.casino_rounded,
+                        size: 20,
+                        color: valido == null ? luz.tinta : c.texto2,
+                      ),
+                      rotulo: 'Sorteio',
+                    ),
+                    for (final (i, j) in jogadores.indexed)
+                      _Escolha(
+                        selecionada: valido == j.uid,
+                        aoTocar: () =>
+                            escolher(() => provider.definirKnowerUid(j.uid)),
+                        inicio: AvatarJogador(
+                          nome: j.displayName,
+                          indice: j.seat ?? i,
+                          tamanho: 24,
+                        ),
+                        rotulo: j.displayName,
+                      ),
+                  ],
+                ),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: Espaco.e3),
+        CartaoConfig(
+          icone: Symbols.signal_cellular_alt_rounded,
+          titulo: 'Dificuldade',
+          subtitulo: 'Quanto mais difícil, mais escondidas as regras.',
+          luz: luz,
+          controle: Row(
+            children: [
+              for (final (i, nivel) in AneisConstants.dificuldades.indexed) ...[
+                if (i > 0) const SizedBox(width: Espaco.e2),
+                Expanded(
+                  child: BotaoOpcao(
+                    rotulo: AneisConstants.rotuloDificuldade(nivel),
+                    semantica:
+                        'Dificuldade ${AneisConstants.rotuloDificuldade(nivel)}',
+                    selecionado: provider.dificuldade == nivel,
+                    luz: luz,
+                    aoTocar: () =>
+                        escolher(() => provider.definirDificuldade(nivel)),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _AguardandoHost extends StatelessWidget {
-  const _AguardandoHost();
+/// Uma pílula de escolha de pessoa (ou do sorteio).
+class _Escolha extends StatelessWidget {
+  const _Escolha({
+    required this.selecionada,
+    required this.aoTocar,
+    required this.inicio,
+    required this.rotulo,
+  });
+
+  final bool selecionada;
+  final VoidCallback aoTocar;
+  final Widget inicio;
+  final String rotulo;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                'Aguardando o host iniciar.',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+    final c = context.cores;
+    final luz = c.luz(Matiz.ceu);
+    return Semantics(
+      button: true,
+      selected: selecionada,
+      label: rotulo,
+      excludeSemantics: true,
+      child: Pressionavel(
+        onTap: aoTocar,
+        escala: .96,
+        child: AnimatedContainer(
+          duration: Movimento.base,
+          curve: Movimento.padrao,
+          height: 40,
+          padding: const EdgeInsets.only(left: 8, right: Espaco.e3),
+          decoration: BoxDecoration(
+            color: selecionada ? luz.suave : c.superficieFunda,
+            borderRadius: BorderRadius.circular(Raio.pill),
+            border: Border.all(
+              color: selecionada
+                  ? (c.ehDia ? c.contorno : luz.cor)
+                  : (c.ehDia ? c.contorno : c.linha),
+              width: selecionada ? 2 : c.bordaControle,
             ),
-          ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              inicio,
+              const SizedBox(width: Espaco.e2),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 120),
+                child: Text(
+                  rotulo,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: selecionada ? luz.tinta : c.texto2,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

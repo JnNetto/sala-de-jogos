@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>CartaRevelacao</title></head>
+<body>
+
+<div class="sj-palco col" style="align-items:center;gap:14px">
+  <div class="sj-carta sj-c-carmim is-espiao" id="carta">
+    <div class="sj-carta__giro">
+      <div class="sj-carta__face sj-carta__verso sj-c-violeta">
+        <span class="sj-rotulo">Jogador 3 de 8</span>
+        <div style="font-family:var(--font-display);font-size:32px;line-height:36px;font-weight:600">Bruno</div>
+        <p style="margin:0;color:var(--texto-2);font-size:14px;line-height:20px">Ninguém olhando? Segure o botão.</p>
+        <button class="sj-segurar" id="seg" aria-label="Segure para revelar seu papel"><svg viewBox="0 0 112 112"><circle class="trilho" cx="56" cy="56" r="51"/><circle class="anel" cx="56" cy="56" r="51"/></svg><span class="ms cheio">fingerprint</span></button>
+      </div>
+      <div class="sj-carta__face sj-carta__frente">
+        <span class="sj-selo"><span class="ms cheio">visibility_off</span>Você é o espião</span>
+        <span class="ms cheio icone-papel">visibility_off</span>
+        <p style="margin:0;color:var(--texto-2);font-size:16px;line-height:24px;font-weight:600">Descubra o lugar sem se entregar.</p>
+        <button class="sj-btn sj-btn--secundario sj-btn--compacto" id="esc">Esconder e passar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var c=document.getElementById('carta'),b=document.getElementById('seg'),anel=b.querySelector('.anel'),t0=0,raf=0,DUR=600;
+function loop(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/DUR);anel.style.strokeDashoffset=320*(1-p);if(p<1){raf=requestAnimationFrame(loop)}else{c.classList.add('is-virada');parar(true);}}
+function ini(e){e.preventDefault();b.classList.add('is-segurando');t0=0;raf=requestAnimationFrame(loop);}
+function parar(ok){cancelAnimationFrame(raf);b.classList.remove('is-segurando');if(!ok){anel.style.transition='stroke-dashoffset 220ms cubic-bezier(.3,0,.8,.15)';anel.style.strokeDashoffset=320;setTimeout(function(){anel.style.transition=''},230);}}
+b.addEventListener('pointerdown',ini);['pointerup','pointerleave','pointercancel'].forEach(function(e){b.addEventListener(e,function(){if(!c.classList.contains('is-virada'))parar(false)})});
+document.getElementById('esc').onclick=function(){c.classList.remove('is-virada');anel.style.strokeDashoffset=320;};
+</script>
+</body>
+</html>

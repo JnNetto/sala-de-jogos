@@ -8,6 +8,7 @@ import '../../../data/models/resistencia_partida.dart';
 import '../../providers/resistencia_partida_provider.dart';
 import '../../widgets/primary_button.dart';
 import 'resistencia_configuracao_screen.dart';
+import '../../navegacao.dart';
 
 class ResistenciaResultadoScreen extends StatelessWidget {
   const ResistenciaResultadoScreen({super.key});
@@ -48,7 +49,7 @@ class ResistenciaResultadoScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (_) => const ResistenciaConfiguracaoScreen(),
                         ),
-                        (route) => route.isFirst,
+                        ehBaseDosJogos,
                       );
                     },
                   ),
@@ -56,7 +57,7 @@ class ResistenciaResultadoScreen extends StatelessWidget {
                   OutlinedButton.icon(
                     onPressed: () {
                       provider.limparPartida();
-                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).popUntil(ehBaseDosJogos);
                     },
                     icon: const Icon(Icons.home),
                     label: const Text('Voltar ao Início'),

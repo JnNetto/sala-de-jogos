@@ -4,6 +4,7 @@ import '../../providers/quiz_partida_provider.dart';
 import '../../widgets/primary_button.dart';
 import 'quiz_categoria_screen.dart';
 import 'quiz_configuracao_screen.dart';
+import '../../navegacao.dart';
 
 class QuizPassagemScreen extends StatelessWidget {
   const QuizPassagemScreen({super.key});
@@ -118,7 +119,7 @@ class QuizPassagemScreen extends StatelessWidget {
       provider.encerrarPartida();
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const QuizConfiguracaoScreen()),
-        (r) => r.isFirst,
+        ehBaseDosJogos,
       );
     }
   }

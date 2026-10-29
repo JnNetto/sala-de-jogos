@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>Transicoes</title></head>
+<body>
+
+<div class="sj-palco" style="align-items:flex-start;gap:24px">
+  <div class="sj-tel sj-ceu" id="tel">
+    <div id="home" style="position:absolute;inset:0;padding:56px 16px 16px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-family:var(--font-display);font-size:28px;line-height:32px;font-weight:700;margin:0 4px 10px">Sala de Jogos</div>
+      <button class="sj-cartao-jogo sj-c-violeta" id="c1" style="min-height:80px;padding:12px"><span class="sj-poco p"><span class="ms">visibility_off</span></span><span class="sj-cartao-jogo__txt"><b style="font-size:16px">Quem é o Espião?</b><small style="font-size:12px;line-height:16px">Um de vocês não sabe onde está.</small></span><span class="ms seta">chevron_right</span></button>
+      <button class="sj-cartao-jogo sj-c-rosa" style="min-height:80px;padding:12px"><span class="sj-poco p"><span class="ms">help</span></span><span class="sj-cartao-jogo__txt"><b style="font-size:16px">Pergunta Impostora</b><small style="font-size:12px;line-height:16px">Alguém respondeu outra pergunta.</small></span><span class="ms seta">chevron_right</span></button>
+    </div>
+    <div id="jogo" style="position:absolute;display:none;background:var(--superficie);overflow:hidden">
+      <div id="jogoConteudo" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;opacity:0;text-align:center" class="sj-c-violeta">
+        <span class="sj-poco" style="width:96px;height:96px;border-radius:28px"><span class="ms" style="font-size:52px">visibility_off</span></span>
+        <div style="font-family:var(--font-display);font-size:26px;line-height:30px;font-weight:600">Quem é o Espião?</div>
+        <div style="color:var(--texto-2);font-size:13px;line-height:18px">Um de vocês não sabe onde está.</div>
+        <button class="sj-btn sj-btn--jogo sj-btn--bloco" id="passo">Jogar</button>
+        <button class="sj-btn sj-btn--fantasma sj-btn--compacto" id="volta">Voltar</button>
+      </div>
+    </div>
+    <div id="etapa" style="position:absolute;inset:0;display:none;padding:56px 20px 20px" class="sj-ceu sj-c-violeta">
+      <div style="font-size:22px;line-height:28px;font-weight:900">Quem vai jogar?</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px"><span class="sj-chip"><span class="sj-chip__avatar" style="--c:var(--violeta)">A</span><span class="sj-chip__nome">Ana</span></span><span class="sj-chip"><span class="sj-chip__avatar" style="--c:var(--rosa)">B</span><span class="sj-chip__nome">Bruno</span></span></div>
+      <button class="sj-btn sj-btn--secundario sj-btn--compacto" id="voltaEtapa" style="position:absolute;left:20px;bottom:20px">Voltar</button>
+    </div>
+    <div id="dlg" class="sj-veu" style="display:none;opacity:0;transition:opacity 220ms"><section class="sj-janela sj-dialogo" id="dlgJ"><header class="sj-janela__barra"><span class="sj-janela__luzes"><i></i><i></i><i></i></span><span class="sj-janela__titulo">Atenção</span></header><div class="sj-janela__corpo" style="padding:18px"><h3 style="font-size:18px">Abortar a partida?</h3><p style="margin-bottom:14px">A rodada atual será perdida.</p><button class="sj-btn sj-btn--perigo sj-btn--bloco sj-btn--compacto" id="fechaDlg">Abortar</button></div></section></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:240px">
+    <div class="sj-rotulo">Experimente</div>
+    <button class="sj-btn sj-btn--secundario sj-btn--compacto" id="b1">Card → home do jogo</button>
+    <button class="sj-btn sj-btn--secundario sj-btn--compacto" id="b2">Próximo passo (eixo X)</button>
+    <button class="sj-btn sj-btn--secundario sj-btn--compacto" id="b3">Abrir diálogo</button>
+    <p style="font-size:13px;line-height:18px;color:var(--texto-2);margin:6px 0 0">Container transform: 450 ms. Eixo compartilhado X: 320 ms, 30 px. Diálogo: 320 ms a partir de 0,9.</p>
+  </div>
+</div>
+<script>
+var tel=document.getElementById('tel'),home=document.getElementById('home'),jogo=document.getElementById('jogo'),jc=document.getElementById('jogoConteudo'),c1=document.getElementById('c1'),etapa=document.getElementById('etapa');
+var EM='cubic-bezier(0.2,0,0,1)',IN='cubic-bezier(0.05,0.7,0.1,1)',OUT='cubic-bezier(0.3,0,0.8,0.15)';
+function abrirJogo(){var r=c1.getBoundingClientRect(),t=tel.getBoundingClientRect();jogo.style.display='block';var from={left:r.left-t.left+'px',top:r.top-t.top+'px',width:r.width+'px',height:r.height+'px',borderRadius:'24px'},to={left:'0px',top:'0px',width:t.width+'px',height:t.height+'px',borderRadius:'0px'};
+jogo.animate([from,to],{duration:450,easing:EM,fill:'forwards'});home.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.94)'}],{duration:150,easing:OUT,fill:'forwards'});jc.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'none'}],{duration:300,delay:150,easing:IN,fill:'forwards'});}
+function fecharJogo(){var r=c1.getBoundingClientRect(),t=tel.getBoundingClientRect();jc.animate([{opacity:1},{opacity:0}],{duration:120,easing:OUT,fill:'forwards'});var a=jogo.animate([{left:'0px',top:'0px',width:t.width+'px',height:t.height+'px',borderRadius:'0px'},{left:r.left-t.left+'px',top:r.top-t.top+'px',width:r.width+'px',height:r.height+'px',borderRadius:'24px'}],{duration:380,easing:EM,fill:'forwards'});home.animate([{opacity:0,transform:'scale(.94)'},{opacity:1,transform:'scale(1)'}],{duration:300,delay:120,easing:IN,fill:'forwards'});a.onfinish=function(){jogo.style.display='none'};}
+function passo(dir){var a=dir>0?jogo:etapa,b=dir>0?etapa:jogo;b.style.display='block';a.animate([{opacity:1,transform:'translateX(0)'},{opacity:0,transform:'translateX('+(-30*dir)+'px)'}],{duration:90,easing:OUT,fill:'forwards'});b.animate([{opacity:0,transform:'translateX('+(30*dir)+'px)'},{opacity:1,transform:'translateX(0)'}],{duration:230,delay:90,easing:IN,fill:'forwards'}).onfinish=function(){if(dir<0)etapa.style.display='none';};if(dir<0){jogo.style.display='block';}}
+document.getElementById('b1').onclick=function(){if(jogo.style.display==='block'&&etapa.style.display!=='block'){fecharJogo()}else if(etapa.style.display!=='block'){abrirJogo()}};
+c1.onclick=abrirJogo;document.getElementById('volta').onclick=fecharJogo;
+document.getElementById('passo').onclick=function(){passo(1)};document.getElementById('voltaEtapa').onclick=function(){passo(-1)};
+document.getElementById('b2').onclick=function(){if(jogo.style.display!=='block'){abrirJogo();setTimeout(function(){passo(1)},500)}else if(etapa.style.display!=='block'){passo(1)}else{passo(-1)}};
+var dlg=document.getElementById('dlg'),dj=document.getElementById('dlgJ');
+document.getElementById('b3').onclick=function(){dlg.style.display='grid';requestAnimationFrame(function(){dlg.style.opacity=1});dj.animate([{opacity:0,transform:'scale(.9) translateY(8px)'},{opacity:1,transform:'none'}],{duration:320,easing:IN,fill:'forwards'})};
+document.getElementById('fechaDlg').onclick=function(){dlg.style.opacity=0;dj.animate([{opacity:1,transform:'none'},{opacity:0,transform:'scale(.96)'}],{duration:140,easing:OUT,fill:'forwards'});setTimeout(function(){dlg.style.display='none'},220)};
+</script>
+</body>
+</html>

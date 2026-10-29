@@ -347,10 +347,7 @@ class _AcaoLobisomem extends StatelessWidget {
           child: Column(
             children: [
               for (final alvo in alvos)
-                RadioListTile<String>(
-                  title: Text(alvo.nome),
-                  value: alvo.id,
-                ),
+                RadioListTile<String>(title: Text(alvo.nome), value: alvo.id),
               const RadioListTile<String>(
                 title: Text('Desistir de atacar'),
                 value: '__desistir__',
@@ -420,10 +417,7 @@ class _AcaoVidente extends StatelessWidget {
           child: Column(
             children: [
               for (final alvo in alvos)
-                RadioListTile<String>(
-                  title: Text(alvo.nome),
-                  value: alvo.id,
-                ),
+                RadioListTile<String>(title: Text(alvo.nome), value: alvo.id),
             ],
           ),
         ),

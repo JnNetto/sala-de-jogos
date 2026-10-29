@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>Cronometro</title></head>
+<body>
+
+<div class="sj-palco">
+  <span class="sj-cronometro"><span class="ms">timer</span><span class="sj-digitos" id="d1"></span></span>
+  <span class="sj-cronometro is-atencao"><span class="ms">timer</span><span class="sj-digitos" id="d2"></span></span>
+  <span class="sj-cronometro is-critico"><span class="ms">timer</span><span class="sj-digitos" id="d3"></span></span>
+</div>
+<script>
+function fmt(el,s){var m=Math.floor(s/60),ss=s%60,t=(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;el.innerHTML=t.split('').map(function(ch){return '<span'+(ch===':'?' class="dp"':'')+'>'+ch+'</span>'}).join('');}
+var a=125,b=9,c=4;function up(){fmt(d1,a);fmt(d2,b);fmt(d3,c);a=a>0?a-1:125;b=b>5?b-1:10;c=c>0?c-1:5;}var d1=document.getElementById('d1'),d2=document.getElementById('d2'),d3=document.getElementById('d3');up();setInterval(up,1000);
+</script>
+</body>
+</html>

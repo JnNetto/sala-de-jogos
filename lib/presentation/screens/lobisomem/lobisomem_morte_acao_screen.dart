@@ -100,8 +100,7 @@ class _TelaMorte extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final precisaEscolherAlvo =
-        morto.ehCacador && partida.vivos.isNotEmpty;
+    final precisaEscolherAlvo = morto.ehCacador && partida.vivos.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.all(24),

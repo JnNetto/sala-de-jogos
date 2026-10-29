@@ -82,7 +82,9 @@ class LobisomemPartida {
   }
 
   List<LobisomemJogador> get lobisomensVivos {
-    return vivos.where((jogador) => jogador.ehLobisomem).toList(growable: false);
+    return vivos
+        .where((jogador) => jogador.ehLobisomem)
+        .toList(growable: false);
   }
 
   List<LobisomemJogador> get aldeiaViva {
@@ -139,9 +141,7 @@ class LobisomemPartida {
   String nomePorId(String id) => jogadorPorId(id).nome;
 
   List<String> nomesPorIds(List<String> ids) {
-    return [
-      for (final id in ids) nomePorId(id),
-    ];
+    return [for (final id in ids) nomePorId(id)];
   }
 
   LobisomemPartida copyWith({

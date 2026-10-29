@@ -120,7 +120,10 @@ class AneisFirebaseService {
       if (!snapshot.exists || data == null) return const [];
       return (data['coisas'] as List<dynamic>? ?? const [])
           .whereType<Map>()
-          .map((item) => AneisCartaPublica.fromMap(Map<String, dynamic>.from(item)))
+          .map(
+            (item) =>
+                AneisCartaPublica.fromMap(Map<String, dynamic>.from(item)),
+          )
           .toList(growable: false);
     });
   }
@@ -173,10 +176,7 @@ class AneisFirebaseService {
   }) async {
     await garantirLoginAnonimo();
     final callable = _functions.httpsCallable('aneisJudgePlacement');
-    await callable.call<void>({
-      'roomId': roomId,
-      'regiao': regiao,
-    });
+    await callable.call<void>({'roomId': roomId, 'regiao': regiao});
   }
 
   Future<void> desfazerJulgamento(String roomId) async {

@@ -11,6 +11,19 @@ import {
   escolherPistasIniciais,
   regiaoDe,
 } from "./aneisAvaliador";
+import {
+  criarSala,
+  entrarSala,
+  expulsarJogador,
+  normalizeCode,
+  normalizeDisplayName,
+  requireRoomId,
+  requireTargetUid,
+  requireUid,
+  sairSala,
+  shuffle,
+  type SalaLobby,
+} from "./salaLobby";
 
 const region = "southamerica-east1";
 const MIN_JOGADORES = 2;
@@ -33,6 +46,13 @@ type CartaPublica = {id: string; texto: string};
 
 type CartaTabuleiro = {coisaId: string; texto: string; regiao: string};
 
+const aneisLobby: SalaLobby = {
+  rooms: "aneisRooms",
+  codes: "aneisRoomCodes",
+  maxPlayers: MAX_JOGADORES,
+  playerExtra: {maoCount: 0},
+};
+
 let bancoCache: Banco | undefined;
 
 function carregarBanco(): Banco {
@@ -40,60 +60,6 @@ function carregarBanco(): Banco {
     bancoCache = require("./data/aneis_banco.json") as Banco;
   }
   return bancoCache;
-}
-
-function requireUid(uid: string | undefined): string {
-  if (!uid) {
-    throw new HttpsError("unauthenticated", "Faça login para continuar");
-  }
-  return uid;
-}
-
-function normalizeDisplayName(value: unknown): string {
-  if (typeof value !== "string") {
-    throw new HttpsError("invalid-argument", "Nome inválido");
-  }
-  const name = value.trim();
-  if (name.length < 1 || name.length > 24) {
-    throw new HttpsError("invalid-argument", "Nome deve ter 1 a 24 caracteres");
-  }
-  return name;
-}
-
-function normalizeCode(value: unknown): string {
-  if (typeof value !== "string") {
-    throw new HttpsError("invalid-argument", "Código inválido");
-  }
-  const code = value.trim().toUpperCase();
-  if (!/^[A-Z0-9]{4,6}$/.test(code)) {
-    throw new HttpsError("invalid-argument", "Código inválido");
-  }
-  return code;
-}
-
-function requireRoomId(value: unknown): string {
-  if (typeof value !== "string" || value.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Sala inválida");
-  }
-  return value.trim();
-}
-
-function createRoomCode(): string {
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "";
-  for (let i = 0; i < 4; i++) {
-    code += alphabet[Math.floor(Math.random() * alphabet.length)];
-  }
-  return code;
-}
-
-function shuffle<T>(items: T[]): T[] {
-  const list = [...items];
-  for (let i = list.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [list[j], list[i]] = [list[i], list[j]];
-  }
-  return list;
 }
 
 function orderedSeats(players: QuerySnapshot): PlayerSeat[] {
@@ -229,185 +195,31 @@ function revelarRegras(regras: Regra[], aneis: AnelPublico[]) {
 export const aneisCreateRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const displayName = normalizeDisplayName(req.data?.displayName);
-
-  for (let attempt = 0; attempt < 8; attempt++) {
-    const code = createRoomCode();
-    const codeRef = db.doc(`aneisRoomCodes/${code}`);
-    const roomRef = db.collection("aneisRooms").doc();
-    const playerRef = roomRef.collection("players").doc(uid);
-
-    try {
-      await db.runTransaction(async (tx) => {
-        const codeDoc = await tx.get(codeRef);
-        if (codeDoc.exists) {
-          throw new HttpsError("already-exists", "Código já existe");
-        }
-
-        tx.set(roomRef, {
-          code,
-          hostUid: uid,
-          status: "lobby",
-          playerCount: 1,
-          createdAt: FieldValue.serverTimestamp(),
-          updatedAt: FieldValue.serverTimestamp(),
-        });
-        tx.set(playerRef, {
-          displayName,
-          seat: null,
-          maoCount: 0,
-          joinedAt: FieldValue.serverTimestamp(),
-        });
-        tx.set(codeRef, {
-          roomId: roomRef.id,
-          createdAt: FieldValue.serverTimestamp(),
-        });
-      });
-
-      return {roomId: roomRef.id, code};
-    } catch (error) {
-      if (error instanceof HttpsError && error.code === "already-exists") {
-        continue;
-      }
-      throw error;
-    }
-  }
-
-  throw new HttpsError("resource-exhausted", "Não foi possível gerar código");
+  return criarSala(aneisLobby, uid, displayName);
 });
 
 export const aneisJoinRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const displayName = normalizeDisplayName(req.data?.displayName);
   const code = normalizeCode(req.data?.code);
-
-  let roomId = "";
-
-  await db.runTransaction(async (tx) => {
-    const codeDoc = await tx.get(db.doc(`aneisRoomCodes/${code}`));
-    if (!codeDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-
-    roomId = codeDoc.get("roomId") as string;
-    const roomRef = db.doc(`aneisRooms/${roomId}`);
-    const playerRef = db.doc(`aneisRooms/${roomId}/players/${uid}`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Partida já iniciada");
-    }
-    if (!playerDoc.exists && (roomDoc.get("playerCount") as number) >= MAX_JOGADORES) {
-      throw new HttpsError("failed-precondition", "Sala cheia");
-    }
-
-    tx.set(playerRef, {
-      displayName,
-      seat: null,
-      maoCount: 0,
-      joinedAt: FieldValue.serverTimestamp(),
-    }, {merge: true});
-
-    if (!playerDoc.exists) {
-      tx.update(roomRef, {
-        playerCount: FieldValue.increment(1),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-    }
-  });
-
+  const roomId = await entrarSala(aneisLobby, uid, displayName, code);
   return {roomId};
 });
 
 export const aneisLeaveRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const roomId = requireRoomId(req.data?.roomId);
-
-  await db.runTransaction(async (tx) => {
-    const roomRef = db.doc(`aneisRooms/${roomId}`);
-    const playerRef = db.doc(`aneisRooms/${roomId}/players/${uid}`);
-    const playersRef = db.collection(`aneisRooms/${roomId}/players`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-    const playersSnap = await tx.get(playersRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (!playerDoc.exists) {
-      throw new HttpsError("permission-denied", "Você não está na sala");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Só é possível sair no lobby");
-    }
-
-    const remaining = playersSnap.docs.filter((doc) => doc.id !== uid);
-    tx.delete(playerRef);
-
-    if (remaining.length === 0) {
-      tx.update(roomRef, {
-        playerCount: 0,
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-      return;
-    }
-
-    const hostUid = roomDoc.get("hostUid") as string;
-    tx.update(roomRef, {
-      hostUid: hostUid === uid ? remaining[0].id : hostUid,
-      playerCount: remaining.length,
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  });
-
+  await sairSala(aneisLobby, uid, roomId);
   return {ok: true};
 });
 
 export const aneisRemovePlayer = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const roomId = requireRoomId(req.data?.roomId);
-  const targetUid = req.data?.targetUid;
-  if (typeof targetUid !== "string" || targetUid.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Jogador inválido");
-  }
-
-  await db.runTransaction(async (tx) => {
-    const roomRef = db.doc(`aneisRooms/${roomId}`);
-    const playerRef = db.doc(`aneisRooms/${roomId}/players/${targetUid}`);
-    const playersRef = db.collection(`aneisRooms/${roomId}/players`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-    const playersSnap = await tx.get(playersRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (roomDoc.get("hostUid") !== uid) {
-      throw new HttpsError("permission-denied", "Só o host pode remover");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Só é possível remover no lobby");
-    }
-    if (targetUid === uid) {
-      throw new HttpsError("invalid-argument", "Host não pode remover a si mesmo");
-    }
-    if (!playerDoc.exists) {
-      throw new HttpsError("not-found", "Jogador não encontrado");
-    }
-
-    tx.delete(playerRef);
-    tx.update(roomRef, {
-      playerCount: Math.max(0, playersSnap.size - 1),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  });
-
+  const targetUid = requireTargetUid(req.data?.targetUid);
+  await expulsarJogador(aneisLobby, uid, roomId, targetUid);
   return {ok: true};
 });
-
 export const aneisStartGame = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const roomId = requireRoomId(req.data?.roomId);

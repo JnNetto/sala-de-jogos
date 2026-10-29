@@ -1,6 +1,20 @@
 import {FieldValue} from "firebase-admin/firestore";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
 import {db} from "./firebaseAdmin";
+import {
+  criarSala,
+  entrarSala,
+  expulsarJogador,
+  normalizeCode,
+  normalizeDisplayName,
+  requireRoomId,
+  requireTargetUid,
+  requireUid,
+  sairSala,
+  shuffle,
+  type SalaLobby,
+} from "./salaLobby";
+import {aplicarAnulacoes, palpiteCorreto, pistasPorEscritor} from "./soUmaPistas";
 
 const region = "southamerica-east1";
 
@@ -30,34 +44,11 @@ type HistoricoEntry = {
   pontos: number;
 };
 
-function requireUid(uid: string | undefined): string {
-  if (!uid) {
-    throw new HttpsError("unauthenticated", "Faça login para continuar");
-  }
-  return uid;
-}
-
-function normalizeDisplayName(value: unknown): string {
-  if (typeof value !== "string") {
-    throw new HttpsError("invalid-argument", "Nome inválido");
-  }
-  const name = value.trim();
-  if (name.length < 1 || name.length > 24) {
-    throw new HttpsError("invalid-argument", "Nome deve ter 1 a 24 caracteres");
-  }
-  return name;
-}
-
-function normalizeCode(value: unknown): string {
-  if (typeof value !== "string") {
-    throw new HttpsError("invalid-argument", "Código inválido");
-  }
-  const code = value.trim().toUpperCase();
-  if (!/^[A-Z0-9]{4,6}$/.test(code)) {
-    throw new HttpsError("invalid-argument", "Código inválido");
-  }
-  return code;
-}
+const soUmaLobby: SalaLobby = {
+  rooms: "soUmaRooms",
+  codes: "soUmaRoomCodes",
+  maxPlayers: MAX_JOGADORES,
+};
 
 function normalizeWord(value: unknown, label: string): string {
   if (typeof value !== "string") {
@@ -68,24 +59,6 @@ function normalizeWord(value: unknown, label: string): string {
     throw new HttpsError("invalid-argument", `${label} deve ter 1 a 40 caracteres`);
   }
   return word;
-}
-
-function createRoomCode(): string {
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "";
-  for (let i = 0; i < 4; i++) {
-    code += alphabet[Math.floor(Math.random() * alphabet.length)];
-  }
-  return code;
-}
-
-function shuffle<T>(items: T[]): T[] {
-  const list = [...items];
-  for (let i = list.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [list[i], list[j]] = [list[j], list[i]];
-  }
-  return list;
 }
 
 function orderedSeats(
@@ -105,292 +78,34 @@ function nextGuesserUid(players: PlayerSeat[], currentUid: string): string {
   return players[(currentIndex + 1) % players.length].uid;
 }
 
-// --- comparação de pistas ---
-// Mesma especificação de lib/core/utils/so_uma_pista_matcher.dart: cobre só os
-// casos inequívocos (idêntica, plural e gênero regulares, e uma sugestão de
-// mesma raiz por prefixo comum). O resto (homófonas, palavra inventada,
-// idioma estrangeiro) fica para o grupo decidir manualmente na comparação.
-
-const COM_ACENTO = "àáâãäåèéêëìíîïòóôõöùúûüçñ";
-const SEM_ACENTO = "aaaaaaeeeeiiiiooooouuuucn";
-
-function normalizarPalavra(texto: string): string {
-  let resultado = texto.trim().toLowerCase();
-  for (let i = 0; i < COM_ACENTO.length; i++) {
-    resultado = resultado.split(COM_ACENTO[i]).join(SEM_ACENTO[i]);
-  }
-  resultado = resultado.replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, "");
-  resultado = resultado.replace(/\s+/g, " ");
-  return resultado;
-}
-
-function radicalPlural(palavra: string): string {
-  if (palavra.endsWith("oes") || palavra.endsWith("aes") || palavra.endsWith("ais")) {
-    return palavra;
-  }
-  if (palavra.endsWith("es") && palavra.length > 3) return palavra.slice(0, -2);
-  if (palavra.endsWith("s") && palavra.length > 3) return palavra.slice(0, -1);
-  return palavra;
-}
-
-function mesmoPlural(a: string, b: string): boolean {
-  return a !== b && radicalPlural(a) === radicalPlural(b);
-}
-
-function mesmoGenero(a: string, b: string): boolean {
-  const termina = (s: string, sufixo: string) => s.length > 3 && s.endsWith(sufixo);
-  if (termina(a, "o") && termina(b, "a")) return a.slice(0, -1) === b.slice(0, -1);
-  if (termina(a, "a") && termina(b, "o")) return a.slice(0, -1) === b.slice(0, -1);
-  return false;
-}
-
-function possivelMesmaRaiz(a: string, b: string): boolean {
-  if (a.length < 4 || b.length < 4 || a === b) return false;
-  const menor = a.length < b.length ? a : b;
-  const maior = a.length < b.length ? b : a;
-  let comuns = 0;
-  while (comuns < menor.length && menor[comuns] === maior[comuns]) comuns++;
-  return comuns >= 3 && comuns / menor.length >= 0.7;
-}
-
-type MatchResultado = { anulada: boolean; motivo?: string };
-
-function compararComAlvo(pista: string, alvo: string): MatchResultado {
-  const p = normalizarPalavra(pista);
-  const a = normalizarPalavra(alvo);
-  if (!p) return {anulada: false};
-  if (p === a) return {anulada: true, motivo: "palavra_alvo"};
-  if (mesmoPlural(p, a) || mesmoGenero(p, a)) return {anulada: true, motivo: "palavra_alvo"};
-  if (possivelMesmaRaiz(p, a)) return {anulada: true, motivo: "palavra_alvo_raiz"};
-  return {anulada: false};
-}
-
-function compararPistas(x: string, y: string): MatchResultado {
-  const nx = normalizarPalavra(x);
-  const ny = normalizarPalavra(y);
-  if (!nx || !ny) return {anulada: false};
-  if (nx === ny) return {anulada: true, motivo: "identica"};
-  if (mesmoPlural(nx, ny)) return {anulada: true, motivo: "plural"};
-  if (mesmoGenero(nx, ny)) return {anulada: true, motivo: "genero"};
-  if (possivelMesmaRaiz(nx, ny)) return {anulada: true, motivo: "raiz"};
-  return {anulada: false};
-}
-
-function palpiteCorreto(palpite: string, alvo: string): boolean {
-  return normalizarPalavra(palpite) === normalizarPalavra(alvo);
-}
-
-function aplicarAnulacoes(clues: Clue[], palavraAlvo: string): Clue[] {
-  const atualizadas = clues.map((clue) => ({...clue}));
-
-  for (const clue of atualizadas) {
-    const resultado = compararComAlvo(clue.texto, palavraAlvo);
-    if (resultado.anulada) {
-      clue.anulada = true;
-      clue.motivoAutoAnulacao = resultado.motivo ?? null;
-    }
-  }
-
-  for (let i = 0; i < atualizadas.length; i++) {
-    for (let j = i + 1; j < atualizadas.length; j++) {
-      const resultado = compararPistas(atualizadas[i].texto, atualizadas[j].texto);
-      if (resultado.anulada) {
-        atualizadas[i].anulada = true;
-        atualizadas[i].motivoAutoAnulacao = atualizadas[i].motivoAutoAnulacao ?? resultado.motivo ?? null;
-        atualizadas[j].anulada = true;
-        atualizadas[j].motivoAutoAnulacao = atualizadas[j].motivoAutoAnulacao ?? resultado.motivo ?? null;
-      }
-    }
-  }
-
-  return atualizadas;
-}
-
 // --- callables ---
 
 export const soUmaCreateRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const displayName = normalizeDisplayName(req.data?.displayName);
-
-  for (let attempt = 0; attempt < 8; attempt++) {
-    const code = createRoomCode();
-    const codeRef = db.doc(`soUmaRoomCodes/${code}`);
-    const roomRef = db.collection("soUmaRooms").doc();
-    const playerRef = roomRef.collection("players").doc(uid);
-
-    try {
-      await db.runTransaction(async (tx) => {
-        const codeDoc = await tx.get(codeRef);
-        if (codeDoc.exists) {
-          throw new HttpsError("already-exists", "Código já existe");
-        }
-
-        tx.set(roomRef, {
-          code,
-          hostUid: uid,
-          status: "lobby",
-          playerCount: 1,
-          createdAt: FieldValue.serverTimestamp(),
-          updatedAt: FieldValue.serverTimestamp(),
-        });
-        tx.set(playerRef, {
-          displayName,
-          seat: null,
-          joinedAt: FieldValue.serverTimestamp(),
-        });
-        tx.set(codeRef, {
-          roomId: roomRef.id,
-          createdAt: FieldValue.serverTimestamp(),
-        });
-      });
-
-      return {roomId: roomRef.id, code};
-    } catch (error) {
-      if (error instanceof HttpsError && error.code === "already-exists") {
-        continue;
-      }
-      throw error;
-    }
-  }
-
-  throw new HttpsError("resource-exhausted", "Não foi possível gerar código");
+  return criarSala(soUmaLobby, uid, displayName);
 });
 
 export const soUmaJoinRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const displayName = normalizeDisplayName(req.data?.displayName);
   const code = normalizeCode(req.data?.code);
-
-  let roomId = "";
-
-  await db.runTransaction(async (tx) => {
-    const codeDoc = await tx.get(db.doc(`soUmaRoomCodes/${code}`));
-    if (!codeDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-
-    roomId = codeDoc.get("roomId") as string;
-    const roomRef = db.doc(`soUmaRooms/${roomId}`);
-    const playerRef = db.doc(`soUmaRooms/${roomId}/players/${uid}`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Partida já iniciada");
-    }
-    if (!playerDoc.exists && (roomDoc.get("playerCount") as number) >= MAX_JOGADORES) {
-      throw new HttpsError("failed-precondition", "Sala cheia");
-    }
-
-    tx.set(playerRef, {
-      displayName,
-      seat: null,
-      joinedAt: FieldValue.serverTimestamp(),
-    }, {merge: true});
-
-    if (!playerDoc.exists) {
-      tx.update(roomRef, {
-        playerCount: FieldValue.increment(1),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-    }
-  });
-
+  const roomId = await entrarSala(soUmaLobby, uid, displayName, code);
   return {roomId};
 });
 
 export const soUmaLeaveRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
-  const roomId = req.data?.roomId;
-  if (typeof roomId !== "string" || roomId.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Sala inválida");
-  }
-
-  await db.runTransaction(async (tx) => {
-    const roomRef = db.doc(`soUmaRooms/${roomId}`);
-    const playerRef = db.doc(`soUmaRooms/${roomId}/players/${uid}`);
-    const playersRef = db.collection(`soUmaRooms/${roomId}/players`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-    const playersSnap = await tx.get(playersRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (!playerDoc.exists) {
-      throw new HttpsError("permission-denied", "Você não está na sala");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Só é possível sair no lobby");
-    }
-
-    const remaining = playersSnap.docs.filter((doc) => doc.id !== uid);
-    tx.delete(playerRef);
-
-    if (remaining.length === 0) {
-      tx.update(roomRef, {
-        playerCount: 0,
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-      return;
-    }
-
-    const hostUid = roomDoc.get("hostUid") as string;
-    tx.update(roomRef, {
-      hostUid: hostUid === uid ? remaining[0].id : hostUid,
-      playerCount: remaining.length,
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  });
-
+  const roomId = requireRoomId(req.data?.roomId);
+  await sairSala(soUmaLobby, uid, roomId);
   return {ok: true};
 });
 
 export const soUmaRemovePlayer = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
-  const roomId = req.data?.roomId;
-  const targetUid = req.data?.targetUid;
-  if (typeof roomId !== "string" || roomId.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Sala inválida");
-  }
-  if (typeof targetUid !== "string" || targetUid.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Jogador inválido");
-  }
-
-  await db.runTransaction(async (tx) => {
-    const roomRef = db.doc(`soUmaRooms/${roomId}`);
-    const playerRef = db.doc(`soUmaRooms/${roomId}/players/${targetUid}`);
-    const playersRef = db.collection(`soUmaRooms/${roomId}/players`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-    const playersSnap = await tx.get(playersRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (roomDoc.get("hostUid") !== uid) {
-      throw new HttpsError("permission-denied", "Só o host pode remover");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Só é possível remover no lobby");
-    }
-    if (targetUid === uid) {
-      throw new HttpsError("invalid-argument", "Host não pode remover a si mesmo");
-    }
-    if (!playerDoc.exists) {
-      throw new HttpsError("not-found", "Jogador não encontrado");
-    }
-
-    tx.delete(playerRef);
-    tx.update(roomRef, {
-      playerCount: Math.max(0, playersSnap.size - 1),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  });
-
+  const roomId = requireRoomId(req.data?.roomId);
+  const targetUid = requireTargetUid(req.data?.targetUid);
+  await expulsarJogador(soUmaLobby, uid, roomId, targetUid);
   return {ok: true};
 });
 
@@ -569,7 +284,7 @@ export const soUmaSubmitClues = onCall({region}, async (req) => {
     }
 
     const playerCount = stateDoc.get("playerCount") as number;
-    const esperadas = playerCount === 3 ? 2 : 1;
+    const esperadas = pistasPorEscritor(playerCount);
     if (palavrasRaw.length !== esperadas) {
       throw new HttpsError("invalid-argument", `Envie exatamente ${esperadas} pista(s)`);
     }

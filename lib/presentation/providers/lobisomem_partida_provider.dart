@@ -240,8 +240,9 @@ class LobisomemPartidaProvider extends ChangeNotifier {
     required bool usouCura,
     required String? venenoAlvoId,
   }) {
-    final ataqueEfetivo =
-        vitimaAtaqueId != null && !usouCura ? vitimaAtaqueId : null;
+    final ataqueEfetivo = vitimaAtaqueId != null && !usouCura
+        ? vitimaAtaqueId
+        : null;
     final jogadores = [...partida.jogadores];
     final filtradas = <String>[];
 
@@ -258,10 +259,7 @@ class LobisomemPartidaProvider extends ChangeNotifier {
       filtradas.add(id);
     }
 
-    return (
-      jogadores: List.unmodifiable(jogadores),
-      mortes: filtradas,
-    );
+    return (jogadores: List.unmodifiable(jogadores), mortes: filtradas);
   }
 
   void confirmarDespedida() {

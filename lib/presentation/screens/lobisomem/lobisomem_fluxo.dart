@@ -11,10 +11,7 @@ import 'lobisomem_votacao_screen.dart';
 
 void _ir(BuildContext context, Widget tela) {
   if (!context.mounted) return;
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (_) => tela),
-  );
+  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => tela));
 }
 
 void irParaDesfecho(BuildContext context, LobisomemPartidaProvider provider) {
@@ -28,7 +25,10 @@ void irParaDesfecho(BuildContext context, LobisomemPartidaProvider provider) {
   );
 }
 
-void irParaAberturaNoite(BuildContext context, LobisomemPartidaProvider provider) {
+void irParaAberturaNoite(
+  BuildContext context,
+  LobisomemPartidaProvider provider,
+) {
   _ir(
     context,
     LobisomemNarradorScreen(
@@ -54,7 +54,10 @@ void irParaAmanhecer(BuildContext context, LobisomemPartidaProvider provider) {
   );
 }
 
-void irParaChamadaVotacao(BuildContext context, LobisomemPartidaProvider provider) {
+void irParaChamadaVotacao(
+  BuildContext context,
+  LobisomemPartidaProvider provider,
+) {
   _ir(
     context,
     LobisomemNarradorScreen(
@@ -67,7 +70,10 @@ void irParaChamadaVotacao(BuildContext context, LobisomemPartidaProvider provide
   );
 }
 
-void continuarAposNoite(BuildContext context, LobisomemPartidaProvider provider) {
+void continuarAposNoite(
+  BuildContext context,
+  LobisomemPartidaProvider provider,
+) {
   final partida = provider.partida;
   if (partida == null) return;
 
@@ -82,7 +88,10 @@ void continuarAposNoite(BuildContext context, LobisomemPartidaProvider provider)
   continuarAposMortes(context, provider);
 }
 
-void continuarAposMortes(BuildContext context, LobisomemPartidaProvider provider) {
+void continuarAposMortes(
+  BuildContext context,
+  LobisomemPartidaProvider provider,
+) {
   final partida = provider.partida;
   if (partida == null) return;
 

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>Varal</title></head>
+<body>
+
+<div class="sj-palco col" style="gap:10px">
+  <div class="sj-rotulo">Decorativo · cintila</div>
+  <div class="sj-varal" id="v1"></div>
+  <div class="sj-rotulo" style="margin-top:8px">Progresso · 5 de 8 já viram o papel</div>
+  <div class="sj-varal" id="v2"></div>
+  <div class="sj-rotulo" style="margin-top:8px">Carregando · acende em sequência</div>
+  <div class="sj-varal" id="v3" style="max-width:220px"></div>
+</div>
+<script>
+function varal(el, cores, acesas, op){
+  op = op || {};
+  var w = el.clientWidth || 600, h = 44, sag = op.sag || 12, n = cores.length;
+  var NS = 'http://www.w3.org/2000/svg';
+  var s = '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><defs><filter id="bl'+(op.id||'')+'" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="5"/></filter></defs>';
+  s += '<path class="fio" d="M0 6 Q '+(w/2)+' '+(6+sag*2)+' '+w+' 6"/>';
+  for (var i=0;i<n;i++){
+    var t=(i+0.5)/n, x=2*(1-t)*t*(w/2)+t*t*w, y=(1-t)*(1-t)*6+2*(1-t)*t*(6+sag*2)+t*t*6;
+    var cls=(acesas===true||(typeof acesas==='number'&&i<acesas))?'acesa':'';
+    if (op.cintila && cls) cls+=' cintila';
+    s += '<g data-i="'+i+'" class="'+cls+'" style="--cor:var(--'+cores[i]+');'+(op.cintila?'--d:'+(i*370%1900)+'ms':'')+'">'
+      + '<circle class="halo" cx="'+x.toFixed(1)+'" cy="'+(y+12).toFixed(1)+'" r="10" filter="url(#bl'+(op.id||'')+')" style="animation-delay:var(--d,0ms)"/>'
+      + '<rect class="soquete" x="'+(x-3).toFixed(1)+'" y="'+(y-1).toFixed(1)+'" width="6" height="5" rx="1.5"/>'
+      + '<ellipse class="bulbo" cx="'+x.toFixed(1)+'" cy="'+(y+11).toFixed(1)+'" rx="5" ry="7"/></g>';
+  }
+  el.innerHTML = s + '</svg>';
+}
+
+var roda=['lampada','rosa','menta','violeta','brasa','luar','ceu'];
+var cores12=[];for(var i=0;i<12;i++)cores12.push(roda[i%7]);
+varal(document.getElementById('v1'),cores12,true,{cintila:true,id:'a'});
+var c8=[];for(var i=0;i<8;i++)c8.push(roda[i%7]);
+varal(document.getElementById('v2'),c8,5,{id:'b',sag:8});
+var v3=document.getElementById('v3');varal(v3,['lampada','lampada','lampada','lampada','lampada'],0,{id:'c',sag:6});
+var k=0;setInterval(function(){var gs=v3.querySelectorAll('g');gs.forEach(function(g,i){g.classList.toggle('acesa',i===k%5||i===(k-1+5)%5);});k++;},160);
+</script>
+</body>
+</html>

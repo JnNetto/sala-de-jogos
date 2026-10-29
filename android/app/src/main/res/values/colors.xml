@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ceu-topo da Sala de Jogos: a splash nativa emenda com o céu do Flutter -->
+    <color name="ceu_topo">#FF070822</color>
+</resources>

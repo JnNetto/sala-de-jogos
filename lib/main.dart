@@ -23,6 +23,8 @@ import 'presentation/providers/so_uma_sala_provider.dart';
 import 'presentation/providers/aneis_sala_provider.dart';
 import 'presentation/providers/theme_provider.dart';
 import 'presentation/screens/splash_screen.dart';
+import 'presentation/widgets/sala/palco_da_sala.dart';
+import 'presentation/widgets/sala/troca_de_tema.dart';
 
 FirebaseOptions _firebaseOptions() {
   try {
@@ -45,19 +47,23 @@ void main() async {
 
   await ServiceLocator().init();
 
-  runApp(const MyApp());
+  // O tema salvo carrega antes do primeiro quadro: a splash já nasce nele.
+  final tema = ThemeProvider();
+  await tema.carregarPreferencias();
+
+  runApp(MyApp(tema: tema));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.tema});
+
+  final ThemeProvider tema;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => ThemeProvider()..carregarPreferencias(),
-        ),
+        ChangeNotifierProvider.value(value: tema),
         ChangeNotifierProvider(create: (_) => ConfiguracaoProvider()),
         ChangeNotifierProvider(create: (_) => PartidaProvider()),
         ChangeNotifierProvider(create: (_) => CategoriaProvider()),
@@ -78,11 +84,17 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, _) {
           return MaterialApp(
             title: 'Sala de Jogos',
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
+            theme: AppTheme.dia(),
+            darkTheme: AppTheme.noite(),
             themeMode: themeProvider.isDarkMode
                 ? ThemeMode.dark
                 : ThemeMode.light,
+            // A troca é feita pela TrocaDeTema; interpolar o ThemeData do
+            // app inteiro a cada quadro é o que travava.
+            themeAnimationDuration: Duration.zero,
+            navigatorObservers: [PalcoDaSala.observador],
+            builder: (context, child) =>
+                TrocaDeTema(child: PalcoDaSala(child: child!)),
             debugShowCheckedModeBanner: false,
             home: const SplashScreen(),
           );

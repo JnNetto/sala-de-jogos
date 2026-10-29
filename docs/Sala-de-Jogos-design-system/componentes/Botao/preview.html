@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>Botao</title></head>
+<body>
+
+<div class="sj-palco col" style="gap:18px">
+  <div class="sj-rotulo">Primário · a luz da sala</div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+    <button class="sj-btn"><span class="ms cheio">play_arrow</span>Jogar</button>
+    <button class="sj-btn is-pressionado">Pressionado</button>
+    <button class="sj-btn" aria-busy="true"><span class="sj-carregando"><i></i><i></i><i></i></span></button>
+    <button class="sj-btn" disabled>Desabilitado</button>
+  </div>
+  <div class="sj-rotulo">Jogo · a cor do jogo assume</div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+    <button class="sj-btn sj-btn--jogo sj-c-violeta">Revelar papel</button>
+    <button class="sj-btn sj-btn--jogo sj-c-rosa">Próxima pergunta</button>
+    <button class="sj-btn sj-btn--jogo sj-c-menta"><span class="ms">check</span>Responder</button>
+  </div>
+  <div class="sj-rotulo">Secundário · fantasma · perigo</div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+    <button class="sj-btn sj-btn--secundario"><span class="ms">bar_chart</span>Estatísticas</button>
+    <button class="sj-btn sj-btn--fantasma">Ver regras</button>
+    <button class="sj-btn sj-btn--fantasma perigo">Sair da sala</button>
+    <button class="sj-btn sj-btn--perigo">Abortar</button>
+  </div>
+</div>
+
+</body>
+</html>

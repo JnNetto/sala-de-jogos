@@ -9,8 +9,11 @@ import '../../data/models/aneis_jogador_remoto.dart';
 import '../../data/models/aneis_knower_view.dart';
 import '../../data/models/aneis_sala.dart';
 import '../../data/services/aneis_firebase_service.dart';
+import '../../data/services/sala_erro.dart';
 
-class AneisSalaProvider extends ChangeNotifier {
+import 'sala_online.dart';
+
+class AneisSalaProvider extends ChangeNotifier implements SalaOnline {
   final AneisFirebaseService _service;
 
   AneisSala? _sala;
@@ -33,13 +36,17 @@ class AneisSalaProvider extends ChangeNotifier {
   AneisEstadoRemoto? get estado => _estado;
   List<AneisCartaPublica> get mao => _mao;
   AneisKnowerView? get visaoKnower => _visaoKnower;
+  @override
   bool get isLoading => _isLoading;
+  @override
   String? get erro => _erro;
+  @override
   String? get uid => _service.uid;
   String get dificuldade => _dificuldade;
   String get knowerMode => _knowerMode;
   String? get knowerUidEscolhido => _knowerUidEscolhido;
   bool get podeDesfazer => souKnower && _estado?.podeDesfazer == true;
+  @override
   bool get souHost => _sala != null && _sala!.hostUid == _service.uid;
   bool get souKnower =>
       _estado?.knowerHumano == true && _estado?.knowerUid == uid;
@@ -50,6 +57,7 @@ class AneisSalaProvider extends ChangeNotifier {
       !souKnower;
   bool get emSetupKnower => souKnower && _estado?.phase == 'setup';
   bool get emJulgamentoKnower => souKnower && _estado?.phase == 'judging';
+  @override
   bool get podeIniciar =>
       souHost &&
       _sala?.status == 'lobby' &&
@@ -84,6 +92,7 @@ class AneisSalaProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   Future<bool> criarSala(String nome) async {
     return _executar(() async {
       _sala = await _service.criarSala(displayName: nome.trim());
@@ -92,6 +101,7 @@ class AneisSalaProvider extends ChangeNotifier {
     });
   }
 
+  @override
   Future<bool> entrarNaSala({
     required String codigo,
     required String nome,
@@ -173,6 +183,7 @@ class AneisSalaProvider extends ChangeNotifier {
     });
   }
 
+  @override
   Future<bool> iniciarPartidaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -217,12 +228,14 @@ class AneisSalaProvider extends ChangeNotifier {
     return _executar(() => _service.desfazerJulgamento(sala.id));
   }
 
+  @override
   Future<bool> voltarAoLobbyRemoto() async {
     final sala = _sala;
     if (sala == null) return false;
     return _executar(() => _service.voltarAoLobby(sala.id));
   }
 
+  @override
   Future<bool> sairDaSalaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -233,6 +246,7 @@ class AneisSalaProvider extends ChangeNotifier {
     return ok;
   }
 
+  @override
   Future<bool> removerJogadorRemoto(String targetUid) async {
     final sala = _sala;
     if (sala == null) return false;
@@ -241,6 +255,7 @@ class AneisSalaProvider extends ChangeNotifier {
     );
   }
 
+  @override
   Future<bool> abortarPartidaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -274,7 +289,7 @@ class AneisSalaProvider extends ChangeNotifier {
       await action();
       return true;
     } on FirebaseFunctionsException catch (e) {
-      _erro = e.message ?? _traduzirErro(e.code);
+      _erro = e.message ?? traduzirErroSala(e.code);
       return false;
     } catch (e) {
       _erro = e.toString();
@@ -282,27 +297,6 @@ class AneisSalaProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
-    }
-  }
-
-  String _traduzirErro(String code) {
-    switch (code) {
-      case 'unauthenticated':
-        return 'Não foi possível autenticar.';
-      case 'not-found':
-        return 'Sala não encontrada.';
-      case 'failed-precondition':
-        return 'A sala não está disponível.';
-      case 'permission-denied':
-        return 'Você não pode fazer isso nesta sala.';
-      case 'invalid-argument':
-        return 'Confira os dados e tente novamente.';
-      case 'already-exists':
-        return 'Essa ação já foi registrada.';
-      case 'resource-exhausted':
-        return 'Tente novamente em instantes.';
-      default:
-        return 'Erro ao acessar a sala.';
     }
   }
 }

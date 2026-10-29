@@ -55,7 +55,8 @@ class LobisomemRoteiroService {
         : 'foram eliminados pela aldeia';
     final anuncio = '$nomes $verbo.';
     final revelacoes = _revelacoes(partida, mortes);
-    final bobo = partida.boboVenceu &&
+    final bobo =
+        partida.boboVenceu &&
             mortes.any((id) => partida.jogadorPorId(id).ehBobo)
         ? ' O Bobo da Corte venceu individualmente. A partida continua para as outras equipes.'
         : '';
@@ -112,5 +113,4 @@ class LobisomemRoteiroService {
         return '';
     }
   }
-
 }

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 60 bash -c 'until grep -q \"All emulators ready\" \"C:/Users/joaoz/AppData/Local/Temp/claude/c--Users-joaoz-OneDrive-Documentos-ws-flutter-impostor-app/c36b3818-fbfc-4f3a-b983-36691f9a3038/scratchpad/pw/emulators2.log\" 2>/dev/null; do sleep 2; done')",
+      "Bash(awk '/2026-09-02T00:08:4[0-9]/{p=1} p' firebase-debug.log)",
+      "Bash(rm -f \"c:/Users/joaoz/OneDrive/Documentos/ws.flutter/impostor_app/firebase-debug.log\")",
+      "Bash(nohup firebase emulators:start --only functions,firestore,auth --project demo-so-uma-test)",
+      "Bash(timeout 60 bash -c 'until grep -q \"All emulators ready\\\\|Loaded functions definitions\" \"C:/Users/joaoz/AppData/Local/Temp/claude/c--Users-joaoz-OneDrive-Documentos-ws-flutter-impostor-app/c36b3818-fbfc-4f3a-b983-36691f9a3038/scratchpad/pw/emulators3.log\" 2>/dev/null; do sleep 2; done')",
+      "Bash(node test_createroom.mjs)",
+      "Bash(node -e ' *)",
+      "Bash(xargs -I{} echo {})",
+      "Bash(git check-ignore *)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" https://sala-de-jogos-7298f.web.app)",
+      "Bash(firebase hosting:channel:list --project sala-de-jogos-7298f)",
+      "Bash(flutter build *)",
+      "Bash(firebase deploy *)",
+      "Bash(curl -s -o /dev/null -w \"hosting: HTTP %{http_code}\\\\n\" https://sala-de-jogos-7298f.web.app)",
+      "Bash(curl -s -o /dev/null -w \"soUmaCreateRoom \\(sem auth, esperado 401/403\\): HTTP %{http_code}\\\\n\" -X POST -H \"Content-Type: application/json\" -d '{\"data\":{}}' https://southamerica-east1-sala-de-jogos-7298f.cloudfunctions.net/soUmaCreateRoom)"
+    ]
+  }
+}

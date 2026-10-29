@@ -19,7 +19,8 @@ class LobisomemNarradorScreen extends StatefulWidget {
   });
 
   @override
-  State<LobisomemNarradorScreen> createState() => _LobisomemNarradorScreenState();
+  State<LobisomemNarradorScreen> createState() =>
+      _LobisomemNarradorScreenState();
 }
 
 class _LobisomemNarradorScreenState extends State<LobisomemNarradorScreen> {

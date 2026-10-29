@@ -5,6 +5,7 @@ import '../../providers/resistencia_partida_provider.dart';
 import '../../widgets/primary_button.dart';
 import 'resistencia_proposta_screen.dart';
 import 'resistencia_revelacao_papel_screen.dart';
+import '../../navegacao.dart';
 
 class ResistenciaDistribuicaoScreen extends StatefulWidget {
   const ResistenciaDistribuicaoScreen({super.key});
@@ -42,7 +43,7 @@ class _ResistenciaDistribuicaoScreenState
 
     if (confirmed == true && mounted) {
       context.read<ResistenciaPartidaProvider>().limparPartida();
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil(ehBaseDosJogos);
     }
   }
 

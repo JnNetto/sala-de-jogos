@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/enums/vencedor.dart';
-import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/sala_tokens.dart';
 import '../../../data/models/jogador_pergunta.dart';
 import '../../../data/models/par_perguntas.dart';
+import '../../navegacao.dart';
 import '../../providers/pergunta_partida_provider.dart';
-import '../../widgets/primary_button.dart';
-import 'pergunta_configuracao_screen.dart';
+import '../../widgets/sala/botao_sala.dart';
+import '../../widgets/sala/fim_de_jogo.dart';
+import '../../widgets/sala/janela.dart';
+import '../../widgets/sala/jogador_sala.dart';
+import '../../widgets/sala/selo_papel.dart';
+import '../../widgets/sala/tela_da_sala.dart';
 import 'pergunta_distribuicao_screen.dart';
 
+/// Fim de jogo: quem venceu, quem tinha a outra pergunta, as duas
+/// perguntas e o que cada um respondeu.
 class PerguntaResultadoScreen extends StatefulWidget {
   const PerguntaResultadoScreen({super.key});
 
@@ -19,250 +28,268 @@ class PerguntaResultadoScreen extends StatefulWidget {
 
 class _PerguntaResultadoScreenState extends State<PerguntaResultadoScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+  late final AnimationController _entrada;
 
-  late Vencedor _vencedor;
-  late ParPerguntas _par;
-  late List<JogadorPergunta> _civis;
-  late List<JogadorPergunta> _espioes;
-  late List<JogadorPergunta> _jogadores;
+  // A partida é copiada aqui: "Jogar de novo" troca a do provider.
+  late final Vencedor _vencedor;
+  late final ParPerguntas _par;
+  late final List<JogadorPergunta> _jogadores;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _scaleAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    );
-    _animationController.forward();
-
     final partida = context.read<PerguntaPartidaProvider>().partida!;
     _vencedor = partida.vencedor;
     _par = partida.par;
-    _civis = List.from(partida.civis);
-    _espioes = List.from(partida.espioes);
-    _jogadores = List.from(partida.jogadores);
-
+    _jogadores = List.of(partida.jogadores);
+    _entrada = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 320 + 60 * _jogadores.length + 220),
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Movimento.reduzido(context)) {
+        _entrada.value = 1;
+      } else {
+        _entrada.forward();
+      }
       context.read<PerguntaPartidaProvider>().finalizarPartida();
     });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _entrada.dispose();
     super.dispose();
   }
 
+  Animation<double> _trecho(int inicioMs, int duracaoMs, Curve curva) {
+    final total = _entrada.duration!.inMilliseconds;
+    return CurvedAnimation(
+      parent: _entrada,
+      curve: Interval(
+        inicioMs / total,
+        ((inicioMs + duracaoMs) / total).clamp(0, 1),
+        curve: curva,
+      ),
+    );
+  }
+
+  SeloPapel _selo(JogadorPergunta j) => j.isEspiao
+      ? SeloPapel(
+          texto: 'IMPOSTOR',
+          icone: Symbols.theater_comedy_rounded,
+          luz: context.cores.papelEspiao,
+          compacto: true,
+        )
+      : SeloPapel.civil(context, compacto: true);
+
   @override
   Widget build(BuildContext context) {
-    final civisVenceram = _vencedor == Vencedor.civis;
-    final backgroundColor = civisVenceram
-        ? AppTheme.civilColor
-        : AppTheme.espiaoColor;
+    final c = context.cores;
+    final texto = Theme.of(context).textTheme;
+    final civis = _vencedor == Vencedor.civis;
+    final impostores = _jogadores.where((j) => j.isEspiao).toList();
+    final varios = impostores.length > 1;
+    final titulo = _trecho(0, 320, Movimento.pulo);
 
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                const SizedBox(height: 24),
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Column(
-                    children: [
-                      Icon(
-                        civisVenceram ? Icons.group : Icons.help_outline,
-                        size: 100,
-                        color: Colors.white,
+      child: TelaDaSala(
+        matiz: Matiz.rosa,
+        corpo: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            Espaco.margemTela,
+            Espaco.e2,
+            Espaco.margemTela,
+            Espaco.e6,
+          ),
+          children: [
+            AnimatedBuilder(
+              animation: titulo,
+              builder: (_, f) => Opacity(
+                opacity: titulo.value.clamp(0, 1),
+                child: Transform.scale(scale: .9 + .1 * titulo.value, child: f),
+              ),
+              child: Janela(
+                titulo: 'FIM DE JOGO',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: SeloPapel(
+                        texto: civis
+                            ? 'CIVIS VENCERAM'
+                            : (varios
+                                  ? 'IMPOSTORES VENCERAM'
+                                  : 'IMPOSTOR VENCEU'),
+                        icone: Symbols.trophy_rounded,
+                        luz: civis ? c.papelCivil : c.papelEspiao,
                       ),
-                      const SizedBox(height: 24),
-                      Text(
-                        civisVenceram
-                            ? 'Civis Venceram!'
-                            : 'Impostores Venceram!',
-                        style: const TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    ),
+                    const SizedBox(height: Espaco.e4),
+                    Text(
+                      civis
+                          ? (varios
+                                ? 'Pegaram os impostores!'
+                                : 'Pegaram o impostor!')
+                          : (varios
+                                ? 'Os impostores escaparam!'
+                                : 'O impostor escapou!'),
+                      textAlign: TextAlign.center,
+                      style: texto.headlineMedium,
+                    ),
+                    const SizedBox(height: Espaco.e6),
+                    for (final i in impostores) ...[
+                      FatoDoFim(
+                        poco: AvatarJogador(
+                          nome: i.nome,
+                          indice: i.id - 1,
+                          tamanho: 44,
                         ),
-                        textAlign: TextAlign.center,
+                        texto: comDestaque(
+                          context,
+                          '',
+                          i.nome,
+                          ' tinha a outra pergunta',
+                        ),
+                        direita: _selo(i),
                       ),
+                      const SizedBox(height: Espaco.e2),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Pergunta de Todos',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w600,
-                        ),
+                    FatoDoFim(
+                      poco: PocoIcone(
+                        icone: Symbols.group_rounded,
+                        luz: c.papelCivil,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
+                      texto: comDestaque(
+                        context,
+                        'A pergunta de todos era:\n',
                         _par.principal,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: backgroundColor,
-                        ),
                       ),
-                      const SizedBox(height: 16),
-                      Divider(color: Colors.grey[300]),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Pergunta do Impostor',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w600,
-                        ),
+                    ),
+                    const SizedBox(height: Espaco.e2),
+                    FatoDoFim(
+                      poco: PocoIcone(
+                        icone: Symbols.theater_comedy_rounded,
+                        luz: c.papelEspiao,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
+                      texto: comDestaque(
+                        context,
+                        varios
+                            ? 'A pergunta dos impostores era:\n'
+                            : 'A pergunta do impostor era:\n',
                         _par.impostor,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: backgroundColor,
-                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Respostas',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      ..._jogadores.map(
-                        (j) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            '${j.nome}${j.isEspiao ? ' (impostor)' : ''}: "${j.resposta ?? '—'}"',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Civis: ${_civis.map((j) => j.nome).join(', ')}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Impostores: ${_espioes.map((j) => j.nome).join(', ')}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Consumer<PerguntaPartidaProvider>(
-                  builder: (context, provider, _) {
-                    return Column(
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: PrimaryButton(
-                            text: 'Jogar Novamente',
-                            icon: Icons.refresh,
-                            backgroundColor: Colors.white,
-                            textColor: backgroundColor,
-                            onPressed: () async {
-                              final navigator = Navigator.of(context);
-                              final messenger = ScaffoldMessenger.of(context);
-                              final sucesso = await provider.jogarNovamente();
-                              if (!mounted) return;
-                              if (sucesso) {
-                                navigator.pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PerguntaDistribuicaoScreen(),
-                                  ),
-                                  (route) => route.isFirst,
-                                );
-                              } else {
-                                messenger.showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      provider.erro ??
-                                          'Erro ao iniciar partida',
-                                    ),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              provider.encerrarPartida();
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PerguntaConfiguracaoScreen(),
-                                ),
-                                (route) => route.isFirst,
-                              );
-                            },
-                            icon: const Icon(Icons.arrow_back),
-                            label: const Text('Voltar ao Início'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              side: const BorderSide(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+              ),
+            ),
+            const SizedBox(height: Espaco.e8),
+            Row(
+              children: [
+                Expanded(child: Text('Na mesa', style: texto.titleMedium)),
+                Text(
+                  '${_jogadores.length} JOGADORES',
+                  style: texto.labelSmall?.copyWith(color: c.texto3),
                 ),
               ],
+            ),
+            const SizedBox(height: Espaco.e3),
+            for (final (i, j) in _jogadores.indexed) ...[
+              AnimatedBuilder(
+                animation: _entrada,
+                builder: (_, f) {
+                  final a = _trecho(320 + 60 * i, 220, Movimento.entrada);
+                  return Opacity(
+                    opacity: a.value.clamp(0, 1),
+                    child: Transform.translate(
+                      offset: Offset(0, 12 * (1 - a.value)),
+                      child: f,
+                    ),
+                  );
+                },
+                child: LinhaJogador(
+                  nome: j.nome,
+                  indice: j.id - 1,
+                  apagado: j.foiEliminado,
+                  apoio: '“${j.resposta ?? '...'}”',
+                  direita: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _selo(j),
+                      if (j.foiEliminado) ...[
+                        const SizedBox(height: Espaco.e1),
+                        Text(
+                          'FORA',
+                          style: texto.labelSmall?.copyWith(color: c.texto3),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: Espaco.e2),
+            ],
+          ],
+        ),
+        rodape: Consumer<PerguntaPartidaProvider>(
+          builder: (context, provider, _) => SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Espaco.margemTela,
+                Espaco.e3,
+                Espaco.margemTela,
+                Espaco.e3,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BotaoSala(
+                    rotulo: 'Jogar de novo',
+                    icone: Symbols.replay_rounded,
+                    luz: c.luz(Matiz.rosa),
+                    bloco: true,
+                    carregando: provider.isLoading,
+                    onPressed: () async {
+                      final sucesso = await provider.jogarNovamente();
+                      if (!context.mounted) return;
+                      if (sucesso) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const PerguntaDistribuicaoScreen(),
+                          ),
+                          ehInicioDaImpostora,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              provider.erro ??
+                                  'Não deu para começar outra partida. '
+                                      'Tente de novo.',
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: Espaco.e1),
+                  BotaoSala(
+                    rotulo: 'Voltar ao início',
+                    variante: VarianteBotao.fantasma,
+                    luz: Luz(c.texto2, c.texto2, c.superficieFunda),
+                    bloco: true,
+                    onPressed: () {
+                      provider.encerrarPartida();
+                      Navigator.of(context).popUntil(ehInicioDaImpostora);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

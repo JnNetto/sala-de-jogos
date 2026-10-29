@@ -54,10 +54,8 @@ class _LobisomemVotacaoScreenState extends State<LobisomemVotacaoScreen> {
                       MaterialPageRoute(
                         builder: (_) => LobisomemNarradorScreen(
                           texto: provider.textoResultadoVoto(),
-                          onContinuar: (ctx) => continuarAposNarracaoEliminacao(
-                            ctx,
-                            provider,
-                          ),
+                          onContinuar: (ctx) =>
+                              continuarAposNarracaoEliminacao(ctx, provider),
                         ),
                       ),
                     );
@@ -303,10 +301,7 @@ class _LinhaVoto extends StatelessWidget {
           Expanded(
             child: Text(nome, style: Theme.of(context).textTheme.bodyLarge),
           ),
-          Text(
-            alvo,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text(alvo, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );

@@ -255,362 +255,374 @@ class _LobisomemConfiguracaoScreenState
       body: _carregando
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            ConfigCard(
-              title: 'Jogadores',
-              subtitle: 'Todos jogam, inclusive o Narrador. De 5 a 12 pessoas.',
-              icon: Icons.group,
-              child: Column(
+              child: ListView(
+                padding: const EdgeInsets.all(16),
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '$_quantidadeJogadores jogadores',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        '${LobisomemConstants.minJogadores}-${LobisomemConstants.maxJogadores}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
+                  ConfigCard(
+                    title: 'Jogadores',
+                    subtitle:
+                        'Todos jogam, inclusive o Narrador. De 5 a 12 pessoas.',
+                    icon: Icons.group,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '$_quantidadeJogadores jogadores',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Text(
+                              '${LobisomemConstants.minJogadores}-${LobisomemConstants.maxJogadores}',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[600]),
+                            ),
+                          ],
+                        ),
+                        Slider(
+                          value: _quantidadeJogadores.toDouble(),
+                          min: LobisomemConstants.minJogadores.toDouble(),
+                          max: LobisomemConstants.maxJogadores.toDouble(),
+                          divisions:
+                              LobisomemConstants.maxJogadores -
+                              LobisomemConstants.minJogadores,
+                          onChanged: (value) {
+                            _atualizar(() {
+                              _quantidadeJogadores = value.toInt();
+                              _aplicarRecomendado();
+                              _ajustarControllers(_quantidadeJogadores);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  ConfigCard(
+                    title: 'Nomes dos Jogadores',
+                    subtitle: 'A ordem da mesa é a ordem desta lista',
+                    icon: Icons.edit,
+                    child: Column(
+                      children: [
+                        for (var i = 0; i < _nomeControllers.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: TextField(
+                              controller: _nomeControllers[i],
+                              decoration: InputDecoration(
+                                labelText: 'Jogador ${i + 1}',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              textCapitalization: TextCapitalization.words,
+                              onChanged: (_) => _atualizar(() {}),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  ConfigCard(
+                    title: 'Narrador',
+                    subtitle:
+                        'É um dos jogadores: recebe papel, age à noite e vota. Também lê a historinha.',
+                    icon: Icons.menu_book,
+                    child: DropdownButtonFormField<int>(
+                      initialValue: _narradorIndex,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ],
+                      items: [
+                        for (var i = 0; i < _nomes.length; i++)
+                          DropdownMenuItem(value: i, child: Text(_nomes[i])),
+                      ],
+                      onChanged: (value) {
+                        if (value == null) return;
+                        _atualizar(() => _narradorIndex = value);
+                      },
+                    ),
                   ),
-                  Slider(
-                    value: _quantidadeJogadores.toDouble(),
-                    min: LobisomemConstants.minJogadores.toDouble(),
-                    max: LobisomemConstants.maxJogadores.toDouble(),
-                    divisions:
-                        LobisomemConstants.maxJogadores -
-                        LobisomemConstants.minJogadores,
-                    onChanged: (value) {
-                      _atualizar(() {
-                        _quantidadeJogadores = value.toInt();
-                        _aplicarRecomendado();
-                        _ajustarControllers(_quantidadeJogadores);
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            ConfigCard(
-              title: 'Nomes dos Jogadores',
-              subtitle: 'A ordem da mesa é a ordem desta lista',
-              icon: Icons.edit,
-              child: Column(
-                children: [
-                  for (var i = 0; i < _nomeControllers.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: TextField(
-                        controller: _nomeControllers[i],
-                        decoration: InputDecoration(
-                          labelText: 'Jogador ${i + 1}',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                  ConfigCard(
+                    title: 'Lobisomens',
+                    subtitle: 'Mínimo 1, e menos da metade da mesa',
+                    icon: Icons.nightlight_round,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: _quantidadeLobisomens > 1
+                              ? () => _atualizar(() => _quantidadeLobisomens--)
+                              : null,
+                          icon: const Icon(Icons.remove_circle_outline),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            '$_quantidadeLobisomens',
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
                         ),
-                        textCapitalization: TextCapitalization.words,
-                        onChanged: (_) => _atualizar(() {}),
+                        IconButton(
+                          onPressed: _quantidadeLobisomens < _maxLobisomens
+                              ? () => _atualizar(() => _quantidadeLobisomens++)
+                              : null,
+                          icon: const Icon(Icons.add_circle_outline),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ConfigCard(
+                    title: 'Papéis especiais',
+                    subtitle: _papeisEspeciaisAleatorios
+                        ? 'Até $_maxEspeciaisAleatorios especiais (jogadores − 4). Sorteados no início.'
+                        : 'Aldeão preenche o restante',
+                    icon: Icons.style,
+                    child: Column(
+                      children: [
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Especiais aleatórios'),
+                          subtitle: Text(
+                            'Máximo de $_maxEspeciaisAleatorios nesta mesa',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          value: _papeisEspeciaisAleatorios,
+                          onChanged: (value) => _atualizar(() {
+                            _papeisEspeciaisAleatorios = value;
+                            if (value) {
+                              _temVidente = false;
+                              _temBruxa = false;
+                              _temCacador = false;
+                              _temBobo = false;
+                              _temAnciao = false;
+                            } else {
+                              _aplicarRecomendado();
+                            }
+                            _quantidadeLobisomens = _quantidadeLobisomens.clamp(
+                              1,
+                              _maxLobisomens,
+                            );
+                          }),
+                        ),
+                        if (!_papeisEspeciaisAleatorios) ...[
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Vidente'),
+                            value: _temVidente,
+                            onChanged: _podeAtivarEspecial(_temVidente)
+                                ? (value) =>
+                                      _atualizar(() => _temVidente = value)
+                                : null,
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Bruxa'),
+                            value: _temBruxa,
+                            onChanged: _podeAtivarEspecial(_temBruxa)
+                                ? (value) => _atualizar(() => _temBruxa = value)
+                                : null,
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Caçador'),
+                            value: _temCacador,
+                            onChanged: _podeAtivarEspecial(_temCacador)
+                                ? (value) =>
+                                      _atualizar(() => _temCacador = value)
+                                : null,
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Bobo da Corte'),
+                            subtitle: const Text(
+                              'Vence sozinho se for eliminado na votação',
+                            ),
+                            value: _temBobo,
+                            onChanged: _podeAtivarEspecial(_temBobo)
+                                ? (value) => _atualizar(() => _temBobo = value)
+                                : null,
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Ancião'),
+                            subtitle: const Text(
+                              'Sobrevive ao 1º ataque dos lobisomens',
+                            ),
+                            value: _temAnciao,
+                            onChanged: _podeAtivarEspecial(_temAnciao)
+                                ? (value) =>
+                                      _atualizar(() => _temAnciao = value)
+                                : null,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  ConfigCard(
+                    title: 'Composição',
+                    subtitle: 'Preview da mesa',
+                    icon: Icons.preview,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        Chip(
+                          label: Text('$_quantidadeLobisomens Lobisomem(ns)'),
+                        ),
+                        if (_papeisEspeciaisAleatorios)
+                          Chip(
+                            label: Text(
+                              'Até $_maxEspeciaisAleatorios especiais aleatórios',
+                            ),
+                          )
+                        else ...[
+                          if (_temVidente) const Chip(label: Text('1 Vidente')),
+                          if (_temBruxa) const Chip(label: Text('1 Bruxa')),
+                          if (_temCacador) const Chip(label: Text('1 Caçador')),
+                          if (_temBobo)
+                            const Chip(label: Text('1 Bobo da Corte')),
+                          if (_temAnciao) const Chip(label: Text('1 Ancião')),
+                          Chip(label: Text('$_aldeoes Aldeão(ões)')),
+                        ],
+                      ],
+                    ),
+                  ),
+                  ConfigCard(
+                    title: 'Revelação dos mortos',
+                    icon: Icons.visibility,
+                    child: RadioGroup<LobisomemRevelacao>(
+                      groupValue: _revelacao,
+                      onChanged: (value) {
+                        if (value == null) return;
+                        _atualizar(() => _revelacao = value);
+                      },
+                      child: Column(
+                        children: [
+                          for (final opcao in LobisomemRevelacao.values)
+                            RadioListTile<LobisomemRevelacao>(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(opcao.nome),
+                              subtitle: Text(opcao.descricao),
+                              value: opcao,
+                            ),
+                        ],
                       ),
                     ),
-                ],
-              ),
-            ),
-            ConfigCard(
-              title: 'Narrador',
-              subtitle:
-                  'É um dos jogadores: recebe papel, age à noite e vota. Também lê a historinha.',
-              icon: Icons.menu_book,
-              child: DropdownButtonFormField<int>(
-                initialValue: _narradorIndex,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-                items: [
-                  for (var i = 0; i < _nomes.length; i++)
-                    DropdownMenuItem(value: i, child: Text(_nomes[i])),
-                ],
-                onChanged: (value) {
-                  if (value == null) return;
-                  _atualizar(() => _narradorIndex = value);
-                },
-              ),
-            ),
-            ConfigCard(
-              title: 'Lobisomens',
-              subtitle: 'Mínimo 1, e menos da metade da mesa',
-              icon: Icons.nightlight_round,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: _quantidadeLobisomens > 1
-                        ? () => _atualizar(() => _quantidadeLobisomens--)
-                        : null,
-                    icon: const Icon(Icons.remove_circle_outline),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      '$_quantidadeLobisomens',
-                      style: Theme.of(context).textTheme.displaySmall,
+                  ConfigCard(
+                    title: 'Empate na votação',
+                    icon: Icons.balance,
+                    child: RadioGroup<LobisomemEmpate>(
+                      groupValue: _empate,
+                      onChanged: (value) {
+                        if (value == null) return;
+                        _atualizar(() => _empate = value);
+                      },
+                      child: Column(
+                        children: [
+                          for (final opcao in LobisomemEmpate.values)
+                            RadioListTile<LobisomemEmpate>(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(opcao.nome),
+                              subtitle: Text(opcao.descricao),
+                              value: opcao,
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: _quantidadeLobisomens < _maxLobisomens
-                        ? () => _atualizar(() => _quantidadeLobisomens++)
-                        : null,
-                    icon: const Icon(Icons.add_circle_outline),
-                  ),
-                ],
-              ),
-            ),
-            ConfigCard(
-              title: 'Papéis especiais',
-              subtitle: _papeisEspeciaisAleatorios
-                  ? 'Até $_maxEspeciaisAleatorios especiais (jogadores − 4). Sorteados no início.'
-                  : 'Aldeão preenche o restante',
-              icon: Icons.style,
-              child: Column(
-                children: [
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Especiais aleatórios'),
-                    subtitle: Text(
-                      'Máximo de $_maxEspeciaisAleatorios nesta mesa',
-                      style: Theme.of(context).textTheme.bodySmall,
+                  ConfigCard(
+                    title: 'Votação',
+                    icon: Icons.how_to_vote,
+                    child: Column(
+                      children: [
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Permitir abstenção'),
+                          subtitle: const Text('Desligado por padrão'),
+                          value: _permitirAbstencao,
+                          onChanged: (value) =>
+                              _atualizar(() => _permitirAbstencao = value),
+                        ),
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Permitir voto em si'),
+                          subtitle: const Text('Ligado por padrão'),
+                          value: _permitirVotoEmSi,
+                          onChanged: (value) =>
+                              _atualizar(() => _permitirVotoEmSi = value),
+                        ),
+                      ],
                     ),
-                    value: _papeisEspeciaisAleatorios,
-                    onChanged: (value) => _atualizar(() {
-                      _papeisEspeciaisAleatorios = value;
-                      if (value) {
-                        _temVidente = false;
-                        _temBruxa = false;
-                        _temCacador = false;
-                        _temBobo = false;
-                        _temAnciao = false;
-                      } else {
-                        _aplicarRecomendado();
-                      }
-                      _quantidadeLobisomens = _quantidadeLobisomens.clamp(
-                        1,
-                        _maxLobisomens,
+                  ),
+                  ConfigCard(
+                    title: 'Timer da discussão',
+                    subtitle: 'Desligado ou de 3 a 10 minutos',
+                    icon: Icons.timer,
+                    child: DropdownButtonFormField<int?>(
+                      initialValue: _timerMinutos,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      items: [
+                        const DropdownMenuItem(
+                          value: null,
+                          child: Text('Desligado'),
+                        ),
+                        for (
+                          var m = LobisomemConstants.timerDiscussaoMinMinutos;
+                          m <= LobisomemConstants.timerDiscussaoMaxMinutos;
+                          m++
+                        )
+                          DropdownMenuItem(
+                            value: m,
+                            child: Text('$m minuto${m == 1 ? '' : 's'}'),
+                          ),
+                      ],
+                      onChanged: (value) =>
+                          _atualizar(() => _timerMinutos = value),
+                    ),
+                  ),
+                  ConfigCard(
+                    title: 'Consenso dos lobisomens',
+                    icon: Icons.groups,
+                    child: RadioGroup<LobisomemConsenso>(
+                      groupValue: _consenso,
+                      onChanged: (value) {
+                        if (value == null) return;
+                        _atualizar(() => _consenso = value);
+                      },
+                      child: Column(
+                        children: [
+                          for (final opcao in LobisomemConsenso.values)
+                            RadioListTile<LobisomemConsenso>(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(opcao.nome),
+                              subtitle: Text(opcao.descricao),
+                              value: opcao,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Consumer<LobisomemPartidaProvider>(
+                    builder: (context, provider, _) {
+                      return PrimaryButton(
+                        text: 'Iniciar Partida',
+                        icon: Icons.play_arrow,
+                        isLoading: provider.isLoading,
+                        onPressed: _composicaoValida ? _iniciarPartida : null,
                       );
-                    }),
+                    },
                   ),
-                  if (!_papeisEspeciaisAleatorios) ...[
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Vidente'),
-                      value: _temVidente,
-                      onChanged: _podeAtivarEspecial(_temVidente)
-                          ? (value) => _atualizar(() => _temVidente = value)
-                          : null,
-                    ),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Bruxa'),
-                      value: _temBruxa,
-                      onChanged: _podeAtivarEspecial(_temBruxa)
-                          ? (value) => _atualizar(() => _temBruxa = value)
-                          : null,
-                    ),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Caçador'),
-                      value: _temCacador,
-                      onChanged: _podeAtivarEspecial(_temCacador)
-                          ? (value) => _atualizar(() => _temCacador = value)
-                          : null,
-                    ),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Bobo da Corte'),
-                      subtitle: const Text(
-                        'Vence sozinho se for eliminado na votação',
-                      ),
-                      value: _temBobo,
-                      onChanged: _podeAtivarEspecial(_temBobo)
-                          ? (value) => _atualizar(() => _temBobo = value)
-                          : null,
-                    ),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Ancião'),
-                      subtitle: const Text(
-                        'Sobrevive ao 1º ataque dos lobisomens',
-                      ),
-                      value: _temAnciao,
-                      onChanged: _podeAtivarEspecial(_temAnciao)
-                          ? (value) => _atualizar(() => _temAnciao = value)
-                          : null,
-                    ),
-                  ],
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
-            ConfigCard(
-              title: 'Composição',
-              subtitle: 'Preview da mesa',
-              icon: Icons.preview,
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  Chip(label: Text('$_quantidadeLobisomens Lobisomem(ns)')),
-                  if (_papeisEspeciaisAleatorios)
-                    Chip(
-                      label: Text(
-                        'Até $_maxEspeciaisAleatorios especiais aleatórios',
-                      ),
-                    )
-                  else ...[
-                    if (_temVidente) const Chip(label: Text('1 Vidente')),
-                    if (_temBruxa) const Chip(label: Text('1 Bruxa')),
-                    if (_temCacador) const Chip(label: Text('1 Caçador')),
-                    if (_temBobo) const Chip(label: Text('1 Bobo da Corte')),
-                    if (_temAnciao) const Chip(label: Text('1 Ancião')),
-                    Chip(label: Text('$_aldeoes Aldeão(ões)')),
-                  ],
-                ],
-              ),
-            ),
-            ConfigCard(
-              title: 'Revelação dos mortos',
-              icon: Icons.visibility,
-              child: RadioGroup<LobisomemRevelacao>(
-                groupValue: _revelacao,
-                onChanged: (value) {
-                  if (value == null) return;
-                  _atualizar(() => _revelacao = value);
-                },
-                child: Column(
-                  children: [
-                    for (final opcao in LobisomemRevelacao.values)
-                      RadioListTile<LobisomemRevelacao>(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(opcao.nome),
-                        subtitle: Text(opcao.descricao),
-                        value: opcao,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            ConfigCard(
-              title: 'Empate na votação',
-              icon: Icons.balance,
-              child: RadioGroup<LobisomemEmpate>(
-                groupValue: _empate,
-                onChanged: (value) {
-                  if (value == null) return;
-                  _atualizar(() => _empate = value);
-                },
-                child: Column(
-                  children: [
-                    for (final opcao in LobisomemEmpate.values)
-                      RadioListTile<LobisomemEmpate>(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(opcao.nome),
-                        subtitle: Text(opcao.descricao),
-                        value: opcao,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            ConfigCard(
-              title: 'Votação',
-              icon: Icons.how_to_vote,
-              child: Column(
-                children: [
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Permitir abstenção'),
-                    subtitle: const Text('Desligado por padrão'),
-                    value: _permitirAbstencao,
-                    onChanged: (value) =>
-                        _atualizar(() => _permitirAbstencao = value),
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Permitir voto em si'),
-                    subtitle: const Text('Ligado por padrão'),
-                    value: _permitirVotoEmSi,
-                    onChanged: (value) =>
-                        _atualizar(() => _permitirVotoEmSi = value),
-                  ),
-                ],
-              ),
-            ),
-            ConfigCard(
-              title: 'Timer da discussão',
-              subtitle: 'Desligado ou de 3 a 10 minutos',
-              icon: Icons.timer,
-              child: DropdownButtonFormField<int?>(
-                initialValue: _timerMinutos,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                items: [
-                  const DropdownMenuItem(value: null, child: Text('Desligado')),
-                  for (var m = LobisomemConstants.timerDiscussaoMinMinutos;
-                      m <= LobisomemConstants.timerDiscussaoMaxMinutos;
-                      m++)
-                    DropdownMenuItem(
-                      value: m,
-                      child: Text('$m minuto${m == 1 ? '' : 's'}'),
-                    ),
-                ],
-                onChanged: (value) => _atualizar(() => _timerMinutos = value),
-              ),
-            ),
-            ConfigCard(
-              title: 'Consenso dos lobisomens',
-              icon: Icons.groups,
-              child: RadioGroup<LobisomemConsenso>(
-                groupValue: _consenso,
-                onChanged: (value) {
-                  if (value == null) return;
-                  _atualizar(() => _consenso = value);
-                },
-                child: Column(
-                  children: [
-                    for (final opcao in LobisomemConsenso.values)
-                      RadioListTile<LobisomemConsenso>(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(opcao.nome),
-                        subtitle: Text(opcao.descricao),
-                        value: opcao,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Consumer<LobisomemPartidaProvider>(
-              builder: (context, provider, _) {
-                return PrimaryButton(
-                  text: 'Iniciar Partida',
-                  icon: Icons.play_arrow,
-                  isLoading: provider.isLoading,
-                  onPressed: _composicaoValida ? _iniciarPartida : null,
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
-      ),
     );
   }
 }

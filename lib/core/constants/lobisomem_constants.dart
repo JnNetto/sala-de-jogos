@@ -17,16 +17,14 @@ class LobisomemConstants {
       'A aldeia adormece. Todos fechem os olhos e permaneçam em silêncio.';
   static const String ponteNoite =
       'O celular vai passar de mão em mão. Cada pessoa viva olha só a própria tela, decide em silêncio e devolve o aparelho sem comentar o que viu.';
-  static const String amanhecerSemVitimas =
-      'A aldeia amanheceu sem vítimas.';
+  static const String amanhecerSemVitimas = 'A aldeia amanheceu sem vítimas.';
   static const String aberturaDiscussao =
       'O dia começa. Os vivos podem discutir, acusar e se defender. Quem já partiu assiste em silêncio.';
   static const String chamadaVotacao =
       'A discussão terminou. Cada pessoa viva vai votar, uma de cada vez, neste celular.';
   static const String desfechoAldeia =
       'A aldeia venceu. Os lobisomens foram expulsos.';
-  static const String desfechoLobisomens =
-      'Os lobisomens dominaram a aldeia.';
+  static const String desfechoLobisomens = 'Os lobisomens dominaram a aldeia.';
   static const String desfechoEmpate =
       'Ninguém restou. A história termina sem vencedores.';
 

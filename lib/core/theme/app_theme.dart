@@ -1,315 +1,260 @@
 import 'package:flutter/material.dart';
 
+import 'sala_texto.dart';
+import 'sala_tokens.dart';
+import 'transicao_sala.dart';
+
+export 'sala_texto.dart';
+export 'sala_tokens.dart';
+
 class AppTheme {
-  static const Color primaryColor = Color(0xFF6C63FF);
-  static const Color secondaryColor = Color(0xFF3F3D56);
-  static const Color accentColor = Color(0xFFFF6584);
-  static const Color backgroundColor = Color(0xFFF7F7F7);
-  static const Color surfaceColor = Colors.white;
-  static const Color errorColor = Color(0xFFE74C3C);
-  static const Color successColor = Color(0xFF2ECC71);
-  static const Color warningColor = Color(0xFFF39C12);
+  // Montados uma vez: o MaterialApp reconstrói a cada troca de tema.
+  static final _noite = _montar(SalaCores.noite, Brightness.dark);
+  static final _dia = _montar(SalaCores.dia, Brightness.light);
 
-  static const Color espiaoColor = Color(0xFFE74C3C);
-  static const Color civilColor = Color(0xFF3498DB);
+  static ThemeData noite() => _noite;
+  static ThemeData dia() => _dia;
 
-  static ThemeData get lightTheme {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
-        primary: primaryColor,
-        secondary: secondaryColor,
-        error: errorColor,
-        surface: surfaceColor,
-        brightness: Brightness.light,
-      ),
-      scaffoldBackgroundColor: backgroundColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: primaryColor,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          side: const BorderSide(color: primaryColor, width: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: primaryColor,
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ),
-      cardTheme: CardThemeData(
-        color: surfaceColor,
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: surfaceColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryColor, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: errorColor),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
-      ),
-      sliderTheme: const SliderThemeData(
-        activeTrackColor: primaryColor,
-        inactiveTrackColor: Color(0xFFE0E0E0),
-        thumbColor: primaryColor,
-        overlayColor: Color(0x296C63FF),
-      ),
-      switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return primaryColor;
-          }
-          return const Color(0xFFBDBDBD);
-        }),
-        trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return primaryColor.withValues(alpha: 0.5);
-          }
-          return const Color(0xFFE0E0E0);
-        }),
-      ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: secondaryColor,
-        ),
-        displayMedium: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: secondaryColor,
-        ),
-        displaySmall: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: secondaryColor,
-        ),
-        headlineLarge: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: secondaryColor,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: secondaryColor,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: secondaryColor,
-        ),
-        titleMedium: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: secondaryColor,
-        ),
-        bodyLarge: TextStyle(fontSize: 16, color: secondaryColor),
-        bodyMedium: TextStyle(fontSize: 14, color: secondaryColor),
-        labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: secondaryColor,
-        ),
-      ),
+  // Cores do sistema antigo, apontando para a paleta nova. Ficam até as telas
+  // migrarem para `context.cores` (ver docs/.../05-migracao.md).
+  static const Color primaryColor = Color(0xFF8F7CFF); // marca
+  static const Color secondaryColor = Color(0xFF67D6F0); // luar
+  static const Color accentColor = Color(0xFFFF77B7); // rosa
+  static const Color errorColor = Color(0xFFFF5D73); // carmim
+  static const Color successColor = Color(0xFF4FE3A6); // menta
+  static const Color warningColor = Color(0xFFFFC94D); // lâmpada
+  static const Color espiaoColor = Color(0xFFFF5D73); // papel-espiao
+  static const Color civilColor = Color(0xFF5FA2FF); // papel-civil
+
+  static ThemeData _montar(SalaCores c, Brightness b) {
+    final texto = salaTextTheme(c.texto);
+    final bordaControle = BorderSide(
+      color: c.linhaForte,
+      width: c.bordaControle,
     );
-  }
+    final scheme = ColorScheme(
+      brightness: b,
+      primary: c.primaria,
+      onPrimary: c.sobreCor,
+      secondary: c.marca,
+      onSecondary: c.ehDia ? Colors.white : c.sobreCor,
+      error: c.erro.cor,
+      onError: c.sobreCor,
+      surface: c.superficie,
+      onSurface: c.texto,
+      onSurfaceVariant: c.texto2,
+      surfaceContainerLowest: c.superficieFunda,
+      surfaceContainerHighest: c.superficieElevada,
+      outline: c.linhaForte,
+      outlineVariant: c.linha,
+      scrim: c.veu,
+      shadow: c.contorno,
+    );
+    final rr = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(Raio.lg),
+    );
+    OutlineInputBorder borda(BorderSide lado) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(Raio.md),
+      borderSide: lado,
+    );
+    // Fade-through: as telas são transparentes sobre o céu do palco, então
+    // a que sai some antes de a nova aparecer.
+    const transicao = TransicaoDaSala();
 
-  static const Color darkPrimaryColor = Color(0xFF8B84FF);
-  static const Color darkSecondaryColor = Color(0xFFE0E0E0);
-  static const Color darkBackgroundColor = Color(0xFF121212);
-  static const Color darkSurfaceColor = Color(0xFF1E1E1E);
-
-  static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: darkPrimaryColor,
-        primary: darkPrimaryColor,
-        secondary: darkSecondaryColor,
-        error: errorColor,
-        surface: darkSurfaceColor,
-        brightness: Brightness.dark,
+      brightness: b,
+      colorScheme: scheme,
+      // Transparente: o céu do PalcoDaSala aparece por trás de toda tela.
+      scaffoldBackgroundColor: Colors.transparent,
+      fontFamily: 'Nunito',
+      textTheme: texto,
+      splashFactory: NoSplash.splashFactory, // o toque é físico, não ripple
+      highlightColor: Colors.transparent,
+      iconTheme: IconThemeData(color: c.texto, size: 24, weight: 500, grade: 0),
+      extensions: [c, SalaTexto.padrao],
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: transicao,
+          TargetPlatform.iOS: transicao,
+        },
       ),
-      scaffoldBackgroundColor: darkBackgroundColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: darkSurfaceColor,
-        foregroundColor: Colors.white,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+        toolbarHeight: 64,
+        foregroundColor: c.texto,
+        titleTextStyle: texto.titleMedium?.copyWith(
+          fontWeight: FontWeight.w900,
+          fontVariations: const [FontVariation.weight(900)],
         ),
       ),
+      // Os botões do Material ficam coerentes; a ação principal usa BotaoSala.
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: darkPrimaryColor,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          backgroundColor: c.primaria,
+          foregroundColor: c.sobreCor,
+          elevation: 0,
+          minimumSize: const Size(64, 56),
+          padding: const EdgeInsets.symmetric(horizontal: Espaco.e6),
+          shape: rr,
+          textStyle: texto.labelLarge,
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: c.primaria,
+          foregroundColor: c.sobreCor,
+          minimumSize: const Size(64, 56),
+          shape: rr,
+          textStyle: texto.labelLarge,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: darkPrimaryColor,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          side: const BorderSide(color: darkPrimaryColor, width: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          foregroundColor: c.texto,
+          backgroundColor: c.superficie,
+          side: bordaControle,
+          minimumSize: const Size(64, 56),
+          shape: rr,
+          textStyle: texto.labelLarge,
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: darkPrimaryColor,
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          foregroundColor: c.primariaTinta,
+          minimumSize: const Size(48, 48),
+          padding: const EdgeInsets.symmetric(horizontal: Espaco.e4),
+          textStyle: texto.labelLarge,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Raio.md),
+          ),
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          minimumSize: const Size(48, 48),
+          foregroundColor: c.texto,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Raio.md),
+          ),
         ),
       ),
       cardTheme: CardThemeData(
-        color: darkSurfaceColor,
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        color: c.superficie,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Raio.xl),
+          side: BorderSide(
+            color: c.ehDia ? c.contorno : c.linha,
+            width: c.bordaControle,
+          ),
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: darkSurfaceColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF424242)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: darkPrimaryColor, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: errorColor),
-        ),
+        fillColor: c.ehDia ? c.superficie : c.superficieFunda,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
+          horizontal: Espaco.e4,
+          vertical: 18,
         ),
-      ),
-      sliderTheme: const SliderThemeData(
-        activeTrackColor: darkPrimaryColor,
-        inactiveTrackColor: Color(0xFF424242),
-        thumbColor: darkPrimaryColor,
-        overlayColor: Color(0x298B84FF),
+        hintStyle: texto.bodyLarge?.copyWith(color: c.texto3),
+        border: borda(bordaControle),
+        enabledBorder: borda(bordaControle),
+        focusedBorder: borda(BorderSide(color: c.marca, width: 2)),
+        errorBorder: borda(BorderSide(color: c.erro.cor, width: 2)),
+        focusedErrorBorder: borda(BorderSide(color: c.erro.cor, width: 2)),
+        errorStyle: texto.bodySmall?.copyWith(color: c.erro.tinta),
+        helperStyle: texto.bodySmall?.copyWith(color: c.texto3),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return darkPrimaryColor;
-          }
-          return const Color(0xFF757575);
-        }),
-        trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return darkPrimaryColor.withValues(alpha: 0.5);
-          }
-          return const Color(0xFF424242);
-        }),
+        thumbColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? c.primaria : c.texto3,
+        ),
+        trackColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected)
+              ? c.luz(Matiz.lampada).suave
+              : c.superficieFunda,
+        ),
+        trackOutlineColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected)
+              ? (c.ehDia ? c.contorno : c.primaria)
+              : c.linhaForte,
+        ),
+        trackOutlineWidth: WidgetStatePropertyAll(c.bordaControle),
       ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: darkSecondaryColor,
-        ),
-        displayMedium: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: darkSecondaryColor,
-        ),
-        displaySmall: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: darkSecondaryColor,
-        ),
-        headlineLarge: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: darkSecondaryColor,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: darkSecondaryColor,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: darkSecondaryColor,
-        ),
-        titleMedium: TextStyle(
+      sliderTheme: SliderThemeData(
+        trackHeight: 10,
+        activeTrackColor: c.primaria,
+        inactiveTrackColor: c.superficieFunda,
+        thumbColor: c.primaria,
+        overlayColor: c.primaria.withValues(alpha: .22),
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 14),
+        tickMarkShape: const RoundSliderTickMarkShape(tickMarkRadius: 2),
+        activeTickMarkColor: c.sobreCor.withValues(alpha: .5),
+        inactiveTickMarkColor: c.texto3,
+        valueIndicatorColor: c.janelaBarra,
+        valueIndicatorTextStyle: SalaTexto.padrao.hud.copyWith(
+          color: c.janelaBarraTexto,
           fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: darkSecondaryColor,
         ),
-        bodyLarge: TextStyle(fontSize: 16, color: darkSecondaryColor),
-        bodyMedium: TextStyle(fontSize: 14, color: darkSecondaryColor),
-        labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: darkSecondaryColor,
+        showValueIndicator: ShowValueIndicator.onDrag,
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: c.superficie,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Raio.xl),
         ),
+        titleTextStyle: texto.headlineSmall,
+        contentTextStyle: texto.bodyMedium?.copyWith(color: c.texto2),
+        barrierColor: c.veu,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: c.superficieElevada,
+        elevation: 0,
+        contentTextStyle: texto.bodyMedium?.copyWith(
+          color: c.texto,
+          fontWeight: FontWeight.w700,
+          fontVariations: const [FontVariation.weight(700)],
+        ),
+        actionTextColor: c.primariaTinta,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Raio.lg),
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: c.superficie,
+        surfaceTintColor: Colors.transparent,
+        showDragHandle: true,
+        dragHandleColor: c.linhaForte,
+        dragHandleSize: const Size(36, 4),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(Raio.xxl)),
+        ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: c.linha,
+        thickness: 1.5,
+        space: 1.5,
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: c.primaria,
+        linearTrackColor: c.superficieFunda,
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: c.janelaBarra,
+          borderRadius: BorderRadius.circular(Raio.xs),
+        ),
+        textStyle: texto.labelMedium?.copyWith(color: c.janelaBarraTexto),
       ),
     );
   }

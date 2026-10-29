@@ -5,6 +5,7 @@ import '../../../data/models/resistencia_jogador_remoto.dart';
 import '../../../data/models/resistencia_sala.dart';
 import '../../providers/resistencia_sala_provider.dart';
 import '../../widgets/primary_button.dart';
+import '../../navegacao.dart';
 
 class ResistenciaLobbyRemotoScreen extends StatefulWidget {
   const ResistenciaLobbyRemotoScreen({super.key});
@@ -134,7 +135,7 @@ class _ResistenciaLobbyRemotoScreenState
     final ok = await provider.sairDaSalaRemota();
     if (!context.mounted) return;
     if (ok) {
-      navigator.popUntil((route) => route.isFirst);
+      navigator.popUntil(ehBaseDosJogos);
     } else if (provider.erro != null) {
       messenger.showSnackBar(
         SnackBar(content: Text(provider.erro!), backgroundColor: Colors.red),
@@ -173,7 +174,7 @@ class _ResistenciaLobbyRemotoScreenState
       if (!context.mounted) return;
       await provider.esquecerUltimaSala();
       if (!context.mounted) return;
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil(ehBaseDosJogos);
     });
   }
 }

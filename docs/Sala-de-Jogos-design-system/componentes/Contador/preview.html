@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>Contador</title></head>
+<body>
+
+<div class="sj-palco">
+  <div class="sj-contador">
+    <button class="sj-btn-icone" id="m" aria-label="Menos"><span class="ms">remove</span></button>
+    <div class="sj-contador__valor" aria-live="polite"><span id="n">5</span></div>
+    <button class="sj-btn-icone" id="p" aria-label="Mais"><span class="ms">add</span></button>
+  </div>
+  <span class="sj-rotulo">Rodadas</span>
+</div>
+<script>
+var n=5,box=document.querySelector('.sj-contador__valor');
+function set(d){var nv=Math.max(1,Math.min(10,n+d));if(nv===n)return;var old=box.querySelector('span');var e=document.createElement('span');e.textContent=nv;e.style.transform='translateY('+(d>0?'100%':'-100%')+')';e.style.opacity='0';box.appendChild(e);requestAnimationFrame(function(){requestAnimationFrame(function(){old.style.transform='translateY('+(d>0?'-100%':'100%')+')';old.style.opacity='0';e.style.transform='none';e.style.opacity='1';});});setTimeout(function(){old.remove();},260);n=nv;}
+document.getElementById('m').onclick=function(){set(-1)};document.getElementById('p').onclick=function(){set(1)};
+</script>
+</body>
+</html>

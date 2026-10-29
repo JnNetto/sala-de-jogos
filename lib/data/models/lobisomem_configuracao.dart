@@ -191,7 +191,9 @@ class LobisomemConfiguracao {
         narradorIndex: narradorIndex,
         quantidadeLobisomens: _lerInt(
           json['quantidadeLobisomens'],
-          padrao: LobisomemConstants.lobisomensRecomendados(quantidadeJogadores),
+          padrao: LobisomemConstants.lobisomensRecomendados(
+            quantidadeJogadores,
+          ),
         ),
         temVidente: json['temVidente'] as bool? ?? true,
         temBruxa: json['temBruxa'] as bool? ?? false,

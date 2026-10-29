@@ -5,6 +5,7 @@ import '../../../core/enums/lobisomem_vencedor.dart';
 import '../../providers/lobisomem_partida_provider.dart';
 import '../../widgets/primary_button.dart';
 import 'lobisomem_configuracao_screen.dart';
+import '../../navegacao.dart';
 
 class LobisomemResultadoFinalScreen extends StatelessWidget {
   const LobisomemResultadoFinalScreen({super.key});
@@ -131,7 +132,7 @@ class LobisomemResultadoFinalScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => const LobisomemConfiguracaoScreen(),
                     ),
-                    (route) => route.isFirst,
+                    ehBaseDosJogos,
                   );
                 },
               ),
@@ -139,7 +140,7 @@ class LobisomemResultadoFinalScreen extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: () {
                   provider.limparPartida();
-                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).popUntil(ehBaseDosJogos);
                 },
                 icon: const Icon(Icons.home),
                 label: const Text('Voltar ao início'),

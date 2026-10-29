@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+
 import '../../core/enums/vencedor.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/sala_tokens.dart';
 import '../../data/models/jogador_partida.dart';
 import '../../data/models/palavra.dart';
+import '../navegacao.dart';
 import '../providers/partida_provider.dart';
-import '../widgets/primary_button.dart';
-import 'configuracao_screen.dart';
+import '../widgets/sala/botao_sala.dart';
+import '../widgets/sala/fim_de_jogo.dart';
+import '../widgets/sala/janela.dart';
+import '../widgets/sala/jogador_sala.dart';
+import '../widgets/sala/selo_papel.dart';
+import '../widgets/sala/tela_da_sala.dart';
 import 'distribuicao_papeis_screen.dart';
 
+/// Fim de jogo: quem venceu, quem era espião, qual era a palavra e como
+/// ficou a mesa.
 class ResultadoScreen extends StatefulWidget {
   const ResultadoScreen({super.key});
 
@@ -18,289 +27,296 @@ class ResultadoScreen extends StatefulWidget {
 
 class _ResultadoScreenState extends State<ResultadoScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+  /// Título entra com escala; linhas da mesa em cascata de 60 ms.
+  late final AnimationController _entrada;
 
-  // Captura os dados da partida para evitar que sejam atualizados
-  // quando "Jogar Novamente" for clicado
-  late Vencedor _vencedor;
-  late Palavra _palavraSecreta;
+  // A partida é copiada aqui: "Jogar de novo" troca a do provider.
+  late final Vencedor _vencedor;
+  late final Palavra _palavraSecreta;
   Palavra? _palavraRelacionada;
-  late List<JogadorPartida> _civis;
-  late List<JogadorPartida> _espioes;
-  late List<JogadorPartida> _jogadoresEliminados;
+  late final List<JogadorPartida> _jogadores;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _scaleAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    );
-    _animationController.forward();
-
-    // Captura os dados da partida atual antes de finalizar
     final partida = context.read<PartidaProvider>().partida;
-    if (partida != null) {
-      _vencedor = partida.vencedor;
-      _palavraSecreta = partida.palavraSecreta;
-      _palavraRelacionada = partida.palavraRelacionada;
-      _civis = List.from(partida.civis);
-      _espioes = List.from(partida.espioes);
-      _jogadoresEliminados = List.from(partida.jogadoresEliminados);
-    }
+    _vencedor = partida?.vencedor ?? Vencedor.emAndamento;
+    _palavraSecreta = partida!.palavraSecreta;
+    _palavraRelacionada = partida.palavraRelacionada;
+    _jogadores = List.of(partida.jogadores);
+    _entrada = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 320 + 60 * _jogadores.length + 220),
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Movimento.reduzido(context)) {
+        _entrada.value = 1;
+      } else {
+        _entrada.forward();
+      }
       context.read<PartidaProvider>().finalizarPartida();
     });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _entrada.dispose();
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final civisVenceram = _vencedor == Vencedor.civis;
-    final backgroundColor = civisVenceram
-        ? AppTheme.civilColor
-        : AppTheme.espiaoColor;
-
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                const Spacer(),
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Column(
-                    children: [
-                      Icon(
-                        civisVenceram ? Icons.group : Icons.visibility_off,
-                        size: 120,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(height: 32),
-                      Text(
-                        _vencedor.displayName,
-                        style: const TextStyle(
-                          fontSize: 42,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 48),
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Palavra secreta:',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                                Text(
-                                  _palavraSecreta.texto,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: backgroundColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (_palavraRelacionada != null) ...[
-                              const SizedBox(height: 12),
-                              Divider(color: Colors.grey[300]),
-                              const SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Palavra do espião:',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey[700],
-                                    ),
-                                  ),
-                                  Text(
-                                    _palavraRelacionada!.texto,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: backgroundColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Resumo da Partida',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildResumoItem(
-                        'Civis',
-                        _civis.map((j) => j.nome).join(', '),
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResumoItem(
-                        'Espiões',
-                        _espioes.map((j) => j.nome).join(', '),
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResumoItem(
-                        'Eliminados',
-                        _jogadoresEliminados.isEmpty
-                            ? 'Ninguém'
-                            : _jogadoresEliminados
-                                  .map((j) => j.nome)
-                                  .join(', '),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Consumer<PartidaProvider>(
-                  builder: (context, provider, _) {
-                    return Column(
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: PrimaryButton(
-                            text: 'Jogar Novamente',
-                            icon: Icons.refresh,
-                            backgroundColor: Colors.white,
-                            textColor: backgroundColor,
-                            onPressed: () async {
-                              final sucesso = await provider.jogarNovamente();
-                              if (sucesso && mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const DistribuicaoPapeisScreen(),
-                                  ),
-                                  (route) => route.isFirst,
-                                );
-                              } else if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      provider.erro ??
-                                          'Erro ao iniciar partida',
-                                    ),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              provider.encerrarPartida();
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ConfiguracaoScreen(),
-                                ),
-                                (route) => route.isFirst,
-                              );
-                            },
-                            icon: const Icon(Icons.arrow_back),
-                            label: const Text('Voltar ao Início'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              side: const BorderSide(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
+  Animation<double> _trecho(int inicioMs, int duracaoMs, Curve curva) {
+    final total = _entrada.duration!.inMilliseconds;
+    return CurvedAnimation(
+      parent: _entrada,
+      curve: Interval(
+        inicioMs / total,
+        ((inicioMs + duracaoMs) / total).clamp(0, 1),
+        curve: curva,
       ),
     );
   }
 
-  Widget _buildResumoItem(String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 100,
-          child: Text(
-            '$label:',
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
+  Widget _entrando(Animation<double> a, Widget filho, {double sobe = 12}) =>
+      AnimatedBuilder(
+        animation: a,
+        builder: (_, f) => Opacity(
+          opacity: a.value.clamp(0, 1),
+          child: Transform.translate(
+            offset: Offset(0, sobe * (1 - a.value)),
+            child: f,
+          ),
+        ),
+        child: filho,
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.cores;
+    final texto = Theme.of(context).textTheme;
+    final civis = _vencedor == Vencedor.civis;
+    final espioes = _jogadores.where((j) => j.isEspiao).toList();
+    final varios = espioes.length > 1;
+    final luzVencedor = civis ? c.papelCivil : c.papelEspiao;
+    final frase = civis
+        ? (varios ? 'Pegaram os espiões!' : 'Pegaram o espião!')
+        : (varios ? 'Os espiões escaparam!' : 'O espião escapou!');
+    final titulo = _trecho(0, 320, Movimento.pulo);
+
+    return PopScope(
+      canPop: false,
+      child: TelaDaSala(
+        matiz: Matiz.violeta,
+        corpo: SafeArea(
+          top: false,
+          bottom: false,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: Espaco.larguraMax),
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Espaco.margemTela,
+                  Espaco.e2,
+                  Espaco.margemTela,
+                  Espaco.e6,
+                ),
+                children: [
+                  AnimatedBuilder(
+                    animation: titulo,
+                    builder: (_, f) => Opacity(
+                      opacity: titulo.value.clamp(0, 1),
+                      child: Transform.scale(
+                        scale: .9 + .1 * titulo.value,
+                        child: f,
+                      ),
+                    ),
+                    child: Janela(
+                      titulo: 'FIM DE JOGO',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Center(
+                            child: SeloPapel(
+                              texto: civis
+                                  ? 'CIVIS VENCERAM'
+                                  : (varios
+                                        ? 'ESPIÕES VENCERAM'
+                                        : 'ESPIÃO VENCEU'),
+                              icone: Symbols.trophy_rounded,
+                              luz: luzVencedor,
+                            ),
+                          ),
+                          const SizedBox(height: Espaco.e4),
+                          Text(
+                            frase,
+                            textAlign: TextAlign.center,
+                            style: texto.headlineMedium,
+                          ),
+                          const SizedBox(height: Espaco.e6),
+                          for (final e in espioes) ...[
+                            FatoDoFim(
+                              poco: AvatarJogador(
+                                nome: e.nome,
+                                indice: e.id - 1,
+                                tamanho: 44,
+                              ),
+                              texto: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: e.nome,
+                                    style: TextStyle(
+                                      color: c.texto,
+                                      fontWeight: FontWeight.w800,
+                                      fontVariations: const [
+                                        FontVariation.weight(800),
+                                      ],
+                                    ),
+                                  ),
+                                  const TextSpan(text: ' era espião'),
+                                ],
+                              ),
+                              direita: SeloPapel.espiao(
+                                context,
+                                compacto: true,
+                              ),
+                            ),
+                            const SizedBox(height: Espaco.e2),
+                          ],
+                          FatoDoFim(
+                            poco: PocoIcone(
+                              icone: Symbols.key_rounded,
+                              luz: c.papelCivil,
+                            ),
+                            texto: comDestaque(
+                              context,
+                              'A palavra era ',
+                              _palavraSecreta.texto,
+                            ),
+                          ),
+                          if (_palavraRelacionada != null) ...[
+                            const SizedBox(height: Espaco.e2),
+                            FatoDoFim(
+                              poco: PocoIcone(
+                                icone: Symbols.visibility_off_rounded,
+                                luz: c.papelEspiao,
+                              ),
+                              texto: comDestaque(
+                                context,
+                                'A pista do espião era ',
+                                _palavraRelacionada!.texto,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Espaco.e8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text('Na mesa', style: texto.titleMedium),
+                      ),
+                      Text(
+                        '${_jogadores.length} JOGADORES',
+                        style: texto.labelSmall?.copyWith(color: c.texto3),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: Espaco.e3),
+                  for (final (i, j) in _jogadores.indexed) ...[
+                    _entrando(
+                      _trecho(320 + 60 * i, 220, Movimento.entrada),
+                      LinhaJogador(
+                        nome: j.nome,
+                        indice: j.id - 1,
+                        apagado: j.foiEliminado,
+                        direita: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (j.foiEliminado) ...[
+                              Text(
+                                'FORA',
+                                style: texto.labelSmall?.copyWith(
+                                  color: c.texto3,
+                                ),
+                              ),
+                              const SizedBox(width: Espaco.e2),
+                            ],
+                            j.isEspiao
+                                ? SeloPapel.espiao(context, compacto: true)
+                                : SeloPapel.civil(context, compacto: true),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: Espaco.e2),
+                  ],
+                ],
+              ),
             ),
           ),
         ),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white.withValues(alpha: 0.9),
+        rodape: Consumer<PartidaProvider>(
+          builder: (context, provider, _) => SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Espaco.margemTela,
+                Espaco.e3,
+                Espaco.margemTela,
+                Espaco.e3,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BotaoSala(
+                    rotulo: 'Jogar de novo',
+                    icone: Symbols.replay_rounded,
+                    luz: c.luz(Matiz.violeta),
+                    bloco: true,
+                    carregando: provider.isLoading,
+                    onPressed: () async {
+                      final sucesso = await provider.jogarNovamente();
+                      if (!context.mounted) return;
+                      if (sucesso) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const DistribuicaoPapeisScreen(),
+                          ),
+                          ehInicioDoEspiao,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              provider.erro ??
+                                  'Não deu para começar outra partida. '
+                                      'Tente de novo.',
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: Espaco.e1),
+                  BotaoSala(
+                    rotulo: 'Voltar ao início',
+                    variante: VarianteBotao.fantasma,
+                    luz: Luz(c.texto2, c.texto2, c.superficieFunda),
+                    bloco: true,
+                    onPressed: () {
+                      provider.encerrarPartida();
+                      Navigator.of(context).popUntil(ehInicioDoEspiao);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

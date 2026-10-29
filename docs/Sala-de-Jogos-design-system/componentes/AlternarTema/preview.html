@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>AlternarTema</title></head>
+<body>
+
+<div class="sj-palco">
+  <button class="sj-tema" id="t" aria-label="Trocar para tema Dia">
+    <span class="ceu-mini"><i style="left:44px;top:10px"></i><i style="left:58px;top:22px"></i><i style="left:50px;top:28px;width:2px;height:2px"></i></span>
+    <span class="polegar"><span class="ms cheio lua">dark_mode</span><span class="ms cheio sol">light_mode</span></span>
+  </button>
+  <span class="sj-rotulo">Toque para trocar o tema do preview</span>
+</div>
+<script>
+var b=document.getElementById('t');
+b.addEventListener('click',function(){var r=document.documentElement;var dia=r.getAttribute('data-theme')==='dia';r.setAttribute('data-theme',dia?'noite':'dia');b.setAttribute('aria-label',dia?'Trocar para tema Dia':'Trocar para tema Noite');});
+</script>
+</body>
+</html>

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+
 import '../../core/enums/vencedor.dart';
+import '../../core/theme/sala_tokens.dart';
+import '../navegacao.dart';
 import '../providers/partida_provider.dart';
-import '../widgets/primary_button.dart';
+import '../widgets/sala/botao_sala.dart';
+import '../widgets/sala/dialogo.dart';
+import '../widgets/sala/jogador_sala.dart';
+import '../widgets/sala/tela_da_sala.dart';
 import 'resultado_screen.dart';
 
+/// A votação: a roda escolhe junto um suspeito para sair da mesa.
 class VotacaoScreen extends StatefulWidget {
   const VotacaoScreen({super.key});
 
@@ -13,243 +22,173 @@ class VotacaoScreen extends StatefulWidget {
 }
 
 class _VotacaoScreenState extends State<VotacaoScreen> {
-  int? _jogadorSelecionado;
+  int? _selecionado;
+  int _rodada = 1;
+
+  Future<void> _abortar() async {
+    final abortar = await mostrarDialogo(
+      context,
+      matiz: Matiz.violeta,
+      barra: 'ATENÇÃO',
+      icone: Symbols.stop_circle_rounded,
+      titulo: 'Abortar a partida?',
+      corpo:
+          'A votação para aqui e a partida não conta nas estatísticas. '
+          'Vocês voltam para a escolha de jogadores.',
+      acao: 'Abortar',
+      escape: 'Continuar votando',
+      perigo: true,
+    );
+    if (abortar != true || !mounted) return;
+    context.read<PartidaProvider>().encerrarPartida();
+    Navigator.of(context).popUntil(ehInicioDoEspiao);
+  }
+
+  Future<void> _votar() async {
+    final provider = context.read<PartidaProvider>();
+    final partida = provider.partida;
+    final id = _selecionado;
+    if (partida == null || id == null) return;
+    final nome = partida.jogadores.firstWhere((j) => j.id == id).nome;
+
+    final confirmou = await mostrarDialogo(
+      context,
+      matiz: Matiz.violeta,
+      barra: 'VOTAÇÃO',
+      icone: Symbols.how_to_vote_rounded,
+      titulo: 'Tirar $nome da mesa?',
+      corpo:
+          'Se $nome for o espião, os civis vencem. Se não for, a partida '
+          'continua sem $nome.',
+      acao: 'Tirar $nome',
+      escape: 'Escolher outro',
+    );
+    if (confirmou != true || !mounted) return;
+
+    HapticFeedback.heavyImpact();
+    provider.votarJogador(id);
+    final vencedor = provider.partida!.vencedor;
+
+    if (vencedor != Vencedor.emAndamento) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(builder: (_) => const ResultadoScreen()),
+      );
+      return;
+    }
+    await mostrarDialogo(
+      context,
+      matiz: Matiz.violeta,
+      barra: 'FORA DA MESA',
+      icone: Symbols.person_remove_rounded,
+      titulo: '$nome saiu da mesa.',
+      corpo:
+          'Ninguém venceu ainda: tem espião entre vocês. Conversem e '
+          'votem de novo.',
+      acao: 'Votar de novo',
+      dispensavel: false,
+    );
+    if (!mounted) return;
+    setState(() {
+      _selecionado = null;
+      _rodada++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final c = context.cores;
+    final texto = Theme.of(context).textTheme;
+    final luz = c.luz(Matiz.violeta);
+    final partida = context.watch<PartidaProvider>().partida;
+    if (partida == null) {
+      return const TelaDaSala(
+        corpo: Center(child: Text('A partida terminou.')),
+      );
+    }
+    final ativos = partida.jogadoresAtivos;
+    final selecionado = ativos.where((j) => j.id == _selecionado).firstOrNull;
+
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Votação'),
-          automaticallyImplyLeading: false,
+      onPopInvokedWithResult: (saiu, _) {
+        if (!saiu) _abortar();
+      },
+      child: TelaDaSala(
+        sobretitulo: _rodada == 1 ? 'VOTAÇÃO' : 'VOTAÇÃO $_rodada',
+        titulo: 'Quem é o Espião?',
+        matiz: Matiz.violeta,
+        voltar: false,
+        acao: BotaoIcone(
+          icone: Symbols.stop_circle_rounded,
+          rotulo: 'Abortar partida',
+          perigo: true,
+          onPressed: _abortar,
         ),
-        body: Consumer<PartidaProvider>(
-          builder: (context, provider, _) {
-            final partida = provider.partida;
-            if (partida == null) {
-              return const Center(child: Text('Erro: partida não encontrada'));
-            }
-
-            final jogadoresAtivos = partida.jogadoresAtivos;
-
-            return SafeArea(
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.1),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.how_to_vote,
-                          size: 48,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Quem é o espião?',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: jogadoresAtivos.length,
-                      itemBuilder: (context, index) {
-                        final jogador = jogadoresAtivos[index];
-                        final isSelecionado = _jogadorSelecionado == jogador.id;
-
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          elevation: isSelecionado ? 8 : 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(
-                              color: isSelecionado
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _jogadorSelecionado = jogador.id;
-                              });
-                            },
-                            borderRadius: BorderRadius.circular(12),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: isSelecionado
-                                          ? Theme.of(
-                                              context,
-                                            ).colorScheme.primary
-                                          : Colors.grey[200],
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        jogador.id.toString(),
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: isSelecionado
-                                              ? Colors.white
-                                              : Colors.grey[700],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Text(
-                                      jogador.nome,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(
-                                            fontWeight: isSelecionado
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                    ),
-                                  ),
-                                  if (isSelecionado)
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                      size: 28,
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: PrimaryButton(
-                        text: 'Confirmar Voto',
-                        icon: Icons.check,
-                        onPressed: _jogadorSelecionado != null
-                            ? () => _confirmarVoto(context, provider)
-                            : null,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  void _confirmarVoto(BuildContext context, PartidaProvider provider) {
-    if (_jogadorSelecionado == null) return;
-
-    final partida = provider.partida;
-    if (partida == null) return;
-
-    final jogadorVotado = partida.jogadores.firstWhere(
-      (j) => j.id == _jogadorSelecionado,
-    );
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Confirmar Voto'),
-        content: Text('Vocês votaram em ${jogadorVotado.nome}. Confirmar?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
+        corpo: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            Espaco.margemTela,
+            Espaco.e4,
+            Espaco.margemTela,
+            Espaco.e6,
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              provider.votarJogador(_jogadorSelecionado!);
-
-              final partidaAtualizada = provider.partida!;
-
-              _mostrarResultadoVotacao(
-                context,
-                jogadorVotado,
-                partidaAtualizada.vencedor,
-              );
-            },
-            child: const Text('Confirmar'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _mostrarResultadoVotacao(
-    BuildContext context,
-    dynamic jogadorVotado,
-    Vencedor vencedor,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: Row(
           children: [
-            const Icon(Icons.person_remove, size: 32),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                '${jogadorVotado.nome} foi eliminado!',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+            Text('Quem é o espião?', style: texto.headlineLarge),
+            const SizedBox(height: Espaco.e2),
+            Text(
+              'Conversem e escolham juntos um suspeito.',
+              style: texto.bodyLarge?.copyWith(color: c.texto2),
             ),
+            const SizedBox(height: Espaco.e6),
+            for (final j in ativos) ...[
+              LinhaJogador(
+                nome: j.nome,
+                indice: j.id - 1,
+                selecionado: j.id == _selecionado,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  setState(() => _selecionado = j.id);
+                },
+                direita: AnimatedSwitcher(
+                  duration: Movimento.base,
+                  switchInCurve: Movimento.pulo,
+                  transitionBuilder: (f, a) =>
+                      ScaleTransition(scale: a, child: f),
+                  child: j.id == _selecionado
+                      ? Icon(
+                          Symbols.check_circle_rounded,
+                          key: const ValueKey('sim'),
+                          fill: 1,
+                          size: 28,
+                          color: luz.tinta,
+                        )
+                      : const SizedBox(key: ValueKey('nao'), width: 28),
+                ),
+              ),
+              const SizedBox(height: Espaco.e3),
+            ],
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-
-              if (vencedor != Vencedor.emAndamento) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ResultadoScreen(),
-                  ),
-                );
-              } else {
-                setState(() {
-                  _jogadorSelecionado = null;
-                });
-              }
-            },
-            child: const Text(
-              'Continuar',
-              style: TextStyle(fontWeight: FontWeight.bold),
+        rodape: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Espaco.margemTela,
+              Espaco.e3,
+              Espaco.margemTela,
+              Espaco.e4,
+            ),
+            child: BotaoSala(
+              rotulo: selecionado == null
+                  ? 'Escolham um suspeito'
+                  : 'Votar em ${selecionado.nome}',
+              icone: Symbols.how_to_vote_rounded,
+              luz: luz,
+              bloco: true,
+              onPressed: selecionado == null ? null : _votar,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

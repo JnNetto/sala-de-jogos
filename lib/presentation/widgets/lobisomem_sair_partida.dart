@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/lobisomem_partida_provider.dart';
+import '../navegacao.dart';
 
 Future<void> confirmarSaidaLobisomem(BuildContext context) async {
   final confirmed = await showDialog<bool>(
@@ -27,7 +28,7 @@ Future<void> confirmarSaidaLobisomem(BuildContext context) async {
 
   if (confirmed == true && context.mounted) {
     context.read<LobisomemPartidaProvider>().limparPartida();
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).popUntil(ehBaseDosJogos);
   }
 }
 

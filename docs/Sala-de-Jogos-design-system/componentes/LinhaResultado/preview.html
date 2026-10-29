@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<link rel="stylesheet" href="../bundle.css"><meta charset="utf-8"><title>LinhaResultado</title></head>
+<body>
+
+<div class="sj-palco col" style="max-width:420px;gap:10px;position:relative" id="box">
+  <div class="sj-resultado sj-c-menta" id="r1"><span class="sj-resultado__texto">Capital da Austrália</span><span class="sj-resultado__estado"><span class="ms">check</span>Acertou</span></div>
+  <div class="sj-resultado sj-c-carmim" id="r2"><span class="sj-resultado__texto">Ano da Lei Áurea</span><span class="sj-resultado__estado"><span class="ms">close</span>Errou</span></div>
+  <div class="sj-resultado sj-c-lampada"><span class="sj-resultado__texto">Maior osso do corpo</span><span class="sj-resultado__estado"><span class="ms">skip_next</span>Passou</span></div>
+  <div><button class="sj-btn sj-btn--fantasma sj-btn--compacto" id="rep"><span class="ms">replay</span>Repetir animações</button></div>
+</div>
+<script>
+function faiscas(el){var box=document.getElementById('box'),r=el.getBoundingClientRect(),b=box.getBoundingClientRect();for(var i=0;i<10;i++){var f=document.createElement('span');f.className='sj-faisca';f.style.setProperty('--c','var(--menta)');var x=r.right-b.left-60,y=r.top-b.top+r.height/2;f.style.left=x+'px';f.style.top=y+'px';box.appendChild(f);var ang=Math.random()*Math.PI*2,d=30+Math.random()*30;f.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate('+Math.cos(ang)*d+'px,'+Math.sin(ang)*d+'px) scale(.4)',opacity:0}],{duration:520,easing:'cubic-bezier(.05,.7,.1,1)'}).onfinish=(function(n){return function(){n.remove()}})(f);}}
+function rep(){var a=document.getElementById('r1'),b=document.getElementById('r2');a.classList.remove('anima-acerto');b.classList.remove('anima-erro');void a.offsetWidth;a.classList.add('anima-acerto');faiscas(a);setTimeout(function(){b.classList.add('anima-erro')},300);}
+document.getElementById('rep').onclick=rep;setTimeout(rep,400);
+</script>
+</body>
+</html>

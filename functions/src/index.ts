@@ -1,6 +1,26 @@
 import {FieldValue} from "firebase-admin/firestore";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
 import {db} from "./firebaseAdmin";
+import {
+  legalMissionCard,
+  missionSecretId,
+  resolveMission,
+  resolveVote,
+  teamSizeFor,
+} from "./resistenciaTurno";
+import {
+  criarSala,
+  entrarSala,
+  expulsarJogador,
+  normalizeCode,
+  normalizeDisplayName,
+  requireRoomId,
+  requireTargetUid,
+  requireUid,
+  sairSala,
+  shuffle,
+  type SalaLobby,
+} from "./salaLobby";
 
 export * from "./soUma";
 export * from "./aneis";
@@ -14,15 +34,6 @@ const spyCount: Record<number, number> = {
   9: 3,
   10: 4,
 };
-const teamSizes: Record<number, number[]> = {
-  5: [2, 3, 2, 3, 3],
-  6: [2, 3, 4, 3, 4],
-  7: [2, 3, 3, 4, 4],
-  8: [3, 4, 4, 5, 5],
-  9: [3, 4, 4, 5, 5],
-  10: [3, 4, 4, 5, 5],
-};
-
 type Assignment = {
   uid: string;
   seat: number;
@@ -41,52 +52,17 @@ type Reveal = {
   team: string;
 };
 
-function requireUid(uid: string | undefined): string {
-  if (!uid) {
-    throw new HttpsError("unauthenticated", "Faça login para continuar");
-  }
-  return uid;
-}
-
-function normalizeDisplayName(value: unknown): string {
-  if (typeof value !== "string") {
-    throw new HttpsError("invalid-argument", "Nome inválido");
-  }
-  const name = value.trim();
-  if (name.length < 1 || name.length > 24) {
-    throw new HttpsError("invalid-argument", "Nome deve ter 1 a 24 caracteres");
-  }
-  return name;
-}
-
-function normalizeCode(value: unknown): string {
-  if (typeof value !== "string") {
-    throw new HttpsError("invalid-argument", "Código inválido");
-  }
-  const code = value.trim().toUpperCase();
-  if (!/^[A-Z0-9]{4,6}$/.test(code)) {
-    throw new HttpsError("invalid-argument", "Código inválido");
-  }
-  return code;
-}
-
-function createRoomCode(): string {
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "";
-  for (let i = 0; i < 4; i++) {
-    code += alphabet[Math.floor(Math.random() * alphabet.length)];
-  }
-  return code;
-}
-
-function shuffle<T>(items: T[]): T[] {
-  const list = [...items];
-  for (let i = list.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [list[i], list[j]] = [list[j], list[i]];
-  }
-  return list;
-}
+const resistenciaLobby: SalaLobby = {
+  rooms: "rooms",
+  codes: "roomCodes",
+  maxPlayers: 10,
+  roomExtra: {
+    settings: {
+      variant: "basic",
+      fiveRejectsRule: "spiesWin",
+    },
+  },
+};
 
 function buildBasicRoles(playerCount: number): Array<Pick<Assignment, "role" | "team">> {
   const spies = spyCount[playerCount];
@@ -133,10 +109,6 @@ function nextLeaderUid(players: PlayerSeat[], leaderUid: string): string {
   return players[(currentIndex + 1) % players.length].uid;
 }
 
-function failsRequired(round: number, playerCount: number): number {
-  return round === 4 && playerCount >= 7 ? 2 : 1;
-}
-
 async function readReveals(
   tx: FirebaseFirestore.Transaction,
   roomId: string,
@@ -172,190 +144,29 @@ function writeReveals(
 export const createRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const displayName = normalizeDisplayName(req.data?.displayName);
-
-  for (let attempt = 0; attempt < 8; attempt++) {
-    const code = createRoomCode();
-    const codeRef = db.doc(`roomCodes/${code}`);
-    const roomRef = db.collection("rooms").doc();
-    const playerRef = roomRef.collection("players").doc(uid);
-
-    try {
-      await db.runTransaction(async (tx) => {
-        const codeDoc = await tx.get(codeRef);
-        if (codeDoc.exists) {
-          throw new HttpsError("already-exists", "Código já existe");
-        }
-
-        tx.set(roomRef, {
-          code,
-          hostUid: uid,
-          status: "lobby",
-          settings: {
-            variant: "basic",
-            fiveRejectsRule: "spiesWin",
-          },
-          playerCount: 1,
-          createdAt: FieldValue.serverTimestamp(),
-          updatedAt: FieldValue.serverTimestamp(),
-        });
-        tx.set(playerRef, {
-          displayName,
-          seat: null,
-          joinedAt: FieldValue.serverTimestamp(),
-        });
-        tx.set(codeRef, {
-          roomId: roomRef.id,
-          createdAt: FieldValue.serverTimestamp(),
-        });
-      });
-
-      return {roomId: roomRef.id, code};
-    } catch (error) {
-      if (error instanceof HttpsError && error.code === "already-exists") {
-        continue;
-      }
-      throw error;
-    }
-  }
-
-  throw new HttpsError("resource-exhausted", "Não foi possível gerar código");
+  return criarSala(resistenciaLobby, uid, displayName);
 });
 
 export const joinRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
   const displayName = normalizeDisplayName(req.data?.displayName);
   const code = normalizeCode(req.data?.code);
-
-  let roomId = "";
-
-  await db.runTransaction(async (tx) => {
-    const codeDoc = await tx.get(db.doc(`roomCodes/${code}`));
-    if (!codeDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-
-    roomId = codeDoc.get("roomId") as string;
-    const roomRef = db.doc(`rooms/${roomId}`);
-    const playerRef = db.doc(`rooms/${roomId}/players/${uid}`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Partida já iniciada");
-    }
-    if (!playerDoc.exists && (roomDoc.get("playerCount") as number) >= 10) {
-      throw new HttpsError("failed-precondition", "Sala cheia");
-    }
-
-    tx.set(playerRef, {
-      displayName,
-      seat: null,
-      joinedAt: FieldValue.serverTimestamp(),
-    }, {merge: true});
-
-    if (!playerDoc.exists) {
-      tx.update(roomRef, {
-        playerCount: FieldValue.increment(1),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-    }
-  });
-
+  const roomId = await entrarSala(resistenciaLobby, uid, displayName, code);
   return {roomId};
 });
 
 export const leaveRoom = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
-  const roomId = req.data?.roomId;
-  if (typeof roomId !== "string" || roomId.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Sala inválida");
-  }
-
-  await db.runTransaction(async (tx) => {
-    const roomRef = db.doc(`rooms/${roomId}`);
-    const playerRef = db.doc(`rooms/${roomId}/players/${uid}`);
-    const playersRef = db.collection(`rooms/${roomId}/players`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-    const playersSnap = await tx.get(playersRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (!playerDoc.exists) {
-      throw new HttpsError("permission-denied", "Você não está na sala");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Só é possível sair no lobby");
-    }
-
-    const remaining = playersSnap.docs.filter((doc) => doc.id !== uid);
-    tx.delete(playerRef);
-
-    if (remaining.length === 0) {
-      tx.update(roomRef, {
-        playerCount: 0,
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-      return;
-    }
-
-    const hostUid = roomDoc.get("hostUid") as string;
-    tx.update(roomRef, {
-      hostUid: hostUid === uid ? remaining[0].id : hostUid,
-      playerCount: remaining.length,
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  });
-
+  const roomId = requireRoomId(req.data?.roomId);
+  await sairSala(resistenciaLobby, uid, roomId);
   return {ok: true};
 });
 
 export const removePlayer = onCall({region}, async (req) => {
   const uid = requireUid(req.auth?.uid);
-  const roomId = req.data?.roomId;
-  const targetUid = req.data?.targetUid;
-  if (typeof roomId !== "string" || roomId.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Sala inválida");
-  }
-  if (typeof targetUid !== "string" || targetUid.trim().length < 1) {
-    throw new HttpsError("invalid-argument", "Jogador inválido");
-  }
-
-  await db.runTransaction(async (tx) => {
-    const roomRef = db.doc(`rooms/${roomId}`);
-    const playerRef = db.doc(`rooms/${roomId}/players/${targetUid}`);
-    const playersRef = db.collection(`rooms/${roomId}/players`);
-    const roomDoc = await tx.get(roomRef);
-    const playerDoc = await tx.get(playerRef);
-    const playersSnap = await tx.get(playersRef);
-
-    if (!roomDoc.exists) {
-      throw new HttpsError("not-found", "Sala não encontrada");
-    }
-    if (roomDoc.get("hostUid") !== uid) {
-      throw new HttpsError("permission-denied", "Só o host pode remover");
-    }
-    if (roomDoc.get("status") !== "lobby") {
-      throw new HttpsError("failed-precondition", "Só é possível remover no lobby");
-    }
-    if (targetUid === uid) {
-      throw new HttpsError("invalid-argument", "Host não pode remover a si mesmo");
-    }
-    if (!playerDoc.exists) {
-      throw new HttpsError("not-found", "Jogador não encontrado");
-    }
-
-    tx.delete(playerRef);
-    tx.update(roomRef, {
-      playerCount: Math.max(0, playersSnap.size - 1),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-  });
-
+  const roomId = requireRoomId(req.data?.roomId);
+  const targetUid = requireTargetUid(req.data?.targetUid);
+  await expulsarJogador(resistenciaLobby, uid, roomId, targetUid);
   return {ok: true};
 });
 
@@ -415,7 +226,7 @@ export const startGame = onCall({region}, async (req) => {
       round: 1,
       attempt: 1,
       leaderUid: assignments[0].uid,
-      teamSize: teamSizes[seated.length][0],
+      teamSize: teamSizeFor(seated.length, 1),
       missionResults: [],
       failCounts: [],
       currentProposalId: null,
@@ -574,15 +385,18 @@ export const castVote = onCall({region}, async (req) => {
       return;
     }
 
-    const approvals = Object.values(votes).filter(Boolean).length;
-    const approved = approvals > totalPlayers / 2;
+    const resolution = resolveVote({
+      votes,
+      totalPlayers,
+      attempt: stateDoc.get("attempt") as number,
+    });
     tx.update(proposalRef, {
-      status: approved ? "approved" : "rejected",
+      status: resolution.outcome === "mission" ? "approved" : "rejected",
       votes,
       revealedAt: FieldValue.serverTimestamp(),
     });
 
-    if (approved) {
+    if (resolution.outcome === "mission") {
       tx.update(stateRef, {
         phase: "mission",
         lastProposalId: proposalId,
@@ -593,8 +407,7 @@ export const castVote = onCall({region}, async (req) => {
       return;
     }
 
-    const nextAttempt = (stateDoc.get("attempt") as number) + 1;
-    if (nextAttempt > 5) {
+    if (resolution.outcome === "spies") {
       writeReveals(tx, roomId, reveals);
       tx.update(stateRef, {
         phase: "over",
@@ -618,7 +431,7 @@ export const castVote = onCall({region}, async (req) => {
 
     tx.update(stateRef, {
       phase: "proposing",
-      attempt: nextAttempt,
+      attempt: resolution.nextAttempt,
       leaderUid: nextLeaderUid(seats, stateDoc.get("leaderUid") as string),
       currentProposalId: null,
       lastProposalId: proposalId,
@@ -671,7 +484,9 @@ export const playMissionCard = onCall({region}, async (req) => {
     const proposalRef = db.doc(`rooms/${roomId}/proposals/${proposalId}`);
     // A proposal ID is unique across rounds and reused-room games. Using only
     // the round here caused cards from an earlier game to be counted again.
-    const secretRef = db.doc(`rooms/${roomId}/secret/mission_${proposalId}`);
+    const secretRef = db.doc(
+      `rooms/${roomId}/secret/${missionSecretId(proposalId)}`,
+    );
     const proposalDoc = await tx.get(proposalRef);
     const secretDoc = await tx.get(secretRef);
     const reveals = await readReveals(tx, roomId, playersSnap);
@@ -693,7 +508,7 @@ export const playMissionCard = onCall({region}, async (req) => {
     }
 
     const team = privateDoc.get("team") as string;
-    cards[uid] = team === "good" ? true : success;
+    cards[uid] = legalMissionCard(team, success);
     const submittedCount = Object.keys(cards).length;
 
     tx.set(secretRef, {
@@ -711,28 +526,23 @@ export const playMissionCard = onCall({region}, async (req) => {
 
     const round = stateDoc.get("round") as number;
     const playerCount = stateDoc.get("playerCount") as number;
-    const failCount = Object.values(cards).filter((card) => !card).length;
-    const missionSucceeded = failCount < failsRequired(round, playerCount);
-    const missionResults = [
-      ...((stateDoc.get("missionResults") as boolean[]) ?? []),
-      missionSucceeded,
-    ];
-    const failCounts = [
-      ...((stateDoc.get("failCounts") as number[]) ?? []),
-      failCount,
-    ];
-    const successes = missionResults.filter(Boolean).length;
-    const failures = missionResults.filter((result) => !result).length;
+    const resolved = resolveMission({
+      cards,
+      round,
+      playerCount,
+      missionResults: (stateDoc.get("missionResults") as boolean[]) ?? [],
+      failCounts: (stateDoc.get("failCounts") as number[]) ?? [],
+    });
 
-    if (successes >= 3 || failures >= 3) {
+    if (resolved.over) {
       writeReveals(tx, roomId, reveals);
       tx.update(stateRef, {
         phase: "over",
-        missionResults,
-        failCounts,
+        missionResults: resolved.missionResults,
+        failCounts: resolved.failCounts,
         submittedCount: 0,
         expectedCount: 0,
-        winner: successes >= 3 ? "resistance" : "spies",
+        winner: resolved.winner,
         updatedAt: FieldValue.serverTimestamp(),
       });
       tx.update(roomRef, {
@@ -753,9 +563,9 @@ export const playMissionCard = onCall({region}, async (req) => {
       round: nextRound,
       attempt: 1,
       leaderUid: nextLeaderUid(seats, stateDoc.get("leaderUid") as string),
-      teamSize: teamSizes[playerCount][nextRound - 1],
-      missionResults,
-      failCounts,
+      teamSize: teamSizeFor(playerCount, nextRound),
+      missionResults: resolved.missionResults,
+      failCounts: resolved.failCounts,
       currentProposalId: null,
       submittedCount: 0,
       expectedCount: 0,

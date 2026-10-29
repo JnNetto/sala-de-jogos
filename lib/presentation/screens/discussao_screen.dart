@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
-import '../../core/utils/time_formatter.dart';
+
+import '../../core/theme/sala_tokens.dart';
+import '../navegacao.dart';
 import '../providers/partida_provider.dart';
-import '../widgets/primary_button.dart';
-import 'configuracao_screen.dart';
+import '../widgets/sala/botao_sala.dart';
+import '../widgets/sala/cronometro.dart';
+import '../widgets/sala/dialogo.dart';
+import '../widgets/sala/janela.dart';
+import '../widgets/sala/jogador_sala.dart';
+import '../widgets/sala/tela_da_sala.dart';
 import 'votacao_screen.dart';
 
+/// A conversa: o cronômetro corre enquanto a roda pergunta e responde.
+/// Quando zera (ou quando pulam), todo mundo vota.
 class DiscussaoScreen extends StatefulWidget {
   const DiscussaoScreen({super.key});
 
@@ -15,199 +24,251 @@ class DiscussaoScreen extends StatefulWidget {
 
 class _DiscussaoScreenState extends State<DiscussaoScreen> {
   bool _navegouParaVotacao = false;
+  bool _pausado = false;
+
+  void _irParaVotacao() {
+    if (_navegouParaVotacao) return;
+    _navegouParaVotacao = true;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute<void>(builder: (_) => const VotacaoScreen()),
+    );
+  }
+
+  Future<void> _pausar() async {
+    final provider = context.read<PartidaProvider>();
+    provider.pausarDiscussao();
+    setState(() => _pausado = true);
+    final tempo = formatarTempo(provider.partida?.tempoRestanteSegundos ?? 0);
+    final escolha = await mostrarDialogo(
+      context,
+      matiz: Matiz.violeta,
+      barra: 'PAUSA',
+      icone: Symbols.pause_rounded,
+      titulo: 'Jogo pausado',
+      corpo:
+          'O cronômetro parou em $tempo. Ninguém espia o celular de '
+          'ninguém.',
+      acao: 'Continuar',
+      escape: 'Sair da partida',
+    );
+    if (!mounted) return;
+    if (escolha == false) {
+      final saiu = await _confirmarSaida();
+      if (saiu || !mounted) return;
+    }
+    setState(() => _pausado = false);
+    provider.retomarDiscussao();
+  }
+
+  /// Devolve `true` se a partida acabou e a tela saiu.
+  Future<bool> _confirmarSaida() async {
+    final abortar = await mostrarDialogo(
+      context,
+      matiz: Matiz.violeta,
+      barra: 'ATENÇÃO',
+      icone: Symbols.stop_circle_rounded,
+      titulo: 'Abortar a partida?',
+      corpo:
+          'A conversa para aqui e a partida não conta nas estatísticas. '
+          'Vocês voltam para a escolha de jogadores.',
+      acao: 'Abortar',
+      escape: 'Continuar jogando',
+      perigo: true,
+    );
+    if (abortar != true || !mounted) return false;
+    context.read<PartidaProvider>().encerrarPartida();
+    Navigator.of(context).popUntil(ehInicioDoEspiao);
+    return true;
+  }
+
+  Future<void> _abortar() async {
+    final provider = context.read<PartidaProvider>();
+    provider.pausarDiscussao();
+    setState(() => _pausado = true);
+    final saiu = await _confirmarSaida();
+    if (saiu || !mounted) return;
+    setState(() => _pausado = false);
+    provider.retomarDiscussao();
+  }
+
+  Future<void> _pular() async {
+    final pular = await mostrarDialogo(
+      context,
+      matiz: Matiz.violeta,
+      barra: 'VOTAÇÃO',
+      icone: Symbols.how_to_vote_rounded,
+      titulo: 'Já querem votar?',
+      corpo: 'O tempo que sobrou fica de lado e todo mundo vota agora.',
+      acao: 'Ir para a votação',
+      escape: 'Conversar mais',
+    );
+    if (pular != true || !mounted) return;
+    context.read<PartidaProvider>().pularDiscussao();
+    _irParaVotacao();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final c = context.cores;
+    final texto = Theme.of(context).textTheme;
+    final luz = c.luz(Matiz.violeta);
+    final partida = context.watch<PartidaProvider>().partida;
+    if (partida == null) {
+      return const TelaDaSala(
+        corpo: Center(child: Text('A partida terminou.')),
+      );
+    }
+
+    final tempo = partida.tempoRestanteSegundos;
+    if (tempo <= 0 && !_navegouParaVotacao) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _irParaVotacao();
+      });
+    }
+    final inicial = partida.jogadorInicial;
+
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Discussão'),
-          automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.pause),
-              onPressed: () => _mostrarMenuPausa(context),
-            ),
-          ],
+      onPopInvokedWithResult: (saiu, _) {
+        if (!saiu && !_pausado) _pausar();
+      },
+      child: TelaDaSala(
+        sobretitulo: 'DISCUSSÃO',
+        titulo: 'Quem é o Espião?',
+        matiz: Matiz.violeta,
+        inicio: BotaoIcone(
+          icone: Symbols.pause_rounded,
+          rotulo: 'Pausar',
+          onPressed: _pausado ? null : _pausar,
         ),
-        body: Consumer<PartidaProvider>(
-          builder: (context, provider, _) {
-            final partida = provider.partida;
-            if (partida == null) {
-              return const Center(child: Text('Erro: partida não encontrada'));
-            }
-
-            final tempoRestante = partida.tempoRestanteSegundos;
-
-            if (tempoRestante <= 0 && !_navegouParaVotacao) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted && !_navegouParaVotacao) {
-                  _navegouParaVotacao = true;
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const VotacaoScreen(),
+        acao: BotaoIcone(
+          icone: Symbols.stop_circle_rounded,
+          rotulo: 'Abortar partida',
+          perigo: true,
+          onPressed: _pausado ? null : _abortar,
+        ),
+        corpo: SafeArea(
+          top: false,
+          bottom: false,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(
+              Espaco.margemTela,
+              Espaco.e3,
+              Espaco.margemTela,
+              Espaco.e6,
+            ),
+            children: [
+              if (inicial != null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    height: 56,
+                    padding: const EdgeInsets.fromLTRB(
+                      Espaco.e2,
+                      0,
+                      Espaco.e5,
+                      0,
                     ),
-                  );
-                }
-              });
-            }
-            final percentualRestante =
-                tempoRestante / partida.configuracao.duracaoDiscussaoSegundos;
-            final tempoPercentual = (percentualRestante * 100).round();
-
-            Color getTimerColor() {
-              if (tempoPercentual > 50) return Colors.green;
-              if (tempoPercentual > 25) return Colors.orange;
-              return Colors.red;
-            }
-
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 32),
-                    Text(
-                      'Discutam e descubram quem é o espião',
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    if (partida.jogadorInicial != null)
-                      Text(
-                        'Começa: ${partida.jogadorInicial!.nome}',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                        textAlign: TextAlign.center,
+                    decoration: BoxDecoration(
+                      color: c.superficie,
+                      borderRadius: BorderRadius.circular(Raio.lg),
+                      border: Border.all(
+                        color: c.ehDia ? c.contorno : c.linha,
+                        width: c.bordaControle,
                       ),
-                    const Spacer(),
-                    Stack(
-                      alignment: Alignment.center,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(
-                          width: 320,
-                          height: 320,
-                          child: CircularProgressIndicator(
-                            value: percentualRestante,
-                            strokeWidth: 24,
-                            backgroundColor: Colors.grey[200],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              getTimerColor(),
-                            ),
-                          ),
+                        AvatarJogador(
+                          nome: inicial.nome,
+                          indice: inicial.id - 1,
+                          tamanho: 40,
                         ),
-                        Column(
-                          children: [
-                            Icon(Icons.timer, size: 80, color: getTimerColor()),
-                            const SizedBox(height: 24),
-                            Text(
-                              TimeFormatter.formatarSegundos(tempoRestante),
-                              style: TextStyle(
-                                fontSize: 72,
-                                fontWeight: FontWeight.bold,
-                                color: getTimerColor(),
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
-                              ),
-                            ),
-                          ],
+                        const SizedBox(width: Espaco.e3),
+                        Text(
+                          'Começa ${inicial.nome}',
+                          style: texto.titleMedium,
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    SizedBox(
-                      width: double.infinity,
-                      child: PrimaryButton(
-                        text: 'Pular para Votação',
-                        icon: Icons.how_to_vote,
-                        onPressed: () {
-                          _confirmarPular(context, provider);
-                        },
+                  ),
+                ),
+              const SizedBox(height: Espaco.e12),
+              Center(
+                child: Cronometro(
+                  segundos: tempo,
+                  pausado: _pausado,
+                  grande: true,
+                ),
+              ),
+              const SizedBox(height: Espaco.e3),
+              Center(
+                child: Text(
+                  _pausado ? 'PAUSADO' : 'PARA A CONVERSA',
+                  style: texto.labelMedium?.copyWith(color: c.texto3),
+                ),
+              ),
+              const SizedBox(height: Espaco.e12),
+              Janela(
+                titulo: 'NA RODA',
+                preenchimento: const EdgeInsets.fromLTRB(
+                  Espaco.e5,
+                  Espaco.e4,
+                  Espaco.e5,
+                  Espaco.e5,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final (i, dica) in const [
+                      'Pergunte algo sobre a palavra para alguém da roda.',
+                      'Responda sem entregar a palavra de bandeja.',
+                      'Desconfiou? Guarde para a votação.',
+                    ].indexed) ...[
+                      if (i > 0) const SizedBox(height: Espaco.e3),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 28,
+                            child: Text(
+                              '${i + 1}',
+                              style: context.estilos.hud.copyWith(
+                                fontSize: 18,
+                                color: luz.tinta,
+                              ),
+                            ),
+                          ),
+                          Expanded(child: Text(dica, style: texto.bodyLarge)),
+                        ],
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
-            );
-          },
+            ],
+          ),
         ),
-      ),
-    );
-  }
-
-  void _confirmarPular(BuildContext context, PartidaProvider provider) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pular Discussão'),
-        content: const Text(
-          'Tem certeza que deseja pular o tempo de discussão e ir direto para a votação?',
+        rodape: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Espaco.margemTela,
+              Espaco.e3,
+              Espaco.margemTela,
+              Espaco.e4,
+            ),
+            child: BotaoSala(
+              rotulo: 'Ir para a votação',
+              icone: Symbols.how_to_vote_rounded,
+              luz: luz,
+              bloco: true,
+              onPressed: _pausado ? null : _pular,
+            ),
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              provider.pularDiscussao();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const VotacaoScreen()),
-              );
-            },
-            child: const Text('Pular'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _mostrarMenuPausa(BuildContext context) {
-    final provider = context.read<PartidaProvider>();
-    provider.pausarDiscussao();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.pause_circle),
-            const SizedBox(width: 12),
-            const Text('Jogo Pausado'),
-          ],
-        ),
-        content: const Text('O timer foi pausado. O que deseja fazer?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              provider.retomarDiscussao();
-            },
-            child: const Text('Continuar'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              provider.encerrarPartida();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => const ConfiguracaoScreen(),
-                ),
-                (route) => route.isFirst,
-              );
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Sair'),
-          ),
-        ],
       ),
     );
   }

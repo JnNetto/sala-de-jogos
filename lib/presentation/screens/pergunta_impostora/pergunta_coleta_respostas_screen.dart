@@ -1,149 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+
+import '../../../core/theme/sala_tokens.dart';
 import '../../providers/pergunta_partida_provider.dart';
-import '../../widgets/primary_button.dart';
-import 'pergunta_resposta_jogador_screen.dart';
+import '../../widgets/sala/botao_sala.dart';
+import '../../widgets/sala/tela_da_sala.dart';
+import '../../widgets/sala/tela_de_revelacao.dart';
+import 'pergunta_cartas.dart';
 import 'pergunta_revelacao_respostas_screen.dart';
 
-class PerguntaColetaRespostasScreen extends StatefulWidget {
+/// Segunda roda: o celular passa de novo, cada um segura a carta, revê a
+/// pergunta e escreve a resposta numa folha. Ao guardar, a carta vira e
+/// passa.
+class PerguntaColetaRespostasScreen extends StatelessWidget {
   const PerguntaColetaRespostasScreen({super.key});
 
   @override
-  State<PerguntaColetaRespostasScreen> createState() =>
-      _PerguntaColetaRespostasScreenState();
-}
-
-class _PerguntaColetaRespostasScreenState
-    extends State<PerguntaColetaRespostasScreen> {
-  int _jogadorAtualIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Respostas'),
-          automaticallyImplyLeading: false,
-        ),
-        body: Consumer<PerguntaPartidaProvider>(
-          builder: (context, provider, _) {
-            final partida = provider.partida;
-            if (partida == null) {
-              return const Center(child: Text('Erro: partida não encontrada'));
-            }
+    final provider = context.watch<PerguntaPartidaProvider>();
+    final partida = provider.partida;
+    if (partida == null) {
+      return const TelaDaSala(
+        corpo: Center(child: Text('A partida terminou.')),
+      );
+    }
+    final jogadores = partida.jogadores;
+    void abortar() => abortarPerguntaImpostora(
+      context,
+      corpo:
+          'As respostas escritas até aqui se perdem. Vocês voltam para a '
+          'escolha de jogadores.',
+      escape: 'Continuar respondendo',
+    );
 
-            final todosResponderam =
-                _jogadorAtualIndex >= partida.jogadores.length;
-
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    LinearProgressIndicator(
-                      value: _jogadorAtualIndex / partida.jogadores.length,
-                      minHeight: 8,
-                    ),
-                    const SizedBox(height: 16),
-                    if (!todosResponderam)
-                      Text(
-                        'Jogador ${_jogadorAtualIndex + 1} de ${partida.jogadores.length}',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(color: Colors.grey[600]),
-                        textAlign: TextAlign.center,
-                      ),
-                    const Spacer(),
-                    if (!todosResponderam) ...[
-                      Center(
-                        child: Icon(
-                          Icons.edit_note,
-                          size: 100,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      Text(
-                        partida.jogadores[_jogadorAtualIndex].nome,
-                        style: Theme.of(context).textTheme.displayMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Passe o celular para este jogador responder',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ] else ...[
-                      const Center(
-                        child: Icon(
-                          Icons.check_circle,
-                          size: 100,
-                          color: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      Text(
-                        'Todos responderam!',
-                        style: Theme.of(context).textTheme.displayMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                    const Spacer(),
-                    SizedBox(
-                      width: double.infinity,
-                      child: todosResponderam
-                          ? PrimaryButton(
-                              text: 'Ver Respostas',
-                              icon: Icons.visibility,
-                              onPressed: () {
-                                provider.iniciarRevelacaoRespostas();
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PerguntaRevelacaoRespostasScreen(),
-                                  ),
-                                );
-                              },
-                            )
-                          : PrimaryButton(
-                              text: 'Escrever Resposta',
-                              icon: Icons.edit,
-                              onPressed: () async {
-                                final jogador =
-                                    partida.jogadores[_jogadorAtualIndex];
-                                final resposta = await Navigator.push<String>(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        PerguntaRespostaJogadorScreen(
-                                          jogador: jogador,
-                                          pergunta: partida.perguntaPara(
-                                            jogador,
-                                          ),
-                                        ),
-                                  ),
-                                );
-                                if (resposta != null && mounted) {
-                                  provider.registrarResposta(
-                                    jogador.id,
-                                    resposta,
-                                  );
-                                  setState(() => _jogadorAtualIndex++);
-                                }
-                              },
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+    return TelaDeRevelacao(
+      nomeDoJogo: 'Pergunta Impostora',
+      matiz: Matiz.rosa,
+      sobretitulo: 'AS RESPOSTAS',
+      feito: 'JÁ RESPONDERAM',
+      nomes: [for (final j in jogadores) j.nome],
+      dicaDoUltimo: 'Último a responder.',
+      // Voltar no meio das respostas é o mesmo que desistir da partida.
+      aoVoltar: abortar,
+      aoAbortar: abortar,
+      frente: (context, i, esconder, efeito) {
+        final jogador = jogadores[i];
+        final pergunta = partida.perguntaPara(jogador);
+        return FrentePergunta(
+          pergunta: pergunta,
+          efeito: efeito,
+          dica: 'Responda com sinceridade, em poucas palavras.',
+          acao: BotaoSala(
+            rotulo: 'Escrever resposta',
+            icone: Symbols.edit_rounded,
+            luz: context.cores.luz(Matiz.rosa),
+            onPressed: () async {
+              final resposta = await escreverResposta(
+                context,
+                nome: jogador.nome,
+                pergunta: pergunta,
+              );
+              if (resposta == null || !context.mounted) return;
+              context.read<PerguntaPartidaProvider>().registrarResposta(
+                jogador.id,
+                resposta,
+              );
+              esconder();
+            },
+          ),
+        );
+      },
+      fim: (context) => PainelTodosViram(
+        titulo: 'Todos responderam!',
+        texto: 'Celular no meio da mesa: hora de ler as respostas.',
+        acao: 'Ver as respostas',
+        icone: Symbols.forum_rounded,
+        matiz: Matiz.rosa,
+        aoContinuar: () {
+          context.read<PerguntaPartidaProvider>().iniciarRevelacaoRespostas();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => const PerguntaRevelacaoRespostasScreen(),
+            ),
+          );
+        },
       ),
     );
   }

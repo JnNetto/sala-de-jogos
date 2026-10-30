@@ -273,6 +273,10 @@ class StorageService {
     return nome;
   }
 
+  Future<void> limparNomeJogador() async {
+    await _prefs?.remove(AppConstants.prefsKeyNomeJogador);
+  }
+
   Future<void> saveNomeJogador(String nome) async {
     final trimmed = nome.trim();
     if (trimmed.isEmpty) return;

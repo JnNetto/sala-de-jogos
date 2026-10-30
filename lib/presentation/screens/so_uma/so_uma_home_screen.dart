@@ -41,7 +41,9 @@ class SoUmaHomeScreen extends StatelessWidget {
             'duas cada). Pistas iguais ou da mesma família se anulam, e '
             'quem adivinha só vê as que sobraram.\n\n'
             'Acertou: o grupo ganha a carta. Passou: a carta sai. Errou: '
-            'a carta sai e a próxima do baralho também.',
+            'a carta volta e a mesma pessoa escolhe outra palavra dela, com '
+            'pistas novas. Se as cinco palavras forem tentadas, a carta '
+            'sai.',
         acao: 'Entendi',
       ),
     );

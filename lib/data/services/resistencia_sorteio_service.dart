@@ -14,7 +14,7 @@ class ResistenciaSorteioService {
     final quantidadeJogadores = jogadores.length;
     if (quantidadeJogadores < ResistenciaConstants.minJogadores ||
         quantidadeJogadores > ResistenciaConstants.maxJogadores) {
-      throw ArgumentError('A Resistência precisa de 5 a 10 jogadores');
+      throw ArgumentError('A Expedição precisa de 5 a 10 jogadores');
     }
 
     final jogadoresEmbaralhados = _embaralhar(jogadores);

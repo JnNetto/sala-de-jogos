@@ -2,4 +2,6 @@
 <resources>
     <!-- ceu-topo da Sala de Jogos: a splash nativa emenda com o céu do Flutter -->
     <color name="ceu_topo">#FF070822</color>
+    <!-- Fundo do ícone adaptativo (fundo da marca) -->
+    <color name="ic_launcher_background">#0D0F2B</color>
 </resources>

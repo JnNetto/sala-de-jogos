@@ -19,7 +19,7 @@ export function failsRequired(round: number, playerCount: number): number {
 export function teamSizeFor(playerCount: number, round: number): number {
   const sizes = teamSizes[playerCount];
   if (!sizes) {
-    throw new Error("A Resistência precisa de 5 a 10 jogadores");
+    throw new Error("A Expedição precisa de 5 a 10 jogadores");
   }
   return sizes[round - 1];
 }
@@ -34,24 +34,28 @@ export function missionSecretId(proposalId: string): string {
 
 export type VoteResolution =
   | {outcome: "mission"}
-  | {outcome: "spies"}
-  | {outcome: "retry"; nextAttempt: number};
+  | {outcome: "spies"; rejections: number}
+  | {outcome: "retry"; rejections: number};
 
+/**
+ * Na Expedição, as rejeições contam na partida inteira (as tochas que se
+ * apagam), não só em sequência: a quinta entrega o jogo aos saqueadores.
+ */
 export function resolveVote(input: {
   votes: Record<string, boolean>;
   totalPlayers: number;
-  attempt: number;
+  rejections: number;
 }): VoteResolution {
   const approvals = Object.values(input.votes).filter(Boolean).length;
   if (approvals > input.totalPlayers / 2) {
     return {outcome: "mission"};
   }
 
-  const nextAttempt = input.attempt + 1;
-  if (nextAttempt > maxRejeicoes) {
-    return {outcome: "spies"};
+  const rejections = input.rejections + 1;
+  if (rejections >= maxRejeicoes) {
+    return {outcome: "spies", rejections};
   }
-  return {outcome: "retry", nextAttempt};
+  return {outcome: "retry", rejections};
 }
 
 export type MissionResolution = {

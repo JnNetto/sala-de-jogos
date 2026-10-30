@@ -181,3 +181,30 @@ export function escolherPistasIniciais(
 
   return escolhidas.slice(0, quantidade);
 }
+
+/** Se a região (`palavra_atributo`, `todos`...) está dentro do anel. */
+export function regiaoTemAnel(regiao: string, anel: string): boolean {
+  return regiao === "todos" || regiao.split("_").includes(anel);
+}
+
+/**
+ * As pistas da preparação: uma em cada anel (de preferência só nele) e uma
+ * fora de todos. Faltando candidata para algum lugar, ele fica sem pista.
+ */
+export function escolherPistasPorAnel(candidatos: Coisa[], regras: Regra[]): Coisa[] {
+  const comRegiao = candidatos.map((coisa) => ({coisa, regiao: regiaoDe(coisa, regras)}));
+  const escolhidas: Coisa[] = [];
+  const usada = (coisa: Coisa) => escolhidas.some((item) => item.id === coisa.id);
+
+  for (const anel of ["palavra", "atributo", "contexto"]) {
+    const so = comRegiao.find((item) => item.regiao === anel && !usada(item.coisa));
+    const qualquer = comRegiao.find(
+      (item) => regiaoTemAnel(item.regiao, anel) && !usada(item.coisa),
+    );
+    const pista = so ?? qualquer;
+    if (pista) escolhidas.push(pista.coisa);
+  }
+  const fora = comRegiao.find((item) => item.regiao === "nenhum" && !usada(item.coisa));
+  if (fora) escolhidas.push(fora.coisa);
+  return escolhidas;
+}

@@ -12,8 +12,10 @@ export {
   createRoomCode,
   entradaBloqueada,
   hostDepoisDeSair,
+  limparTexto,
   normalizeCode,
   normalizeDisplayName,
+  requireConta,
   requireRoomId,
   requireTargetUid,
   requireUid,
@@ -49,6 +51,7 @@ export async function criarSala(
           updatedAt: FieldValue.serverTimestamp(),
         });
         tx.set(playerRef, {
+          uid,
           displayName,
           seat: null,
           ...lobby.playerExtra,
@@ -107,6 +110,7 @@ export async function entrarSala(
     }
 
     tx.set(playerRef, {
+      uid,
       displayName,
       seat: null,
       ...lobby.playerExtra,

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
+import 'conta_service.dart';
 import '../models/aneis_carta_publica.dart';
 import '../models/aneis_estado_remoto.dart';
 import '../models/aneis_jogador_remoto.dart';
@@ -27,20 +27,15 @@ class AneisFirebaseService {
   User? get usuarioAtual => _auth.currentUser;
   String? get uid => _auth.currentUser?.uid;
 
-  Future<User> garantirLoginAnonimo() async {
-    if (kIsWeb) {
-      await _auth.setPersistence(Persistence.SESSION);
-    }
-
+  /// As salas online só aceitam quem entrou com uma conta (não anônima).
+  Future<User> exigirConta() async {
     final atual = _auth.currentUser;
-    if (atual != null) return atual;
-
-    final credential = await _auth.signInAnonymously();
-    return credential.user!;
+    if (atual == null || atual.isAnonymous) throw const ContaNecessaria();
+    return atual;
   }
 
   Future<AneisSala> criarSala({required String displayName}) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisCreateRoom');
     final result = await callable.call<Map<String, dynamic>>({
       'displayName': displayName,
@@ -55,7 +50,7 @@ class AneisFirebaseService {
     required String codigo,
     required String displayName,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisJoinRoom');
     final result = await callable.call<Map<String, dynamic>>({
       'code': codigo.trim().toUpperCase(),
@@ -68,7 +63,7 @@ class AneisFirebaseService {
   }
 
   Future<AneisSala?> obterSala(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final snapshot = await _firestore.doc('aneisRooms/$roomId').get();
     final data = snapshot.data();
     if (!snapshot.exists || data == null) return null;
@@ -146,7 +141,7 @@ class AneisFirebaseService {
     required String knowerMode,
     String? knowerUid,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisStartGame');
     await callable.call<void>({
       'roomId': roomId,
@@ -161,7 +156,7 @@ class AneisFirebaseService {
     required String coisaId,
     required String regiao,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisPlaceThing');
     await callable.call<void>({
       'roomId': roomId,
@@ -174,25 +169,48 @@ class AneisFirebaseService {
     required String roomId,
     required String regiao,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisJudgePlacement');
     await callable.call<void>({'roomId': roomId, 'regiao': regiao});
   }
 
+  Future<void> desvendarRegra({
+    required String roomId,
+    required String anel,
+    required String palpite,
+  }) async {
+    await exigirConta();
+    final callable = _functions.httpsCallable('aneisGuessRule');
+    await callable.call<void>({
+      'roomId': roomId,
+      'anel': anel,
+      'palpite': palpite,
+    });
+  }
+
+  Future<void> julgarRegra({
+    required String roomId,
+    required bool acertou,
+  }) async {
+    await exigirConta();
+    final callable = _functions.httpsCallable('aneisJudgeRule');
+    await callable.call<void>({'roomId': roomId, 'acertou': acertou});
+  }
+
   Future<void> desfazerJulgamento(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisUndoJudge');
     await callable.call<void>({'roomId': roomId});
   }
 
   Future<void> voltarAoLobby(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisResetRoom');
     await callable.call<void>({'roomId': roomId});
   }
 
   Future<void> sairDaSala(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisLeaveRoom');
     await callable.call<void>({'roomId': roomId});
   }
@@ -201,13 +219,13 @@ class AneisFirebaseService {
     required String roomId,
     required String targetUid,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisRemovePlayer');
     await callable.call<void>({'roomId': roomId, 'targetUid': targetUid});
   }
 
   Future<void> abortarPartida(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('aneisAbortGame');
     await callable.call<void>({'roomId': roomId});
   }

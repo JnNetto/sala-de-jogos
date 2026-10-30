@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
+import 'conta_service.dart';
 import '../models/so_uma_estado_remoto.dart';
 import '../models/so_uma_jogador_remoto.dart';
 import '../models/so_uma_rodada_remota.dart';
@@ -26,20 +26,15 @@ class SoUmaFirebaseService {
   User? get usuarioAtual => _auth.currentUser;
   String? get uid => _auth.currentUser?.uid;
 
-  Future<User> garantirLoginAnonimo() async {
-    if (kIsWeb) {
-      await _auth.setPersistence(Persistence.SESSION);
-    }
-
+  /// As salas online só aceitam quem entrou com uma conta (não anônima).
+  Future<User> exigirConta() async {
     final atual = _auth.currentUser;
-    if (atual != null) return atual;
-
-    final credential = await _auth.signInAnonymously();
-    return credential.user!;
+    if (atual == null || atual.isAnonymous) throw const ContaNecessaria();
+    return atual;
   }
 
   Future<SoUmaSala> criarSala({required String displayName}) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaCreateRoom');
     final result = await callable.call<Map<String, dynamic>>({
       'displayName': displayName,
@@ -55,7 +50,7 @@ class SoUmaFirebaseService {
     required String codigo,
     required String displayName,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaJoinRoom');
     final result = await callable.call<Map<String, dynamic>>({
       'code': codigo.trim().toUpperCase(),
@@ -69,7 +64,7 @@ class SoUmaFirebaseService {
   }
 
   Future<SoUmaSala?> obterSala(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final snapshot = await _firestore.doc('soUmaRooms/$roomId').get();
     final data = snapshot.data();
     if (!snapshot.exists || data == null) return null;
@@ -124,7 +119,7 @@ class SoUmaFirebaseService {
   }
 
   Future<void> iniciarPartida(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaStartGame');
     await callable.call<void>({'roomId': roomId});
   }
@@ -133,7 +128,7 @@ class SoUmaFirebaseService {
     required String roomId,
     required int numero,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaChooseNumber');
     await callable.call<void>({'roomId': roomId, 'numero': numero});
   }
@@ -142,7 +137,7 @@ class SoUmaFirebaseService {
     required String roomId,
     required List<String> palavras,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaSubmitClues');
     await callable.call<void>({'roomId': roomId, 'palavras': palavras});
   }
@@ -151,13 +146,13 @@ class SoUmaFirebaseService {
     required String roomId,
     required String clueId,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaToggleClueCancel');
     await callable.call<void>({'roomId': roomId, 'clueId': clueId});
   }
 
   Future<void> finalizarComparacao(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaFinalizeComparison');
     await callable.call<void>({'roomId': roomId});
   }
@@ -167,7 +162,7 @@ class SoUmaFirebaseService {
     String? palpite,
     bool passar = false,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaSubmitGuess');
     await callable.call<void>({
       'roomId': roomId,
@@ -177,13 +172,13 @@ class SoUmaFirebaseService {
   }
 
   Future<void> voltarAoLobby(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaResetRoom');
     await callable.call<void>({'roomId': roomId});
   }
 
   Future<void> sairDaSala(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaLeaveRoom');
     await callable.call<void>({'roomId': roomId});
   }
@@ -192,13 +187,13 @@ class SoUmaFirebaseService {
     required String roomId,
     required String targetUid,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaRemovePlayer');
     await callable.call<void>({'roomId': roomId, 'targetUid': targetUid});
   }
 
   Future<void> abortarPartida(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('soUmaAbortGame');
     await callable.call<void>({'roomId': roomId});
   }

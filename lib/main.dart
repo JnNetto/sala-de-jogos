@@ -1,4 +1,6 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,7 @@ import 'presentation/providers/lobisomem_partida_provider.dart';
 import 'presentation/providers/so_uma_partida_provider.dart';
 import 'presentation/providers/so_uma_sala_provider.dart';
 import 'presentation/providers/aneis_sala_provider.dart';
+import 'presentation/providers/conta_provider.dart';
 import 'presentation/providers/theme_provider.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'presentation/widgets/sala/palco_da_sala.dart';
@@ -34,10 +37,31 @@ FirebaseOptions _firebaseOptions() {
   }
 }
 
+/// O App Check prova para o Firebase que a chamada vem do app de verdade,
+/// num aparelho de verdade (e não de um script com a chave de API). Em
+/// debug, usa o provedor de depuração: o token aparece no log e precisa ser
+/// cadastrado no console. Na web, ficaria a cargo do reCAPTCHA.
+Future<void> _ativarAppCheck() async {
+  if (kIsWeb) return;
+  try {
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: kDebugMode
+          ? AndroidProvider.debug
+          : AndroidProvider.playIntegrity,
+      appleProvider: kDebugMode
+          ? AppleProvider.debug
+          : AppleProvider.appAttestWithDeviceCheckFallback,
+    );
+  } catch (_) {
+    // Sem App Check o app segue; o servidor decide se aceita a chamada.
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: _firebaseOptions());
+  await _ativarAppCheck();
 
   // Configurar app para funcionar apenas em modo retrato
   await SystemChrome.setPreferredOrientations([
@@ -64,6 +88,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: tema),
+        ChangeNotifierProvider(create: (_) => ContaProvider()),
         ChangeNotifierProvider(create: (_) => ConfiguracaoProvider()),
         ChangeNotifierProvider(create: (_) => PartidaProvider()),
         ChangeNotifierProvider(create: (_) => CategoriaProvider()),

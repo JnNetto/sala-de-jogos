@@ -1,27 +1,43 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Só as Cloud Functions escrevem (elas validam cada jogada). O app só
+    // lê, e só o que é da sala onde a pessoa está.
+
+    function logado() {
+      return request.auth != null;
+    }
+
+    // Quem tem um documento de jogador na sala.
+    function naSala(salas, roomId) {
+      return logado() &&
+        exists(/databases/$(database)/documents/$(salas)/$(roomId)/players/$(request.auth.uid));
+    }
+
+    // ─── Expedição ──────────────────────────────────────────────────────
     match /rooms/{roomId} {
-      allow read: if request.auth != null;
-      allow write: if false;
+      // Abrir a própria sala; listar as salas dos outros, nunca.
+      allow get: if naSala('rooms', roomId);
+      allow list, write: if false;
 
       match /players/{uid} {
-        allow read: if request.auth != null;
+        allow read: if naSala('rooms', roomId);
         allow write: if false;
       }
 
       match /state/{docId} {
-        allow read: if request.auth != null;
+        allow read: if naSala('rooms', roomId);
         allow write: if false;
       }
 
+      // O papel de cada um: só o dono lê.
       match /private/{uid} {
-        allow read: if request.auth != null && request.auth.uid == uid;
+        allow read: if logado() && request.auth.uid == uid;
         allow write: if false;
       }
 
       match /proposals/{proposalId} {
-        allow read: if request.auth != null;
+        allow read: if naSala('rooms', roomId);
         allow write: if false;
       }
 
@@ -30,7 +46,7 @@ service cloud.firestore {
       }
 
       match /events/{eventId} {
-        allow read: if request.auth != null;
+        allow read: if naSala('rooms', roomId);
         allow write: if false;
       }
     }
@@ -39,22 +55,24 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // ─── Eco! ───────────────────────────────────────────────────────────
     match /soUmaRooms/{roomId} {
-      allow read: if request.auth != null;
-      allow write: if false;
+      allow get: if naSala('soUmaRooms', roomId);
+      allow list, write: if false;
 
       match /players/{uid} {
-        allow read: if request.auth != null;
+        allow read: if naSala('soUmaRooms', roomId);
         allow write: if false;
       }
 
       match /state/{docId} {
-        allow read: if request.auth != null;
+        allow read: if naSala('soUmaRooms', roomId);
         allow write: if false;
       }
 
+      // A carta e as pistas: quem adivinha não pode ver.
       match /rounds/{roundId} {
-        allow read: if request.auth != null &&
+        allow read: if naSala('soUmaRooms', roomId) &&
           request.auth.uid != resource.data.guesserUid;
         allow write: if false;
       }
@@ -68,27 +86,30 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // ─── Cabe Aqui? ─────────────────────────────────────────────────────
     match /aneisRooms/{roomId} {
-      allow read: if request.auth != null;
-      allow write: if false;
+      allow get: if naSala('aneisRooms', roomId);
+      allow list, write: if false;
 
       match /players/{uid} {
-        allow read: if request.auth != null;
+        allow read: if naSala('aneisRooms', roomId);
         allow write: if false;
       }
 
       match /state/{docId} {
-        allow read: if request.auth != null;
+        allow read: if naSala('aneisRooms', roomId);
         allow write: if false;
       }
 
+      // A mão de cada um: só o dono lê.
       match /hands/{uid} {
-        allow read: if request.auth != null && request.auth.uid == uid;
+        allow read: if logado() && request.auth.uid == uid;
         allow write: if false;
       }
 
+      // As regras secretas: só o Guardião da partida.
       match /knower/{docId} {
-        allow read: if request.auth != null &&
+        allow read: if logado() &&
           request.auth.uid == get(/databases/$(database)/documents/aneisRooms/$(roomId)/state/current).data.knowerUid;
         allow write: if false;
       }

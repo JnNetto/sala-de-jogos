@@ -1,5 +1,6 @@
 import 'aneis_anel_publico.dart';
 import 'aneis_carta_tabuleiro.dart';
+import 'aneis_palpite_regra.dart';
 import 'aneis_pending_jogada.dart';
 import 'aneis_regra_revelada.dart';
 import 'aneis_ultima_jogada.dart';
@@ -21,6 +22,15 @@ class AneisEstadoRemoto {
   final String? vencedorUid;
   final String? vencedorNome;
   final List<AneisRegraRevelada> regrasReveladas;
+
+  /// Os anéis que alguém já desvendou na partida (todos veem).
+  final List<AneisRegraRevelada> aneisDesvendados;
+
+  /// Um "Desvendar uma regra" esperando o Guardião.
+  final AneisPalpiteRegra? pendingPalpite;
+
+  /// Quando o jogo é o Guardião: as opções de regra de cada anel.
+  final Map<String, List<String>> opcoesRegras;
   final int playerCount;
 
   const AneisEstadoRemoto({
@@ -40,6 +50,9 @@ class AneisEstadoRemoto {
     this.vencedorUid,
     this.vencedorNome,
     this.regrasReveladas = const [],
+    this.aneisDesvendados = const [],
+    this.pendingPalpite,
+    this.opcoesRegras = const {},
     required this.playerCount,
   });
 
@@ -47,6 +60,10 @@ class AneisEstadoRemoto {
   bool get knowerHumano => knowerMode == 'jogador' && knowerUid != null;
   bool get emSetup => phase == 'setup';
   bool get emJulgamento => phase == 'judging';
+  bool get emJulgamentoDeRegra => phase == 'judgingRule';
+
+  /// O Guardião tem algo a decidir (uma carta ou um palpite de regra).
+  bool get comGuardiao => emSetup || emJulgamento || emJulgamentoDeRegra;
   bool get podeDesfazer => reversivel;
 
   factory AneisEstadoRemoto.fromMap(Map<String, dynamic> data) {
@@ -92,6 +109,26 @@ class AneisEstadoRemoto {
                 AneisRegraRevelada.fromMap(Map<String, dynamic>.from(item)),
           )
           .toList(growable: false),
+      aneisDesvendados: (data['aneisDesvendados'] as List<dynamic>? ?? const [])
+          .whereType<Map>()
+          .map(
+            (item) =>
+                AneisRegraRevelada.fromMap(Map<String, dynamic>.from(item)),
+          )
+          .toList(growable: false),
+      pendingPalpite: data['pendingPalpite'] is Map
+          ? AneisPalpiteRegra.fromMap(
+              Map<String, dynamic>.from(data['pendingPalpite'] as Map),
+            )
+          : null,
+      opcoesRegras: {
+        for (final entrada
+            in (data['opcoesRegras'] as Map? ?? const {}).entries)
+          entrada.key.toString(): [
+            for (final texto in entrada.value as List? ?? const [])
+              texto.toString(),
+          ],
+      },
       playerCount: data['playerCount'] as int? ?? 0,
     );
   }

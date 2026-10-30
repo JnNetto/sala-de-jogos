@@ -16,20 +16,29 @@ test("quarta missão com 7 jogadores exige duas falhas", () => {
   assert.equal(failsRequired(3, 8), 1);
 });
 
-test("quinta rejeição entrega a partida aos espiões", () => {
+test("a quinta rejeição da partida entrega o jogo aos saqueadores", () => {
   const fim = resolveVote({
     votes: {a: true, b: true, c: false, d: false, e: false},
     totalPlayers: 5,
-    attempt: 5,
+    rejections: 4,
   });
-  assert.deepEqual(fim, {outcome: "spies"});
+  assert.deepEqual(fim, {outcome: "spies", rejections: 5});
+});
+
+test("rejeições somam na partida, mesmo sem ser em sequência", () => {
+  const segue = resolveVote({
+    votes: {a: false, b: false, c: false, d: true, e: true},
+    totalPlayers: 5,
+    rejections: 2,
+  });
+  assert.deepEqual(segue, {outcome: "retry", rejections: 3});
 });
 
 test("maioria aprova a proposta", () => {
   const aprovada = resolveVote({
     votes: {a: true, b: true, c: true, d: false, e: false},
     totalPlayers: 5,
-    attempt: 1,
+    rejections: 4,
   });
   assert.deepEqual(aprovada, {outcome: "mission"});
 });

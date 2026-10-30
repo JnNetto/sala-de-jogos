@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
+import 'conta_service.dart';
 import '../models/resistencia_jogador_remoto.dart';
 import '../models/resistencia_estado_remoto.dart';
 import '../models/resistencia_privado.dart';
@@ -27,20 +27,15 @@ class ResistenciaFirebaseService {
   User? get usuarioAtual => _auth.currentUser;
   String? get uid => _auth.currentUser?.uid;
 
-  Future<User> garantirLoginAnonimo() async {
-    if (kIsWeb) {
-      await _auth.setPersistence(Persistence.SESSION);
-    }
-
+  /// As salas online só aceitam quem entrou com uma conta (não anônima).
+  Future<User> exigirConta() async {
     final atual = _auth.currentUser;
-    if (atual != null) return atual;
-
-    final credential = await _auth.signInAnonymously();
-    return credential.user!;
+    if (atual == null || atual.isAnonymous) throw const ContaNecessaria();
+    return atual;
   }
 
   Future<ResistenciaSala> criarSala({required String displayName}) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('createRoom');
     final result = await callable.call<Map<String, dynamic>>({
       'displayName': displayName,
@@ -56,7 +51,7 @@ class ResistenciaFirebaseService {
     required String codigo,
     required String displayName,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('joinRoom');
     final result = await callable.call<Map<String, dynamic>>({
       'code': codigo.trim().toUpperCase(),
@@ -70,7 +65,7 @@ class ResistenciaFirebaseService {
   }
 
   Future<ResistenciaSala?> obterSala(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final snapshot = await _firestore.doc('rooms/$roomId').get();
     final data = snapshot.data();
     if (!snapshot.exists || data == null) return null;
@@ -141,7 +136,7 @@ class ResistenciaFirebaseService {
   }
 
   Future<void> iniciarPartida(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('startGame');
     await callable.call<void>({'roomId': roomId});
   }
@@ -150,7 +145,7 @@ class ResistenciaFirebaseService {
     required String roomId,
     required List<String> memberUids,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('proposeTeam');
     await callable.call<void>({'roomId': roomId, 'memberUids': memberUids});
   }
@@ -159,7 +154,7 @@ class ResistenciaFirebaseService {
     required String roomId,
     required bool approve,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('castVote');
     await callable.call<void>({'roomId': roomId, 'approve': approve});
   }
@@ -168,19 +163,28 @@ class ResistenciaFirebaseService {
     required String roomId,
     required bool success,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('playMissionCard');
     await callable.call<void>({'roomId': roomId, 'success': success});
   }
 
+  Future<void> usarLanterna({
+    required String roomId,
+    required String? targetUid,
+  }) async {
+    await exigirConta();
+    final callable = _functions.httpsCallable('useLantern');
+    await callable.call<void>({'roomId': roomId, 'targetUid': targetUid});
+  }
+
   Future<void> voltarAoLobby(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('resetRoom');
     await callable.call<void>({'roomId': roomId});
   }
 
   Future<void> sairDaSala(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('leaveRoom');
     await callable.call<void>({'roomId': roomId});
   }
@@ -189,13 +193,13 @@ class ResistenciaFirebaseService {
     required String roomId,
     required String targetUid,
   }) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('removePlayer');
     await callable.call<void>({'roomId': roomId, 'targetUid': targetUid});
   }
 
   Future<void> abortarPartida(String roomId) async {
-    await garantirLoginAnonimo();
+    await exigirConta();
     final callable = _functions.httpsCallable('abortGame');
     await callable.call<void>({'roomId': roomId});
   }

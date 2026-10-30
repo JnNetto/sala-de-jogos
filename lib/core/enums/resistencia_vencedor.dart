@@ -5,9 +5,9 @@ enum ResistenciaVencedor {
   String get nome {
     switch (this) {
       case ResistenciaVencedor.resistencia:
-        return 'Resistência';
+        return 'Exploradores';
       case ResistenciaVencedor.espioes:
-        return 'Espiões';
+        return 'Saqueadores';
     }
   }
 }

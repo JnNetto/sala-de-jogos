@@ -1,6 +1,7 @@
 class AppConstants {
   static const String appName = 'Sala de Jogos';
-  static const String appVersion = '1.3.0';
+  /// Igual ao `version` do pubspec.yaml (sem o número do build).
+  static const String appVersion = '2.1.9';
 
   static const String jogoEspiaoNome = 'Quem é o Espião?';
   static const String jogoEspiaoDescricao = 'Um de vocês não sabe onde está.';
@@ -12,19 +13,25 @@ class AppConstants {
   static const String jogoQuizNome = 'Quiz da Vez';
   static const String jogoQuizDescricao = 'Perguntas rápidas, um celular.';
 
-  static const String jogoResistenciaNome = 'A Resistência';
-  static const String jogoResistenciaDescricao = 'Missões, votos e traidores.';
+  static const String jogoResistenciaNome = 'Expedição';
+  static const String jogoResistenciaDescricao =
+      'Câmaras, votos e saqueadores.';
 
-  static const String jogoSoUmaNome = 'Só uma!';
+  static const String jogoSoUmaNome = 'Eco!';
   static const String jogoSoUmaDescricao = 'Uma dica cada, sem repetir.';
 
   static const String jogoLobisomemNome = 'Lobisomem';
   static const String jogoLobisomemDescricao =
       'A aldeia dorme, os lobos caçam.';
 
-  static const String jogoAneisNome = 'Nos Anéis';
+  static const String jogoAneisNome = 'Cabe Aqui?';
   static const String jogoAneisDescricao =
       'Encaixe as cartas e descubra as regras.';
+
+  /// As páginas públicas do app (Firebase Hosting).
+  static const String urlSite = 'https://sala-de-jogos-7298f.web.app';
+  static const String urlPrivacidade = '$urlSite/privacidade.html';
+  static const String urlExcluirConta = '$urlSite/excluir-conta.html';
 
   static const int minJogadores = 4;
   static const int maxJogadores = 12;

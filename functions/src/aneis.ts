@@ -1,15 +1,16 @@
 import {FieldValue} from "firebase-admin/firestore";
 import type {DocumentReference, QuerySnapshot, Transaction} from "firebase-admin/firestore";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
-import {db} from "./firebaseAdmin";
+import {EXIGIR_APP_CHECK, db} from "./firebaseAdmin";
 import {
   AnelPublico,
   Coisa,
   REGIOES_VALIDAS,
   Regra,
   avaliaRegra,
-  escolherPistasIniciais,
+  escolherPistasPorAnel,
   regiaoDe,
+  regiaoTemAnel,
 } from "./aneisAvaliador";
 import {
   criarSala,
@@ -17,9 +18,10 @@ import {
   expulsarJogador,
   normalizeCode,
   normalizeDisplayName,
+  requireConta,
   requireRoomId,
   requireTargetUid,
-  requireUid,
+  limparTexto,
   sairSala,
   shuffle,
   type SalaLobby,
@@ -29,8 +31,12 @@ const region = "southamerica-east1";
 const MIN_JOGADORES = 2;
 const MAX_JOGADORES = 6;
 const CARTAS_POR_MAO = 5;
-const PISTAS_INICIAIS = 3;
-const CARTAS_SETUP_KNOWER = 5;
+/** Uma pista em cada anel e uma fora. */
+const PISTAS_INICIAIS = 4;
+/** As pistas do Guardião e duas cartas de folga. */
+const CARTAS_SETUP_KNOWER = PISTAS_INICIAIS + 2;
+const ANEIS = ["palavra", "atributo", "contexto"] as const;
+const OPCOES_POR_ANEL = 4;
 const DIFICULDADES = new Set(["facil", "medio", "dificil"]);
 const KNOWER_MODES = new Set(["jogador", "app"]);
 
@@ -81,7 +87,7 @@ function nextFinderUid(
 ): string {
   const finders = finderSeats(players, knowerUid);
   if (finders.length === 0) {
-    throw new HttpsError("failed-precondition", "Não há Finders na partida");
+    throw new HttpsError("failed-precondition", "Não há quem jogue na partida");
   }
   const currentIndex = finders.findIndex((player) => player.uid === currentUid);
   if (currentIndex < 0) return finders[0].uid;
@@ -192,36 +198,68 @@ function revelarRegras(regras: Regra[], aneis: AnelPublico[]) {
   });
 }
 
-export const aneisCreateRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+/** A preparação do Guardião acaba com uma pista em cada anel e uma fora. */
+function preparacaoCompleta(tabuleiro: CartaTabuleiro[]): boolean {
+  return ANEIS.every((anel) => tabuleiro.some((carta) => regiaoTemAnel(carta.regiao, anel))) &&
+    tabuleiro.some((carta) => carta.regiao === "nenhum");
+}
+
+/**
+ * Para o "Desvendar uma regra" quando o jogo é o Guardião: a regra certa de
+ * cada anel embaralhada com três falsas do mesmo anel.
+ */
+function opcoesDeRegras(todas: Regra[], escolhidas: Regra[]): Record<string, string[]> {
+  const opcoes: Record<string, string[]> = {};
+  for (const regra of escolhidas) {
+    const assinatura = assinaturaRegra(regra);
+    const doAnel = todas.filter((outra) =>
+      outra.anel === regra.anel &&
+      outra.id !== regra.id &&
+      outra.texto !== regra.texto &&
+      assinaturaRegra(outra) !== assinatura,
+    );
+    const falsas = [
+      ...shuffle(doAnel.filter((outra) => outra.dificuldade === regra.dificuldade)),
+      ...shuffle(doAnel.filter((outra) => outra.dificuldade !== regra.dificuldade)),
+    ]
+      .map((outra) => outra.texto)
+      .filter((texto, i, lista) => lista.indexOf(texto) === i)
+      .slice(0, OPCOES_POR_ANEL - 1);
+    opcoes[regra.anel] = shuffle([regra.texto, ...falsas]);
+  }
+  return opcoes;
+}
+
+export const aneisCreateRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const displayName = normalizeDisplayName(req.data?.displayName);
   return criarSala(aneisLobby, uid, displayName);
 });
 
-export const aneisJoinRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisJoinRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const displayName = normalizeDisplayName(req.data?.displayName);
   const code = normalizeCode(req.data?.code);
   const roomId = await entrarSala(aneisLobby, uid, displayName, code);
   return {roomId};
 });
 
-export const aneisLeaveRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisLeaveRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   await sairSala(aneisLobby, uid, roomId);
   return {ok: true};
 });
 
-export const aneisRemovePlayer = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisRemovePlayer = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   const targetUid = requireTargetUid(req.data?.targetUid);
   await expulsarJogador(aneisLobby, uid, roomId, targetUid);
   return {ok: true};
 });
-export const aneisStartGame = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisStartGame = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   const dificuldadeRaw = req.data?.dificuldade;
   const dificuldade = typeof dificuldadeRaw === "string" && DIFICULDADES.has(dificuldadeRaw) ?
@@ -241,8 +279,10 @@ export const aneisStartGame = onCall({region}, async (req) => {
   await db.runTransaction(async (tx) => {
     const roomRef = db.doc(`aneisRooms/${roomId}`);
     const playersRef = db.collection(`aneisRooms/${roomId}/players`);
+    const historicoRef = db.doc(`aneisRooms/${roomId}/secret/historico`);
     const roomDoc = await tx.get(roomRef);
     const playersSnap = await tx.get(playersRef);
+    const historicoDoc = await tx.get(historicoRef);
 
     if (!roomDoc.exists) {
       throw new HttpsError("not-found", "Sala não encontrada");
@@ -258,7 +298,7 @@ export const aneisStartGame = onCall({region}, async (req) => {
     if (uids.length < MIN_JOGADORES || uids.length > MAX_JOGADORES) {
       throw new HttpsError(
         "failed-precondition",
-        `Nos Anéis precisa de ${MIN_JOGADORES} a ${MAX_JOGADORES} jogadores`,
+        `Cabe Aqui? precisa de ${MIN_JOGADORES} a ${MAX_JOGADORES} jogadores`,
       );
     }
 
@@ -267,7 +307,7 @@ export const aneisStartGame = onCall({region}, async (req) => {
     if (knowerHumano) {
       if (knowerUidPedido.length > 0) {
         if (!uids.includes(knowerUidPedido)) {
-          throw new HttpsError("invalid-argument", "Knower escolhido não está na sala");
+          throw new HttpsError("invalid-argument", "O Guardião escolhido não está na sala");
         }
         knowerUid = knowerUidPedido;
       } else {
@@ -276,11 +316,11 @@ export const aneisStartGame = onCall({region}, async (req) => {
     }
     const knowerNome = knowerUid ?
       (playersSnap.docs.find((doc) => doc.id === knowerUid)?.get("displayName") as string | undefined) ??
-        "Knower" :
+        "Guardião" :
       null;
     const finders = knowerUid ? seated.filter((id) => id !== knowerUid) : seated;
     if (knowerHumano && finders.length < 1) {
-      throw new HttpsError("failed-precondition", "É preciso ao menos um Finder");
+      throw new HttpsError("failed-precondition", "É preciso ao menos uma pessoa além do Guardião");
     }
 
     const necessarias = knowerHumano ?
@@ -290,7 +330,11 @@ export const aneisStartGame = onCall({region}, async (req) => {
       throw new HttpsError("internal", "Banco de cartas insuficiente para esta sala");
     }
 
-    const historico = (roomDoc.get("historico") as {
+    // O que já saiu nas partidas desta sala, para variar. Fica no segredo:
+    // os ids das regras entregariam as regras da partida.
+    const historico = ((historicoDoc.exists ?
+      historicoDoc.data() :
+      roomDoc.get("historico")) as {
       regraIds?: string[];
       regraAssinaturas?: string[];
       coisaIds?: string[];
@@ -299,7 +343,7 @@ export const aneisStartGame = onCall({region}, async (req) => {
     const assinaturasUsadas = new Set(historico.regraAssinaturas ?? []);
     const coisasUsadas = new Set(historico.coisaIds ?? []);
     const regras: Regra[] = [];
-    for (const anel of ["palavra", "atributo", "contexto"] as const) {
+    for (const anel of ANEIS) {
       const regra = escolherRegra(
         banco.regras,
         anel,
@@ -324,28 +368,44 @@ export const aneisStartGame = onCall({region}, async (req) => {
       maos[playerUid] = baralhoCheio.slice(cursor, cursor + CARTAS_POR_MAO);
       cursor += CARTAS_POR_MAO;
     }
+    let resto = baralhoCheio.slice(cursor);
+
+    // As pistas saem do banco inteiro (menos as cartas já nas mãos): com uma
+    // regra rara, o baralho da partida pode não ter carta para algum anel.
+    // As novas na sala vêm primeiro.
+    const nasMaos = new Set(Object.values(maos).flat().map((coisa) => coisa.id));
+    const candidatas = banco.coisas.filter((coisa) => !nasMaos.has(coisa.id));
+    const pistas = escolherPistasPorAnel(
+      [
+        ...shuffle(candidatas.filter((coisa) => !coisasUsadas.has(coisa.id))),
+        ...shuffle(candidatas.filter((coisa) => coisasUsadas.has(coisa.id))),
+      ],
+      regras,
+    );
+    const idsPistas = new Set(pistas.map((coisa) => coisa.id));
+    resto = resto.filter((coisa) => !idsPistas.has(coisa.id));
+
     if (knowerUid) {
-      maos[knowerUid] = baralhoCheio.slice(cursor, cursor + CARTAS_SETUP_KNOWER);
-      cursor += CARTAS_SETUP_KNOWER;
+      // O Guardião recebe as pistas (uma para cada anel e uma que fica
+      // fora) e duas cartas de folga.
+      const folga = resto.slice(0, CARTAS_SETUP_KNOWER - pistas.length);
+      maos[knowerUid] = shuffle([...pistas, ...folga]);
+      const naMao = new Set(maos[knowerUid].map((coisa) => coisa.id));
+      resto = resto.filter((coisa) => !naMao.has(coisa.id));
     }
-    const resto = baralhoCheio.slice(cursor);
     const porId: Record<string, Coisa> = {};
-    for (const coisa of baralhoCheio) {
+    for (const coisa of [...baralhoCheio, ...pistas]) {
       porId[coisa.id] = coisa;
     }
 
-    let tabuleiro: CartaTabuleiro[] = [];
-    let compra = resto;
-    if (!knowerHumano) {
-      const pistas = escolherPistasIniciais(resto, regras, PISTAS_INICIAIS);
-      const pistaIds = new Set(pistas.map((item) => item.id));
-      compra = resto.filter((item) => !pistaIds.has(item.id));
-      tabuleiro = pistas.map((coisa) => ({
+    const compra = resto;
+    const tabuleiro: CartaTabuleiro[] = knowerHumano ?
+      [] :
+      pistas.map((coisa) => ({
         coisaId: coisa.id,
         texto: coisa.texto,
         regiao: regiaoDe(coisa, regras),
       }));
-    }
 
     for (let i = 0; i < seated.length; i++) {
       const playerUid = seated[i];
@@ -389,6 +449,9 @@ export const aneisStartGame = onCall({region}, async (req) => {
       vencedorUid: null,
       vencedorNome: null,
       regrasReveladas: [],
+      aneisDesvendados: [],
+      pendingPalpite: null,
+      opcoesRegras: knowerHumano ? null : opcoesDeRegras(banco.regras, regras),
       playerCount: seated.length,
       updatedAt: FieldValue.serverTimestamp(),
     });
@@ -402,23 +465,24 @@ export const aneisStartGame = onCall({region}, async (req) => {
     tx.update(roomRef, {
       status: "playing",
       playerCount: seated.length,
-      historico: {
+      historico: FieldValue.delete(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    tx.set(historicoRef, {
         regraIds: [...new Set([...(historico.regraIds ?? []), ...regras.map((regra) => regra.id)])],
         regraAssinaturas: [...new Set([
           ...(historico.regraAssinaturas ?? []),
           ...regras.map((regra) => assinaturaRegra(regra)),
         ])],
         coisaIds: [...new Set([...(historico.coisaIds ?? []), ...idsCoisasUsadas])],
-      },
-      updatedAt: FieldValue.serverTimestamp(),
     });
   });
 
   return {ok: true};
 });
 
-export const aneisPlaceThing = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisPlaceThing = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   const coisaId = req.data?.coisaId;
   const regiao = req.data?.regiao;
@@ -470,7 +534,7 @@ export const aneisPlaceThing = onCall({region}, async (req) => {
 
     if (phase === "setup") {
       if (knowerUid !== uid) {
-        throw new HttpsError("permission-denied", "Só o Knower posiciona as pistas");
+        throw new HttpsError("permission-denied", "Só o Guardião posiciona as pistas");
       }
       const tabuleiroAnterior = (stateDoc.get("tabuleiro") as CartaTabuleiro[] | undefined) ?? [];
       const maoRestante = mao.filter((item) => item.id !== coisaId);
@@ -487,7 +551,7 @@ export const aneisPlaceThing = onCall({region}, async (req) => {
       tx.set(handRef, {coisas: maoRestante});
       tx.update(meRef, {maoCount: maoRestante.length});
 
-      if (tabuleiro.length < PISTAS_INICIAIS) {
+      if (!preparacaoCompleta(tabuleiro) && maoRestante.length > 0) {
         tx.update(stateRef, {
           tabuleiro,
           reversivel: reversivelSetup,
@@ -514,7 +578,7 @@ export const aneisPlaceThing = onCall({region}, async (req) => {
       throw new HttpsError("failed-precondition", "Não é hora de posicionar carta");
     }
     if (knowerUid === uid) {
-      throw new HttpsError("permission-denied", "O Knower não joga cartas da mão");
+      throw new HttpsError("permission-denied", "O Guardião não joga cartas da mão");
     }
     if (stateDoc.get("currentUid") !== uid) {
       throw new HttpsError("permission-denied", "Não é a sua vez");
@@ -672,8 +736,8 @@ function aplicarResolucao(tx: Transaction, args: ResolucaoArgs) {
   });
 }
 
-export const aneisJudgePlacement = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisJudgePlacement = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   const regiao = req.data?.regiao;
   if (typeof regiao !== "string" || !REGIOES_VALIDAS.has(regiao)) {
@@ -697,7 +761,7 @@ export const aneisJudgePlacement = onCall({region}, async (req) => {
       throw new HttpsError("failed-precondition", "Não há carta para julgar");
     }
     if (stateDoc.get("knowerUid") !== uid) {
-      throw new HttpsError("permission-denied", "Só o Knower posiciona a carta");
+      throw new HttpsError("permission-denied", "Só o Guardião posiciona a carta");
     }
 
     const pending = stateDoc.get("pendingJogada") as {
@@ -763,8 +827,8 @@ export const aneisJudgePlacement = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const aneisUndoJudge = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisUndoJudge = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
 
   await db.runTransaction(async (tx) => {
@@ -779,7 +843,7 @@ export const aneisUndoJudge = onCall({region}, async (req) => {
       throw new HttpsError("failed-precondition", "Partida não iniciada");
     }
     if (stateDoc.get("knowerUid") !== uid) {
-      throw new HttpsError("permission-denied", "Só o Knower pode desfazer");
+      throw new HttpsError("permission-denied", "Só o Guardião pode desfazer");
     }
 
     const phase = stateDoc.get("phase") as string;
@@ -845,6 +909,246 @@ export const aneisUndoJudge = onCall({region}, async (req) => {
   return {ok: true};
 });
 
+type PalpiteDeRegra = {
+  uid: string;
+  nome: string;
+  anel: string;
+  palpite: string;
+};
+
+type RegraRevelada = ReturnType<typeof revelarRegras>[number];
+
+type PalpiteArgs = {
+  roomRef: DocumentReference;
+  stateRef: DocumentReference;
+  secretRef: DocumentReference;
+  playersSnap: QuerySnapshot;
+  regras: Regra[];
+  porId: Record<string, Coisa>;
+  baralho: string[];
+  mao: CartaPublica[];
+  jogadorUid: string;
+  jogadorNome: string;
+  anel: string;
+  palpite: string;
+  acertou: boolean;
+  knowerUid: string | null;
+  desvendados: RegraRevelada[];
+};
+
+/**
+ * Fecha um "Desvendar uma regra". Acertou: descarta duas cartas ao acaso e
+ * o anel fica aberto para todos. Errou: compra uma. A vez passa nos dois
+ * casos; quem fica sem cartas vence.
+ */
+function resolverPalpite(tx: Transaction, args: PalpiteArgs) {
+  const banco = carregarBanco();
+  const baralho = [...args.baralho];
+  let mao = [...args.mao];
+  const desvendados = [...args.desvendados];
+  const regra = args.regras.find((item) => item.anel === args.anel);
+
+  if (args.acertou) {
+    mao = shuffle(mao).slice(2);
+    if (regra) desvendados.push(...revelarRegras([regra], banco.aneis));
+  } else if (baralho.length > 0) {
+    const comprada = args.porId[baralho.shift() as string];
+    if (comprada) mao.push(cartaPublica(comprada));
+  }
+
+  tx.set(db.doc(`${args.roomRef.path}/hands/${args.jogadorUid}`), {coisas: mao});
+  tx.update(db.doc(`${args.roomRef.path}/players/${args.jogadorUid}`), {
+    maoCount: mao.length,
+  });
+  tx.update(args.secretRef, {baralho});
+
+  const ultimaJogada = {
+    tipo: "regra",
+    uid: args.jogadorUid,
+    nome: args.jogadorNome,
+    anel: args.anel,
+    palpite: args.palpite,
+    texto: args.palpite,
+    regiaoEscolhida: args.anel,
+    regiaoCerta: args.anel,
+    acertou: args.acertou,
+    cartasRestantes: mao.length,
+  };
+
+  if (mao.length === 0) {
+    tx.update(args.stateRef, {
+      phase: "over",
+      baralhoCount: baralho.length,
+      ultimaJogada,
+      pendingJogada: null,
+      pendingPalpite: null,
+      aneisDesvendados: desvendados,
+      reversivel: null,
+      vencedorUid: args.jogadorUid,
+      vencedorNome: args.jogadorNome,
+      regrasReveladas: revelarRegras(args.regras, banco.aneis),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    tx.update(args.roomRef, {
+      status: "finished",
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    return;
+  }
+
+  tx.update(args.stateRef, {
+    phase: "playing",
+    currentUid: nextFinderUid(orderedSeats(args.playersSnap), args.jogadorUid, args.knowerUid),
+    baralhoCount: baralho.length,
+    ultimaJogada,
+    pendingJogada: null,
+    pendingPalpite: null,
+    aneisDesvendados: desvendados,
+    reversivel: null,
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+}
+
+export const aneisGuessRule = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
+  const roomId = requireRoomId(req.data?.roomId);
+  const anel = req.data?.anel;
+  const palpiteRaw = req.data?.palpite;
+  if (typeof anel !== "string" || !(ANEIS as readonly string[]).includes(anel)) {
+    throw new HttpsError("invalid-argument", "Anel inválido");
+  }
+  const palpite = typeof palpiteRaw === "string" ? limparTexto(palpiteRaw) : "";
+  if (palpite.length < 1 || palpite.length > 80) {
+    throw new HttpsError("invalid-argument", "Diga qual seria a regra");
+  }
+
+  await db.runTransaction(async (tx) => {
+    const roomRef = db.doc(`aneisRooms/${roomId}`);
+    const stateRef = db.doc(`aneisRooms/${roomId}/state/current`);
+    const secretRef = db.doc(`aneisRooms/${roomId}/secret/current`);
+    const meRef = db.doc(`aneisRooms/${roomId}/players/${uid}`);
+    const handRef = db.doc(`aneisRooms/${roomId}/hands/${uid}`);
+    const roomDoc = await tx.get(roomRef);
+    const stateDoc = await tx.get(stateRef);
+    const secretDoc = await tx.get(secretRef);
+    const meDoc = await tx.get(meRef);
+    const handDoc = await tx.get(handRef);
+    const playersSnap = await tx.get(db.collection(`aneisRooms/${roomId}/players`));
+
+    if (!roomDoc.exists || !stateDoc.exists || !secretDoc.exists) {
+      throw new HttpsError("failed-precondition", "Partida não iniciada");
+    }
+    if (!meDoc.exists) {
+      throw new HttpsError("permission-denied", "Você não está na sala");
+    }
+    if (stateDoc.get("phase") !== "playing") {
+      throw new HttpsError("failed-precondition", "Não é hora de desvendar");
+    }
+    const knowerUid = (stateDoc.get("knowerUid") as string | null) ?? null;
+    if (knowerUid === uid) {
+      throw new HttpsError("permission-denied", "O Guardião já sabe as regras");
+    }
+    if (stateDoc.get("currentUid") !== uid) {
+      throw new HttpsError("permission-denied", "Não é a sua vez");
+    }
+    const desvendados = (stateDoc.get("aneisDesvendados") as RegraRevelada[] | undefined) ?? [];
+    if (desvendados.some((item) => item.anel === anel)) {
+      throw new HttpsError("failed-precondition", "Esse anel já foi desvendado");
+    }
+
+    const nome = meDoc.get("displayName") as string;
+    if (stateDoc.get("knowerMode") === "jogador" && knowerUid) {
+      const pendingPalpite: PalpiteDeRegra = {uid, nome, anel, palpite};
+      tx.update(stateRef, {
+        phase: "judgingRule",
+        pendingPalpite,
+        reversivel: null,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    const opcoes = (stateDoc.get("opcoesRegras") as Record<string, string[]> | null)?.[anel] ?? [];
+    if (!opcoes.includes(palpite)) {
+      throw new HttpsError("invalid-argument", "Escolha uma das opções");
+    }
+    const regras = secretDoc.get("regras") as Regra[];
+    resolverPalpite(tx, {
+      roomRef,
+      stateRef,
+      secretRef,
+      playersSnap,
+      regras,
+      porId: secretDoc.get("porId") as Record<string, Coisa>,
+      baralho: (secretDoc.get("baralho") as string[] | undefined) ?? [],
+      mao: (handDoc.get("coisas") as CartaPublica[] | undefined) ?? [],
+      jogadorUid: uid,
+      jogadorNome: nome,
+      anel,
+      palpite,
+      acertou: regras.find((regra) => regra.anel === anel)?.texto === palpite,
+      knowerUid,
+      desvendados,
+    });
+  });
+
+  return {ok: true};
+});
+
+export const aneisJudgeRule = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
+  const roomId = requireRoomId(req.data?.roomId);
+  const acertou = req.data?.acertou;
+  if (typeof acertou !== "boolean") {
+    throw new HttpsError("invalid-argument", "Diga se o palpite acertou");
+  }
+
+  await db.runTransaction(async (tx) => {
+    const roomRef = db.doc(`aneisRooms/${roomId}`);
+    const stateRef = db.doc(`aneisRooms/${roomId}/state/current`);
+    const secretRef = db.doc(`aneisRooms/${roomId}/secret/current`);
+    const roomDoc = await tx.get(roomRef);
+    const stateDoc = await tx.get(stateRef);
+    const secretDoc = await tx.get(secretRef);
+    const playersSnap = await tx.get(db.collection(`aneisRooms/${roomId}/players`));
+
+    if (!roomDoc.exists || !stateDoc.exists || !secretDoc.exists) {
+      throw new HttpsError("failed-precondition", "Partida não iniciada");
+    }
+    if (stateDoc.get("phase") !== "judgingRule") {
+      throw new HttpsError("failed-precondition", "Não há palpite para julgar");
+    }
+    if (stateDoc.get("knowerUid") !== uid) {
+      throw new HttpsError("permission-denied", "Só o Guardião julga o palpite");
+    }
+    const pendente = stateDoc.get("pendingPalpite") as PalpiteDeRegra | null;
+    if (!pendente) {
+      throw new HttpsError("failed-precondition", "Nenhum palpite pendente");
+    }
+    const handDoc = await tx.get(db.doc(`aneisRooms/${roomId}/hands/${pendente.uid}`));
+
+    resolverPalpite(tx, {
+      roomRef,
+      stateRef,
+      secretRef,
+      playersSnap,
+      regras: secretDoc.get("regras") as Regra[],
+      porId: secretDoc.get("porId") as Record<string, Coisa>,
+      baralho: (secretDoc.get("baralho") as string[] | undefined) ?? [],
+      mao: (handDoc.get("coisas") as CartaPublica[] | undefined) ?? [],
+      jogadorUid: pendente.uid,
+      jogadorNome: pendente.nome,
+      anel: pendente.anel,
+      palpite: pendente.palpite,
+      acertou,
+      knowerUid: uid,
+      desvendados: (stateDoc.get("aneisDesvendados") as RegraRevelada[] | undefined) ?? [],
+    });
+  });
+
+  return {ok: true};
+});
+
 function limparPartida(
   tx: Transaction,
   roomId: string,
@@ -870,8 +1174,8 @@ function limparPartida(
   });
 }
 
-export const aneisResetRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisResetRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
 
   await db.runTransaction(async (tx) => {
@@ -905,8 +1209,8 @@ export const aneisResetRoom = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const aneisAbortGame = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const aneisAbortGame = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
 
   await db.runTransaction(async (tx) => {

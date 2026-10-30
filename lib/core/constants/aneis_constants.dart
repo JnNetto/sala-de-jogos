@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AneisConstants {
-  static const String jogoNome = 'Nos Anéis';
+  static const String jogoNome = 'Cabe Aqui?';
   static const String jogoDescricao =
       'Encaixe as cartas no diagrama e descubra as regras secretas';
 
   static const int minJogadores = 2;
   static const int maxJogadores = 6;
   static const int cartasPorMao = 5;
-  static const int pistasIniciais = 3;
-  static const int cartasSetupKnower = 5;
+
+  /// Uma pista em cada anel e uma fora.
+  static const int pistasIniciais = 4;
 
   static const String knowerJogador = 'jogador';
   static const String knowerApp = 'app';
@@ -36,14 +37,17 @@ class AneisConstants {
   }
 
   static String rotuloKnowerMode(String valor) {
-    return valor == knowerApp ? 'O próprio jogo' : 'Um jogador';
+    return valor == knowerApp ? 'O próprio jogo' : 'Um Guardião';
   }
 
   static String descricaoKnowerMode(String valor) {
     if (valor == knowerApp) {
-      return 'O app conhece as regras, coloca as pistas e posiciona cada carta automaticamente.';
+      return 'O jogo é o Guardião: conhece as regras, põe as pistas e '
+          'confere cada carta sozinho.';
     }
-    return 'Uma pessoa da sala é sorteada. Ela vê as regras, recebe cartas aleatórias para as 3 pistas e decide onde cada palavra dos outros vai.';
+    return 'Uma pessoa da sala vira o Guardião. Ela vê as regras, põe uma '
+        'pista em cada anel e uma fora, e decide onde cada carta dos outros '
+        'vai.';
   }
 
   AneisConstants._();

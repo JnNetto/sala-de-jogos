@@ -79,6 +79,7 @@ class SoUmaPartidaProvider extends ChangeNotifier {
       return false;
     }
     if (numero < 1 || numero > 5 || partida.baralho.isEmpty) return false;
+    if (partida.numerosUsados.contains(numero)) return false;
 
     final carta = partida.baralho.first;
     final baralhoRestante = partida.baralho.skip(1).toList(growable: false);
@@ -199,17 +200,17 @@ class SoUmaPartidaProvider extends ChangeNotifier {
     }
 
     var baralho = partida.baralho;
-    var cartasGanhas = partida.cartasGanhas;
-    switch (resultado) {
-      case SoUmaResultadoRodada.acerto:
-        cartasGanhas += 1;
-      case SoUmaResultadoRodada.erro:
-        if (baralho.isNotEmpty) {
-          baralho = baralho.skip(1).toList(growable: false);
-        }
-      case SoUmaResultadoRodada.passou:
-        break;
-    }
+    final cartasGanhas =
+        partida.cartasGanhas +
+        (resultado == SoUmaResultadoRodada.acerto ? 1 : 0);
+
+    // Errou: a carta volta para o topo e a mesma pessoa escolhe outra
+    // palavra dela. Só quando as cinco já foram tentadas a carta se perde.
+    final tentados = [...partida.numerosUsados, rodada.numeroEscolhido];
+    final repete =
+        resultado == SoUmaResultadoRodada.erro &&
+        tentados.length < rodada.carta.palavras.length;
+    if (repete) baralho = [rodada.carta, ...baralho];
 
     final rodadaConcluida = rodada.copyWith(
       palpite: passar ? null : palpite,
@@ -223,9 +224,10 @@ class SoUmaPartidaProvider extends ChangeNotifier {
       cartasGanhas: cartasGanhas,
       historico: historico,
       fase: terminou ? SoUmaFase.finalizada : SoUmaFase.escolhendoNumero,
-      adivinhadorIndex: terminou
+      adivinhadorIndex: terminou || repete
           ? partida.adivinhadorIndex
           : (partida.adivinhadorIndex + 1) % partida.quantidadeJogadores,
+      numerosUsados: repete ? tentados : const [],
       limparRodadaAtual: true,
     );
     notifyListeners();

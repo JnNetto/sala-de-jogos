@@ -14,6 +14,18 @@ class ResistenciaEstadoRemoto {
   final String? winner;
   final int playerCount;
 
+  /// Equipes recusadas na partida inteira (as tochas apagadas).
+  final int rejections;
+  final bool lanternUsed;
+
+  /// Na fase "lantern": o guia que pode usar a Lanterna.
+  final String? lanternHolderUid;
+
+  /// Em quem a Lanterna foi usada (todos sabem; só o guia viu a carta).
+  final String? lanternByUid;
+  final String? lanternTargetUid;
+  final int? lanternRound;
+
   const ResistenciaEstadoRemoto({
     required this.gameId,
     required this.phase,
@@ -29,6 +41,12 @@ class ResistenciaEstadoRemoto {
     required this.expectedCount,
     required this.winner,
     required this.playerCount,
+    this.rejections = 0,
+    this.lanternUsed = false,
+    this.lanternHolderUid,
+    this.lanternByUid,
+    this.lanternTargetUid,
+    this.lanternRound,
   });
 
   factory ResistenciaEstadoRemoto.fromMap(Map<String, dynamic> data) {
@@ -51,6 +69,12 @@ class ResistenciaEstadoRemoto {
       expectedCount: data['expectedCount'] as int? ?? 0,
       winner: data['winner'] as String?,
       playerCount: data['playerCount'] as int? ?? 0,
+      rejections: data['rejections'] as int? ?? 0,
+      lanternUsed: data['lanternUsed'] as bool? ?? false,
+      lanternHolderUid: data['lanternHolderUid'] as String?,
+      lanternByUid: (data['lanternUse'] as Map?)?['byUid'] as String?,
+      lanternTargetUid: (data['lanternUse'] as Map?)?['targetUid'] as String?,
+      lanternRound: (data['lanternUse'] as Map?)?['round'] as int?,
     );
   }
 

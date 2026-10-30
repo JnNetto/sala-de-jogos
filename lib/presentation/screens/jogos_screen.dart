@@ -16,7 +16,7 @@ import 'impostor_home_screen.dart';
 import 'lobisomem/lobisomem_home_screen.dart';
 import 'pergunta_impostora/pergunta_home_screen.dart';
 import 'quiz_da_vez/quiz_home_screen.dart';
-import 'resistencia/resistencia_home_screen.dart';
+import 'expedicao/expedicao_home_screen.dart';
 import 'so_uma/so_uma_home_screen.dart';
 
 /// A estante: todos os jogos, com o mais novo em destaque. Chega-se aqui
@@ -39,10 +39,10 @@ class _JogosScreenState extends State<JogosScreen>
   static const _limiteCompacto = 110.0;
 
   /// O jogo que acabou de chegar ganha a janela; o resto vai para a grade.
-  static final _destaque = JogosDisponiveis.todos
+  static final _destaque = JogosDisponiveis.visiveis
       .where((j) => j.novo)
       .firstOrNull;
-  static final _grade = JogosDisponiveis.todos
+  static final _grade = JogosDisponiveis.visiveis
       .where((j) => j != _destaque)
       .toList();
 
@@ -99,7 +99,7 @@ class _JogosScreenState extends State<JogosScreen>
       JogosDisponiveis.idEspiao => const ImpostorHomeScreen(),
       JogosDisponiveis.idPergunta => const PerguntaHomeScreen(),
       JogosDisponiveis.idQuiz => const QuizHomeScreen(),
-      JogosDisponiveis.idResistencia => const ResistenciaHomeScreen(),
+      JogosDisponiveis.idResistencia => const ExpedicaoHomeScreen(),
       JogosDisponiveis.idSoUma => const SoUmaHomeScreen(),
       JogosDisponiveis.idLobisomem => const LobisomemHomeScreen(),
       JogosDisponiveis.idAneis => const AneisHomeScreen(),

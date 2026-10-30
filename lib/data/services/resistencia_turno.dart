@@ -22,17 +22,20 @@ class ResistenciaTurno {
       );
     }
 
-    final proximaTentativa = partida.tentativaAtual + 1;
-    if (proximaTentativa > ResistenciaConstants.maxRejeicoes) {
+    // As rejeições contam na partida inteira, não só em sequência.
+    final rejeicoes = partida.rejeicoes + 1;
+    if (rejeicoes >= ResistenciaConstants.maxRejeicoes) {
       return partida.copyWith(
         fase: ResistenciaFase.finalizada,
+        rejeicoes: rejeicoes,
         ultimaPropostaAprovada: false,
       );
     }
 
     return partida.copyWith(
       fase: ResistenciaFase.propondo,
-      tentativaAtual: proximaTentativa,
+      rejeicoes: rejeicoes,
+      tentativaAtual: partida.tentativaAtual + 1,
       liderIndex: (partida.liderIndex + 1) % partida.jogadores.length,
       equipePropostaIds: const [],
       votosProposta: const {},
@@ -62,12 +65,23 @@ class ResistenciaTurno {
         sucessos >= ResistenciaConstants.vitoriasNecessarias ||
         sabotagens >= ResistenciaConstants.vitoriasNecessarias;
 
+    // Enquanto a Lanterna não for usada, o guia da câmara pode usá-la.
+    final lanterna = !finalizada && !partida.lanternaUsada;
+
     return partida.copyWith(
       resultadosMissoes: List.unmodifiable(resultados),
       fracassosPorMissao: List.unmodifiable(fracassosPorMissao),
       ultimaMissaoSucesso: missaoSucesso,
       ultimosFracassosMissao: fracassos,
-      fase: finalizada ? ResistenciaFase.finalizada : ResistenciaFase.propondo,
+      guiaDaLanterna: lanterna ? partida.liderAtual.id : null,
+      limparGuiaDaLanterna: !lanterna,
+      cartasDaUltimaMissao: Map.unmodifiable(partida.cartasMissao),
+      equipeDaUltimaMissao: List.unmodifiable(partida.equipePropostaIds),
+      fase: finalizada
+          ? ResistenciaFase.finalizada
+          : lanterna
+          ? ResistenciaFase.lanterna
+          : ResistenciaFase.propondo,
       missaoAtual: finalizada ? partida.missaoAtual : partida.missaoAtual + 1,
       tentativaAtual: 1,
       liderIndex: (partida.liderIndex + 1) % partida.jogadores.length,

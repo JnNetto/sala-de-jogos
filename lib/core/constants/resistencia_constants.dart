@@ -1,12 +1,15 @@
 class ResistenciaConstants {
-  static const String jogoNome = 'A Resistência';
+  static const String jogoNome = 'Expedição';
   static const String jogoDescricao =
-      'Proponha equipes, vote nas missões e encontre os espiões';
+      'Monte as equipes, explore as câmaras e desmascare os saqueadores';
 
   static const int minJogadores = 5;
   static const int maxJogadores = 10;
   static const int totalMissoes = 5;
   static const int vitoriasNecessarias = 3;
+
+  /// As tochas: cada equipe recusada apaga uma, na partida inteira. Sem
+  /// tochas, os saqueadores vencem.
   static const int maxRejeicoes = 5;
 
   static const Map<int, int> quantidadeEspioesPorJogadores = {
@@ -30,7 +33,7 @@ class ResistenciaConstants {
   static int quantidadeEspioes(int quantidadeJogadores) {
     final quantidade = quantidadeEspioesPorJogadores[quantidadeJogadores];
     if (quantidade == null) {
-      throw ArgumentError('A Resistência precisa de 5 a 10 jogadores');
+      throw ArgumentError('A Expedição precisa de 5 a 10 jogadores');
     }
     return quantidade;
   }
@@ -38,7 +41,7 @@ class ResistenciaConstants {
   static List<int> tamanhosEquipe(int quantidadeJogadores) {
     final tamanhos = tamanhosEquipePorJogadores[quantidadeJogadores];
     if (tamanhos == null) {
-      throw ArgumentError('A Resistência precisa de 5 a 10 jogadores');
+      throw ArgumentError('A Expedição precisa de 5 a 10 jogadores');
     }
     return List.unmodifiable(tamanhos);
   }

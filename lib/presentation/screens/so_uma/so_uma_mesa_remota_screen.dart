@@ -205,9 +205,13 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
     if (etapa == 'resultado') {
       final r = e.historico.last;
       final quem = _jogador(r.guesserUid);
-      return EtapaSoUma(
+      return Etapa(
         rodape: BotaoSala(
-          rotulo: e.phase == 'over' ? 'Ver o placar final' : 'Próxima carta',
+          rotulo: e.phase == 'over'
+              ? 'Ver o placar final'
+              : e.palavrasUsadas.isNotEmpty
+              ? 'Tentar de novo'
+              : 'Próxima carta',
           icone: Symbols.arrow_forward_rounded,
           iconeNoFim: true,
           luz: luz,
@@ -220,6 +224,7 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
             palavraAlvo: r.palavraAlvo,
             adivinhador: quem.nome,
             palpite: r.palpite,
+            cartaVolta: r.resultado == 'erro' && e.palavrasUsadas.isNotEmpty,
             palavras: r.palavras,
             pistas: const [],
           ),
@@ -232,7 +237,7 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: EtapaSoUma(
+            child: Etapa(
               children: [
                 FimSoUma(
                   cartasGanhas: e.cartasGanhas,
@@ -257,7 +262,7 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
 
     switch (etapa) {
       case 'escolher':
-        return EtapaSoUma(
+        return Etapa(
           rodape: BotaoSala(
             rotulo: _numero == null
                 ? 'Escolha um número'
@@ -272,13 +277,17 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
             CabecaDaEtapa(
               nome: adivinhador.nome,
               indice: adivinhador.indice,
-              titulo: 'Sua vez de adivinhar',
-              texto:
-                  'São cinco palavras escondidas. Escolha uma pelo número, '
-                  'às cegas.',
+              titulo: e.palavrasUsadas.isEmpty
+                  ? 'Sua vez de adivinhar'
+                  : 'Tente outra palavra',
+              texto: e.palavrasUsadas.isEmpty
+                  ? 'São cinco palavras escondidas. Escolha uma pelo número, '
+                        'às cegas.'
+                  : 'A carta é a mesma. As que já saíram ficam de fora.',
             ),
             const SizedBox(height: Espaco.e6),
             CartaSoUma(
+              tentadas: {for (final n in e.palavrasUsadas) n - 1},
               escolhido: _numero,
               aoEscolher: p.isLoading
                   ? null
@@ -303,7 +312,7 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
         final pronto =
             _pista1.text.trim().isNotEmpty &&
             (!duas || _pista2.text.trim().isNotEmpty);
-        return EtapaSoUma(
+        return Etapa(
           rodape: BotaoSala(
             rotulo: duas ? 'Enviar as pistas' : 'Enviar a pista',
             icone: Symbols.send_rounded,
@@ -362,7 +371,7 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
 
       case 'conferir':
         final nomes = {for (final j in widget.jogadores) j.uid: j.displayName};
-        return EtapaSoUma(
+        return Etapa(
           rodape: BotaoSala(
             rotulo: 'Pronto, pode chutar',
             icone: Symbols.check_rounded,
@@ -400,7 +409,7 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
         );
 
       case 'chutar':
-        return EtapaSoUma(
+        return Etapa(
           rodape: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -428,8 +437,8 @@ class _SoUmaMesaRemotaScreenState extends State<SoUmaMesaRemotaScreen> {
             const CabecaDaEtapa(
               titulo: 'Qual é a palavra?',
               texto:
-                  'Errar custa duas cartas; passar, só uma. Na dúvida, '
-                  'passe.',
+                  'Errou? A carta volta e você tenta outra palavra dela. '
+                  'Passar descarta a carta.',
             ),
             const SizedBox(height: Espaco.e6),
             PistasNaMesa(pistas: e.pistasReveladas),

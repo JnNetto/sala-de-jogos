@@ -57,6 +57,8 @@ class AneisSalaProvider extends ChangeNotifier implements SalaOnline {
       !souKnower;
   bool get emSetupKnower => souKnower && _estado?.phase == 'setup';
   bool get emJulgamentoKnower => souKnower && _estado?.phase == 'judging';
+  bool get emJulgamentoDeRegraKnower =>
+      souKnower && _estado?.phase == 'judgingRule';
   @override
   bool get podeIniciar =>
       souHost &&
@@ -219,6 +221,29 @@ class AneisSalaProvider extends ChangeNotifier implements SalaOnline {
     if (sala == null) return false;
     return _executar(
       () => _service.julgarPosicao(roomId: sala.id, regiao: regiao),
+    );
+  }
+
+  Future<bool> desvendarRegra({
+    required String anel,
+    required String palpite,
+  }) async {
+    final sala = _sala;
+    if (sala == null) return false;
+    return _executar(
+      () => _service.desvendarRegra(
+        roomId: sala.id,
+        anel: anel,
+        palpite: palpite,
+      ),
+    );
+  }
+
+  Future<bool> julgarRegra({required bool acertou}) async {
+    final sala = _sala;
+    if (sala == null) return false;
+    return _executar(
+      () => _service.julgarRegra(roomId: sala.id, acertou: acertou),
     );
   }
 

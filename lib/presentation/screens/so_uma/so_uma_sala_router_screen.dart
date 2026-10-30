@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -74,7 +75,6 @@ class _SoUmaSalaRouterScreenState extends State<SoUmaSalaRouterScreen> {
     _sala = p.sala;
     _jogadores = p.jogadores;
     _estado = p.estado;
-    void ignorar(Object _) {}
 
     _assinaturas.addAll([
       p.observarSalaAtual().listen((sala) {
@@ -89,7 +89,7 @@ class _SoUmaSalaRouterScreenState extends State<SoUmaSalaRouterScreen> {
           p.resetarMarcadoresResultadoRodada();
         }
         setState(() => _sala = sala);
-      }, onError: ignorar),
+      }, onError: _semAcesso),
       p.observarJogadoresAtuais().listen((jogadores) {
         if (!mounted || _saindo) return;
         setState(() {
@@ -97,13 +97,13 @@ class _SoUmaSalaRouterScreenState extends State<SoUmaSalaRouterScreen> {
           _jogadoresChegaram = true;
         });
         _verificarSeFuiRemovido();
-      }, onError: ignorar),
+      }, onError: _semAcesso),
       p.observarEstadoAtual().listen((estado) {
         if (!mounted || _saindo) return;
         setState(() => _estado = estado);
         _ajustarRodada();
         _carregarVisto();
-      }, onError: ignorar),
+      }, onError: _semAcesso),
     ]);
     _ajustarRodada();
     _carregarVisto();
@@ -161,6 +161,23 @@ class _SoUmaSalaRouterScreenState extends State<SoUmaSalaRouterScreen> {
       gameId: e.gameId,
       quantidadeHistorico: e.historico.length,
     );
+  }
+
+  /// As regras do Firestore só deixam ler a sala quem está nela: se a
+  /// leitura passa a ser negada, a pessoa foi tirada (ou a sala sumiu).
+  void _semAcesso(Object erro) {
+    if (erro is! FirebaseException || erro.code != 'permission-denied') return;
+    if (!mounted || _saindo) return;
+    _saindo = true;
+    final navigator = Navigator.of(context);
+    mostrarAviso(
+      context,
+      'Você não está mais nesta sala.',
+      tipo: TipoAviso.info,
+    );
+    _provider.esquecerUltimaSala().then((_) {
+      if (mounted) navigator.popUntil(ehBaseDosJogos);
+    });
   }
 
   void _verificarSeFuiRemovido() {

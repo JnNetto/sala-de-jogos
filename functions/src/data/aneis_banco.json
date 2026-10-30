@@ -1,23 +1,23 @@
 {
-  "jogo": "Nos Anéis",
+  "jogo": "Cabe Aqui?",
   "versao": 1,
   "observacao": "Banco original. Não reproduz cartas nem regras do jogo publicado.",
   "aneis": [
     {
       "id": "palavra",
-      "nome": "Palavra",
-      "subtitulo": "escrita, som ou forma da palavra",
+      "nome": "Letra",
+      "subtitulo": "como a palavra se escreve ou soa",
       "cor": "#3B82F6"
     },
     {
       "id": "atributo",
-      "nome": "Atributo",
+      "nome": "Jeito",
       "subtitulo": "o que a coisa é ou tem",
       "cor": "#F59E0B"
     },
     {
       "id": "contexto",
-      "nome": "Contexto",
+      "nome": "Lugar",
       "subtitulo": "onde aparece ou para que se usa",
       "cor": "#EC4899"
     }

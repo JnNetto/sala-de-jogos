@@ -28,13 +28,45 @@ void main() {
     expect(caiu.ultimaMissaoSucesso, isFalse);
   });
 
-  test('quinta rejeição entrega a partida aos espiões', () {
+  test('a quinta rejeição da partida entrega o jogo aos saqueadores', () {
     final fim = ResistenciaTurno.resolverVotacao(
-      _votacao(jogadores: 5, tentativa: 5, aprovacoes: 2),
+      _votacao(jogadores: 5, tentativa: 1, aprovacoes: 2, rejeicoes: 4),
     );
 
     expect(fim.fase, ResistenciaFase.finalizada);
     expect(fim.vencedor, ResistenciaVencedor.espioes);
+  });
+
+  test('rejeições somam na partida, sem precisar ser em sequência', () {
+    final segue = ResistenciaTurno.resolverVotacao(
+      _votacao(jogadores: 5, tentativa: 1, aprovacoes: 2, rejeicoes: 2),
+    );
+
+    expect(segue.fase, ResistenciaFase.propondo);
+    expect(segue.rejeicoes, 3);
+  });
+
+  test('depois de uma câmara, o guia dela pode usar a Lanterna', () {
+    final depois = ResistenciaTurno.resolverMissao(
+      _missao(jogadores: 5, missao: 1, fracassos: 1),
+    );
+
+    expect(depois.fase, ResistenciaFase.lanterna);
+    expect(depois.guiaDaLanterna, depois.jogadores.first.id);
+    expect(depois.cartasDaUltimaMissao, isNotEmpty);
+  });
+
+  test('com a Lanterna usada, a próxima câmara vem direto', () {
+    final depois = ResistenciaTurno.resolverMissao(
+      _missao(
+        jogadores: 5,
+        missao: 1,
+        fracassos: 0,
+      ).copyWith(lanternaUsada: true),
+    );
+
+    expect(depois.fase, ResistenciaFase.propondo);
+    expect(depois.guiaDaLanterna, isNull);
   });
 
   test('maioria aprova e a missão começa sem cartas antigas', () {
@@ -83,6 +115,7 @@ ResistenciaPartida _votacao({
   required int jogadores,
   required int tentativa,
   required int aprovacoes,
+  int rejeicoes = 0,
   Map<String, bool> cartasAntigas = const {},
 }) {
   return ResistenciaPartida(
@@ -90,10 +123,9 @@ ResistenciaPartida _votacao({
     tamanhosEquipe: ResistenciaConstants.tamanhosEquipe(jogadores),
     fase: ResistenciaFase.votando,
     tentativaAtual: tentativa,
+    rejeicoes: rejeicoes,
     equipePropostaIds: ['j0', 'j1'],
-    votosProposta: {
-      for (var i = 0; i < jogadores; i++) 'j$i': i < aprovacoes,
-    },
+    votosProposta: {for (var i = 0; i < jogadores; i++) 'j$i': i < aprovacoes},
     cartasMissao: cartasAntigas,
   );
 }
@@ -112,12 +144,8 @@ ResistenciaPartida _missao({
     fase: ResistenciaFase.missao,
     missaoAtual: missao,
     equipePropostaIds: equipe,
-    resultadosMissoes: [
-      for (var i = 0; i < sabotagensAnteriores; i++) false,
-    ],
-    cartasMissao: {
-      for (var i = 0; i < tamanho; i++) 'j$i': i >= fracassos,
-    },
+    resultadosMissoes: [for (var i = 0; i < sabotagensAnteriores; i++) false],
+    cartasMissao: {for (var i = 0; i < tamanho; i++) 'j$i': i >= fracassos},
   );
 }
 
@@ -127,9 +155,7 @@ List<ResistenciaJogador> _jogadores(int quantidade) {
       ResistenciaJogador(
         id: 'j$i',
         nome: 'Jogador ${i + 1}',
-        papel: i == 0
-            ? ResistenciaPapel.espiao
-            : ResistenciaPapel.resistencia,
+        papel: i == 0 ? ResistenciaPapel.espiao : ResistenciaPapel.resistencia,
       ),
   ];
 }

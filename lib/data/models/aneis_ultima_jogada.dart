@@ -9,6 +9,15 @@ class AneisUltimaJogada {
   final bool acertou;
   final int cartasRestantes;
 
+  /// "carta" (posicionou uma carta) ou "regra" (tentou desvendar um anel).
+  final String tipo;
+
+  /// No "regra": o anel e o palpite.
+  final String? anel;
+  final String? palpite;
+
+  bool get desvendar => tipo == 'regra';
+
   const AneisUltimaJogada({
     required this.uid,
     required this.nome,
@@ -17,6 +26,9 @@ class AneisUltimaJogada {
     required this.regiaoCerta,
     required this.acertou,
     required this.cartasRestantes,
+    this.tipo = 'carta',
+    this.anel,
+    this.palpite,
   });
 
   factory AneisUltimaJogada.fromMap(Map<String, dynamic> data) {
@@ -28,6 +40,9 @@ class AneisUltimaJogada {
       regiaoCerta: AneisRegiao.fromId(data['regiaoCerta'] as String?),
       acertou: data['acertou'] as bool? ?? false,
       cartasRestantes: data['cartasRestantes'] as int? ?? 0,
+      tipo: data['tipo'] as String? ?? 'carta',
+      anel: data['anel'] as String?,
+      palpite: data['palpite'] as String?,
     );
   }
 }

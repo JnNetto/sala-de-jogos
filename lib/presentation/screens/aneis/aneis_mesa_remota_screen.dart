@@ -11,8 +11,10 @@ import '../../../data/models/aneis_carta_publica.dart';
 import '../../../data/models/aneis_estado_remoto.dart';
 import '../../../data/models/aneis_jogador_remoto.dart';
 import '../../../data/models/aneis_knower_view.dart';
+import '../../../data/models/aneis_regra_revelada.dart';
 import '../../providers/aneis_sala_provider.dart';
 import '../../widgets/aneis/cores_dos_aneis.dart';
+import '../../widgets/aneis/desvendar_regra.dart';
 import '../../widgets/aneis/folha_regiao.dart';
 import '../../widgets/aneis/pecas_aneis.dart';
 import '../../widgets/aneis/tabuleiro_aneis.dart';
@@ -25,7 +27,7 @@ import '../../widgets/sala/pressionavel.dart';
 import '../../widgets/sala/sala_online.dart';
 import '../../widgets/sala/tela_da_sala.dart';
 
-/// A mesa do Nos Anéis: de quem é a vez, o último lance, o tabuleiro, quem
+/// A mesa do Cabe Aqui?: de quem é a vez, o último lance, o tabuleiro, quem
 /// está na mesa e, embaixo, a mão. Para jogar, escolhe-se uma carta e
 /// toca-se numa região.
 class AneisMesaRemotaScreen extends StatefulWidget {
@@ -78,7 +80,9 @@ class _AneisMesaRemotaScreenState extends State<AneisMesaRemotaScreen> {
           'Cada anel tem uma regra escondida. Uma carta entra em todos os '
           'anéis cuja regra ela cumpre, inclusive nas interseções.\n\n'
           'Toque numa região para ver as cartas dela. Segure para espiar '
-          'sem abrir.',
+          'sem abrir.\n\n'
+          'Na sua vez, em vez de jogar uma carta, dá para tentar desvendar '
+          'a regra de um anel.',
       acao: 'Entendi',
     );
     await prefs.setBool(AneisConstants.prefsKeyTutorialVisto, true);
@@ -134,6 +138,30 @@ class _AneisMesaRemotaScreenState extends State<AneisMesaRemotaScreen> {
     }
   }
 
+  Future<void> _desvendar() async {
+    final provider = context.read<AneisSalaProvider>();
+    final palpite = await mostrarDesvendarRegra(context, estado: widget.estado);
+    if (palpite == null || !mounted) return;
+    HapticFeedback.mediumImpact();
+    setState(() => _selecionada = null);
+    await agirNaSala(
+      context,
+      provider,
+      () =>
+          provider.desvendarRegra(anel: palpite.anel, palpite: palpite.palpite),
+    );
+  }
+
+  Future<void> _julgarPalpite(bool acertou) async {
+    final provider = context.read<AneisSalaProvider>();
+    HapticFeedback.mediumImpact();
+    await agirNaSala(
+      context,
+      provider,
+      () => provider.julgarRegra(acertou: acertou),
+    );
+  }
+
   Future<void> _desfazer() async {
     final provider = context.read<AneisSalaProvider>();
     final ok = await provider.desfazerJulgamento();
@@ -155,6 +183,11 @@ class _AneisMesaRemotaScreenState extends State<AneisMesaRemotaScreen> {
             provider.emJulgamentoKnower);
     final maoAtiva = !ocupado && (provider.minhaVez || provider.emSetupKnower);
     final regras = widget.visaoKnower?.regras ?? const [];
+    // Quem não é o Guardião vê só os anéis já desvendados.
+    final regrasVisiveis = souKnower ? regras : estado.aneisDesvendados;
+    final podeDesvendar =
+        provider.minhaVez && !ocupado && aneisPorDesvendar(estado).isNotEmpty;
+    final palpite = estado.pendingPalpite;
 
     return PopScope(
       canPop: false,
@@ -169,7 +202,7 @@ class _AneisMesaRemotaScreenState extends State<AneisMesaRemotaScreen> {
       },
       child: TelaDaSala(
         sobretitulo: '${estado.baralhoCount} NO BARALHO',
-        titulo: 'Nos Anéis',
+        titulo: AneisConstants.jogoNome,
         matiz: Matiz.ceu,
         inicio: const BotaoSairDaMesa(
           nomeDoJogo: AneisConstants.jogoNome,
@@ -188,10 +221,11 @@ class _AneisMesaRemotaScreenState extends State<AneisMesaRemotaScreen> {
               BotaoEncerrarPartida(sala: provider),
           ],
         ),
-        corpo: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
+        corpo: LayoutBuilder(
+          builder: (context, caixa) {
+            // O painel do Guardião já mostra o palpite: o lance repetiria.
+            final mostrarLance = !provider.emJulgamentoDeRegraKnower;
+            final topo = Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: Espaco.margemTela,
               ),
@@ -203,49 +237,97 @@ class _AneisMesaRemotaScreenState extends State<AneisMesaRemotaScreen> {
                     jogadores: widget.jogadores,
                     escolheuCarta: _selecionada != null,
                   ),
-                  _Lance(estado: estado, meuUid: provider.uid),
-                  if (souKnower && regras.isNotEmpty) ...[
+                  if (mostrarLance)
+                    _Lance(estado: estado, meuUid: provider.uid),
+                  if (regrasVisiveis.isNotEmpty) ...[
                     const SizedBox(height: Espaco.e2),
-                    _RegrasSecretas(visao: widget.visaoKnower!),
+                    _Regras(
+                      regras: regrasVisiveis,
+                      titulo: souKnower
+                          ? 'SÓ VOCÊ VÊ AS REGRAS'
+                          : 'REGRAS DESVENDADAS',
+                    ),
                   ],
                 ],
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  Espaco.e3,
-                  Espaco.e2,
-                  Espaco.e3,
-                  0,
-                ),
-                child: TabuleiroAneis(
+            );
+            final tabuleiro = Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Espaco.e3,
+                Espaco.e2,
+                Espaco.e3,
+                0,
+              ),
+              child: TabuleiroAneis(
+                cartas: estado.tabuleiro,
+                posicionando: posicionando,
+                destaque: estado.pendingJogada == null
+                    ? null
+                    : AneisRegiao.fromId(estado.pendingJogada!.regiaoEscolhida),
+                aoEscolherRegiao: _posicionar,
+                aoVerRegiao: (regiao) => mostrarCartasDaRegiao(
+                  context,
+                  regiao: regiao,
                   cartas: estado.tabuleiro,
-                  posicionando: posicionando,
-                  destaque: estado.pendingJogada == null
-                      ? null
-                      : AneisRegiao.fromId(
-                          estado.pendingJogada!.regiaoEscolhida,
-                        ),
-                  aoEscolherRegiao: _posicionar,
-                  aoVerRegiao: (regiao) => mostrarCartasDaRegiao(
-                    context,
-                    regiao: regiao,
-                    cartas: estado.tabuleiro,
-                    aneis: estado.aneis,
-                    regraSecreta: regras
-                        .where((r) => r.anel == regiao.id)
-                        .firstOrNull,
-                  ),
+                  aneis: estado.aneis,
+                  regraSecreta: regrasVisiveis
+                      .where((r) => r.anel == regiao.id)
+                      .firstOrNull,
                 ),
               ),
-            ),
-            const SizedBox(height: Espaco.e2),
-            _Mesa(estado: estado, jogadores: widget.jogadores),
-          ],
+            );
+            final mesa = Padding(
+              padding: const EdgeInsets.only(top: Espaco.e2),
+              child: _Mesa(estado: estado, jogadores: widget.jogadores),
+            );
+
+            // Uma estimativa do que vai em cima e embaixo do tabuleiro. Se
+            // não sobrar o mínimo para ele, a tela rola e o tabuleiro fica
+            // com a altura mínima, em vez de encolher até sumir.
+            const minimo = 270.0;
+            final ocupadoPorFora =
+                78 +
+                (mostrarLance && estado.ultimaJogada != null ? 84 : 0) +
+                (regrasVisiveis.isEmpty
+                    ? 0
+                    : 34 + 24.0 * regrasVisiveis.length) +
+                62;
+            if (caixa.maxHeight - ocupadoPorFora >= minimo) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  topo,
+                  Expanded(child: tabuleiro),
+                  mesa,
+                ],
+              );
+            }
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  topo,
+                  SizedBox(height: minimo, child: tabuleiro),
+                  mesa,
+                ],
+              ),
+            );
+          },
         ),
-        rodape: !souKnower || estado.emSetup
+        rodape: provider.emJulgamentoDeRegraKnower && palpite != null
+            ? JulgarPalpite(
+                estado: estado,
+                palpite: palpite,
+                regraCerta: regras
+                    .where((r) => r.anel == palpite.anel)
+                    .firstOrNull
+                    ?.texto,
+                carregando: ocupado,
+                aoJulgar: _julgarPalpite,
+              )
+            : !souKnower || estado.emSetup
             ? _Mao(
+                aoDesvendar: podeDesvendar ? _desvendar : null,
                 mao: widget.mao,
                 ativa: maoAtiva,
                 carregando:
@@ -284,23 +366,30 @@ class _Vez extends StatelessWidget {
     final luz = c.luz(Matiz.ceu);
     final p = context.watch<AneisSalaProvider>();
 
-    final knower = estado.knowerNome ?? 'Quem sabe as regras';
+    final knower = estado.knowerNome ?? 'O Guardião';
     final daVez = jogadores
         .where((j) => j.uid == estado.currentUid)
         .firstOrNull;
     final nome = daVez?.displayName ?? 'alguém';
-    final comKnower = estado.emSetup || estado.emJulgamento;
+    final comKnower = estado.comGuardiao;
     final quem = comKnower ? estado.knowerUid : estado.currentUid;
     final pendente = estado.pendingJogada;
-    final comigo = p.minhaVez || p.emSetupKnower || p.emJulgamentoKnower;
+    final palpite = estado.pendingPalpite;
+    final anelDoPalpite = palpite == null
+        ? ''
+        : nomeDoAnel(estado, palpite.anel);
+    final comigo =
+        p.minhaVez ||
+        p.emSetupKnower ||
+        p.emJulgamentoKnower ||
+        p.emJulgamentoDeRegraKnower;
 
     final (String titulo, String apoio) = switch (estado) {
       _ when p.emSetupKnower => (
         'Coloque as pistas',
         escolheuCarta
             ? 'Agora toque na região certa desta carta.'
-            : 'Escolha uma carta da mão. São '
-                  '${AneisConstants.pistasIniciais} pistas, uma por vez.',
+            : 'Uma em cada anel e uma fora. ${_faltam(estado)}',
       ),
       _ when estado.emSetup => (
         '$knower põe as pistas',
@@ -314,6 +403,14 @@ class _Vez extends StatelessWidget {
         '$knower está decidindo',
         'Para onde vai a carta de ${pendente?.nome ?? nome}.',
       ),
+      _ when p.emJulgamentoDeRegraKnower => (
+        'Julgue o palpite',
+        '${palpite?.nome ?? nome} acha que sabe a regra de $anelDoPalpite.',
+      ),
+      _ when estado.emJulgamentoDeRegra => (
+        '$knower está julgando',
+        '${palpite?.nome ?? nome} tentou desvendar $anelDoPalpite.',
+      ),
       _ when p.souKnower => (
         'Vez de $nome',
         'Quando a pessoa jogar, você decide onde a carta vai.',
@@ -322,7 +419,7 @@ class _Vez extends StatelessWidget {
         'Sua vez!',
         escolheuCarta
             ? 'Agora toque na região do tabuleiro.'
-            : 'Escolha uma carta da sua mão.',
+            : 'Jogue uma carta da mão ou tente desvendar um anel.',
       ),
       _ => ('Vez de $nome', 'Fique de olho no tabuleiro.'),
     };
@@ -400,6 +497,25 @@ class _Vez extends StatelessWidget {
   }
 }
 
+/// O que ainda falta na preparação do Guardião: "Faltam: Letra e uma fora."
+String _faltam(AneisEstadoRemoto estado) {
+  bool tem(String anel) => estado.tabuleiro.any(
+    (c) =>
+        c.regiao == AneisRegiao.todos || c.regiao.id.split('_').contains(anel),
+  );
+  final faltam = [
+    for (final id in const ['palavra', 'atributo', 'contexto'])
+      if (!tem(id)) nomeDoAnel(estado, id),
+    if (!estado.tabuleiro.any((c) => c.regiao == AneisRegiao.nenhum))
+      'uma fora',
+  ];
+  if (faltam.isEmpty) return '';
+  final lista = faltam.length == 1
+      ? faltam.first
+      : '${faltam.sublist(0, faltam.length - 1).join(', ')} e ${faltam.last}';
+  return 'Faltam: $lista.';
+}
+
 /// O último lance, numa linha: o palpite esperando julgamento, ou como
 /// foi a jogada anterior.
 class _Lance extends StatelessWidget {
@@ -412,11 +528,49 @@ class _Lance extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.cores;
     final pendente = estado.pendingJogada;
+    final palpite = estado.pendingPalpite;
     final ultima = estado.ultimaJogada;
 
     Widget? fato;
     String chave = '';
-    if (pendente != null) {
+    if (palpite != null) {
+      final quem = palpite.uid == meuUid ? 'Você' : palpite.nome;
+      chave = 'r${palpite.uid}${palpite.anel}${palpite.palpite}';
+      fato = FatoDoFim(
+        poco: PocoIcone(icone: Symbols.hourglass_top_rounded, luz: c.aviso),
+        texto: comDestaque(
+          context,
+          '$quem acha que ${nomeDoAnel(estado, palpite.anel)} é ',
+          palpite.palpite,
+          '.',
+        ),
+      );
+    } else if (ultima != null && ultima.desvendar) {
+      final quem = ultima.uid == meuUid ? 'Você' : ultima.nome;
+      final anel = nomeDoAnel(estado, ultima.anel ?? '');
+      chave = 'd${ultima.uid}${ultima.anel}${ultima.acertou}';
+      fato = FatoDoFim(
+        poco: ultima.acertou
+            ? PocoIcone(icone: Symbols.key_rounded, luz: c.sucesso)
+            : PocoIcone(
+                icone: Symbols.key_off_rounded,
+                luz: c.luz(Matiz.brasa),
+              ),
+        texto: ultima.acertou
+            ? comDestaque(
+                context,
+                '$quem desvendou $anel: ',
+                ultima.palpite ?? '',
+                '. Duas cartas a menos!',
+              )
+            : comDestaque(
+                context,
+                '$quem errou a regra de ',
+                anel,
+                ' e comprou uma carta.',
+              ),
+      );
+    } else if (pendente != null) {
       final quem = pendente.uid == meuUid ? 'Você' : pendente.nome;
       chave = 'p${pendente.coisaId}';
       fato = FatoDoFim(
@@ -485,11 +639,13 @@ class _Lance extends StatelessWidget {
   }
 }
 
-/// As regras secretas, para quem sabe: uma linha por anel, na luz dele.
-class _RegrasSecretas extends StatelessWidget {
-  const _RegrasSecretas({required this.visao});
+/// Regras à vista: todas para o Guardião, as desvendadas para os outros.
+/// Uma linha por anel, na luz dele.
+class _Regras extends StatelessWidget {
+  const _Regras({required this.regras, required this.titulo});
 
-  final AneisKnowerView visao;
+  final List<AneisRegraRevelada> regras;
+  final String titulo;
 
   @override
   Widget build(BuildContext context) {
@@ -514,14 +670,11 @@ class _RegrasSecretas extends StatelessWidget {
             children: [
               Icon(Symbols.lock_open_rounded, size: 14, color: c.texto3),
               const SizedBox(width: Espaco.e1),
-              Text(
-                'SÓ VOCÊ VÊ AS REGRAS',
-                style: texto.labelSmall?.copyWith(color: c.texto3),
-              ),
+              Text(titulo, style: texto.labelSmall?.copyWith(color: c.texto3)),
             ],
           ),
           const SizedBox(height: Espaco.e1),
-          for (final regra in visao.regras)
+          for (final regra in regras)
             Padding(
               padding: const EdgeInsets.only(top: 3),
               child: Row(
@@ -579,7 +732,7 @@ class _Mesa extends StatelessWidget {
     final c = context.cores;
     final texto = Theme.of(context).textTheme;
     final luz = c.luz(Matiz.ceu);
-    final comKnower = estado.emSetup || estado.emJulgamento;
+    final comKnower = estado.comGuardiao;
 
     return SizedBox(
       height: 52,
@@ -633,7 +786,7 @@ class _Mesa extends StatelessWidget {
                     ),
                     Text(
                       knower
-                          ? 'SABE AS REGRAS'
+                          ? 'GUARDIÃO'
                           : j.maoCount == 1
                           ? '1 CARTA'
                           : '${j.maoCount} CARTAS',
@@ -661,8 +814,11 @@ class _Mao extends StatelessWidget {
     required this.selecionada,
     required this.vazia,
     required this.aoEscolher,
+    this.aoDesvendar,
   });
 
+  /// Na sua vez: tentar desvendar a regra de um anel.
+  final VoidCallback? aoDesvendar;
   final List<AneisCartaPublica> mao;
   final bool ativa, carregando;
   final String? selecionada;
@@ -716,7 +872,10 @@ class _Mao extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    if (carregando) BolinhasCarregando(cor: luz.cor),
+                    if (carregando)
+                      BolinhasCarregando(cor: luz.cor)
+                    else if (aoDesvendar != null)
+                      _BotaoDesvendar(aoTocar: aoDesvendar!),
                   ],
                 ),
               ),
@@ -821,6 +980,53 @@ class _Carta extends StatelessWidget {
         duration: Movimento.base,
         opacity: ativa ? 1 : .5,
         child: Pressionavel(onTap: ativa ? aoTocar : null, child: carta),
+      ),
+    );
+  }
+}
+
+/// A pílula "Desvendar" no cabeçalho da mão.
+class _BotaoDesvendar extends StatelessWidget {
+  const _BotaoDesvendar({required this.aoTocar});
+
+  final VoidCallback aoTocar;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.cores;
+    final luz = c.luz(Matiz.lampada);
+    return Semantics(
+      button: true,
+      label: 'Desvendar uma regra',
+      excludeSemantics: true,
+      child: Pressionavel(
+        onTap: aoTocar,
+        escala: .95,
+        child: Container(
+          height: 34,
+          padding: const EdgeInsets.symmetric(horizontal: Espaco.e3),
+          decoration: BoxDecoration(
+            color: luz.suave,
+            borderRadius: BorderRadius.circular(Raio.pill),
+            border: Border.all(
+              color: c.ehDia ? c.contorno : luz.cor,
+              width: c.ehDia ? 2 : 1.5,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Symbols.key_rounded, size: 18, color: luz.tinta),
+              const SizedBox(width: Espaco.e1),
+              Text(
+                'DESVENDAR',
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium?.copyWith(color: luz.tinta),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

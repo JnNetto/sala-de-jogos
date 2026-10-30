@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Excluir conta · Sala de Jogos</title>
+  <meta name="description" content="Como excluir sua conta do app Sala de Jogos e quais dados são apagados.">
+  <link rel="icon" href="favicon.png">
+  <style>
+    :root {
+      --fundo: #0d0f2b;
+      --superficie: #181b4a;
+      --linha: #2b2f70;
+      --texto: #f1eeff;
+      --texto-2: #b7b5e6;
+      --luz: #ffc94d;
+      --perigo: #ff5d73;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --fundo: #f4eee3;
+        --superficie: #fffbf4;
+        --linha: #ddd2bf;
+        --texto: #1b1d5c;
+        --texto-2: #4a4c86;
+        --luz: #8a5a00;
+        --perigo: #c22440;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--fundo);
+      color: var(--texto);
+      font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main { max-width: 640px; margin: 0 auto; padding: 48px 20px 64px; }
+    .marca {
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--luz);
+      font-weight: 700;
+    }
+    h1 { font-size: 32px; line-height: 1.2; margin: 8px 0 12px; }
+    h2 { font-size: 20px; margin: 0 0 8px; }
+    p, li { color: var(--texto-2); }
+    strong { color: var(--texto); }
+    section {
+      background: var(--superficie);
+      border: 1.5px solid var(--linha);
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-top: 16px;
+    }
+    ol, ul { padding-left: 22px; margin: 8px 0 0; }
+    li + li { margin-top: 6px; }
+    .aviso { border-color: var(--perigo); }
+    a { color: var(--luz); }
+    footer { margin-top: 32px; font-size: 14px; color: var(--texto-2); }
+  </style>
+</head>
+<body>
+<main>
+  <div class="marca">Sala de Jogos · JnNetto</div>
+  <h1>Como excluir sua conta</h1>
+  <p>
+    Você só precisa de conta para jogar online. Os jogos num celular só
+    funcionam sem login e não guardam nada fora do seu aparelho.
+  </p>
+
+  <section>
+    <h2>Pelo app</h2>
+    <ol>
+      <li>Abra o <strong>Sala de Jogos</strong> e toque em <strong>Configurações</strong>.</li>
+      <li>Na seção <strong>Conta</strong>, toque em <strong>Excluir conta</strong>.</li>
+      <li>Confirme em <strong>Excluir para sempre</strong>.</li>
+    </ol>
+    <p>A exclusão é imediata.</p>
+  </section>
+
+  <section>
+    <h2>Sem acesso ao app</h2>
+    <p>
+      Envie um e-mail para <a href="mailto:jnnetto456@gmail.com">jnnetto456@gmail.com</a>
+      com o assunto <strong>Excluir conta</strong>, a partir do mesmo e-mail
+      da conta Google usada no app. A exclusão é feita em até 7 dias, e você
+      recebe uma confirmação.
+    </p>
+  </section>
+
+  <section class="aviso">
+    <h2>O que é apagado</h2>
+    <ul>
+      <li>Sua conta (nome, e-mail e foto vindos do login com Google ou Apple).</li>
+      <li>Sua presença nas salas online e o seu apelido nelas.</li>
+    </ul>
+    <h2 style="margin-top:16px">O que fica, e por quanto tempo</h2>
+    <ul>
+      <li>
+        Se houver uma partida online em andamento, ela continua para os
+        outros jogadores com o seu lugar marcado como “Conta excluída”. Toda
+        sala parada é apagada automaticamente em até 2 horas.
+      </li>
+      <li>Nada mais é mantido. Não há cópias guardadas para outros fins.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Sala de Jogos · desenvolvido por JnNetto ·
+    <a href="privacidade.html">Política de privacidade</a>
+  </footer>
+</main>
+</body>
+</html>

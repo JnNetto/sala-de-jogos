@@ -18,6 +18,22 @@ class ResistenciaPartida {
   final int tentativaAtual;
   final int liderIndex;
 
+  /// Equipes recusadas na partida inteira (as tochas apagadas).
+  final int rejeicoes;
+
+  /// A Lanterna já foi usada (uma vez por partida).
+  final bool lanternaUsada;
+
+  /// Depois de uma câmara: o guia dela, as cartas e a equipe, para a
+  /// Lanterna.
+  final String? guiaDaLanterna;
+  final Map<String, bool> cartasDaUltimaMissao;
+  final List<String> equipeDaUltimaMissao;
+
+  /// Em quem a Lanterna foi usada e o que ela mostrou.
+  final String? lanternaAlvoId;
+  final bool? lanternaCarta;
+
   const ResistenciaPartida({
     required this.jogadores,
     required this.tamanhosEquipe,
@@ -33,6 +49,13 @@ class ResistenciaPartida {
     this.missaoAtual = 1,
     this.tentativaAtual = 1,
     this.liderIndex = 0,
+    this.rejeicoes = 0,
+    this.lanternaUsada = false,
+    this.guiaDaLanterna,
+    this.cartasDaUltimaMissao = const {},
+    this.equipeDaUltimaMissao = const [],
+    this.lanternaAlvoId,
+    this.lanternaCarta,
   });
 
   ResistenciaJogador get liderAtual => jogadores[liderIndex];
@@ -83,6 +106,14 @@ class ResistenciaPartida {
     int? missaoAtual,
     int? tentativaAtual,
     int? liderIndex,
+    int? rejeicoes,
+    bool? lanternaUsada,
+    String? guiaDaLanterna,
+    bool limparGuiaDaLanterna = false,
+    Map<String, bool>? cartasDaUltimaMissao,
+    List<String>? equipeDaUltimaMissao,
+    String? lanternaAlvoId,
+    bool? lanternaCarta,
   }) {
     return ResistenciaPartida(
       jogadores: jogadores ?? this.jogadores,
@@ -105,6 +136,15 @@ class ResistenciaPartida {
       missaoAtual: missaoAtual ?? this.missaoAtual,
       tentativaAtual: tentativaAtual ?? this.tentativaAtual,
       liderIndex: liderIndex ?? this.liderIndex,
+      rejeicoes: rejeicoes ?? this.rejeicoes,
+      lanternaUsada: lanternaUsada ?? this.lanternaUsada,
+      guiaDaLanterna: limparGuiaDaLanterna
+          ? null
+          : guiaDaLanterna ?? this.guiaDaLanterna,
+      cartasDaUltimaMissao: cartasDaUltimaMissao ?? this.cartasDaUltimaMissao,
+      equipeDaUltimaMissao: equipeDaUltimaMissao ?? this.equipeDaUltimaMissao,
+      lanternaAlvoId: lanternaAlvoId ?? this.lanternaAlvoId,
+      lanternaCarta: lanternaCarta ?? this.lanternaCarta,
     );
   }
 }

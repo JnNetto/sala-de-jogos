@@ -1,6 +1,6 @@
 import {FieldValue} from "firebase-admin/firestore";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
-import {db} from "./firebaseAdmin";
+import {EXIGIR_APP_CHECK, db} from "./firebaseAdmin";
 import {
   legalMissionCard,
   missionSecretId,
@@ -14,9 +14,9 @@ import {
   expulsarJogador,
   normalizeCode,
   normalizeDisplayName,
+  requireConta,
   requireRoomId,
   requireTargetUid,
-  requireUid,
   sairSala,
   shuffle,
   type SalaLobby,
@@ -24,6 +24,8 @@ import {
 
 export * from "./soUma";
 export * from "./aneis";
+export * from "./limpeza";
+export * from "./conta";
 
 const region = "southamerica-east1";
 const spyCount: Record<number, number> = {
@@ -83,7 +85,7 @@ function computeKnowledge(assignments: Assignment[]): Map<string, Array<{uid: st
     if (me.role === "spy") {
       for (const other of assignments) {
         if (other.uid !== me.uid && other.role === "spy") {
-          seen.push({uid: other.uid, label: "espião"});
+          seen.push({uid: other.uid, label: "saqueador"});
         }
       }
     }
@@ -141,37 +143,37 @@ function writeReveals(
   }
 }
 
-export const createRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const createRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const displayName = normalizeDisplayName(req.data?.displayName);
   return criarSala(resistenciaLobby, uid, displayName);
 });
 
-export const joinRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const joinRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const displayName = normalizeDisplayName(req.data?.displayName);
   const code = normalizeCode(req.data?.code);
   const roomId = await entrarSala(resistenciaLobby, uid, displayName, code);
   return {roomId};
 });
 
-export const leaveRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const leaveRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   await sairSala(resistenciaLobby, uid, roomId);
   return {ok: true};
 });
 
-export const removePlayer = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const removePlayer = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   const targetUid = requireTargetUid(req.data?.targetUid);
   await expulsarJogador(resistenciaLobby, uid, roomId, targetUid);
   return {ok: true};
 });
 
-export const startGame = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const startGame = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
     throw new HttpsError("invalid-argument", "Sala inválida");
@@ -234,6 +236,11 @@ export const startGame = onCall({region}, async (req) => {
       submittedCount: 0,
       expectedCount: 0,
       winner: null,
+      rejections: 0,
+      lanternUsed: false,
+      lanternHolderUid: null,
+      lanternProposalId: null,
+      lanternUse: null,
       playerCount: seated.length,
       updatedAt: FieldValue.serverTimestamp(),
     });
@@ -248,8 +255,8 @@ export const startGame = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const proposeTeam = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const proposeTeam = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   const memberUids = req.data?.memberUids;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
@@ -317,8 +324,8 @@ export const proposeTeam = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const castVote = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const castVote = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   const approve = req.data?.approve;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
@@ -388,7 +395,7 @@ export const castVote = onCall({region}, async (req) => {
     const resolution = resolveVote({
       votes,
       totalPlayers,
-      attempt: stateDoc.get("attempt") as number,
+      rejections: (stateDoc.get("rejections") as number | undefined) ?? 0,
     });
     tx.update(proposalRef, {
       status: resolution.outcome === "mission" ? "approved" : "rejected",
@@ -415,6 +422,7 @@ export const castVote = onCall({region}, async (req) => {
         submittedCount: 0,
         expectedCount: 0,
         winner: "spies",
+        rejections: resolution.rejections,
         updatedAt: FieldValue.serverTimestamp(),
       });
       tx.update(db.doc(`rooms/${roomId}`), {
@@ -431,7 +439,8 @@ export const castVote = onCall({region}, async (req) => {
 
     tx.update(stateRef, {
       phase: "proposing",
-      attempt: resolution.nextAttempt,
+      attempt: (stateDoc.get("attempt") as number) + 1,
+      rejections: resolution.rejections,
       leaderUid: nextLeaderUid(seats, stateDoc.get("leaderUid") as string),
       currentProposalId: null,
       lastProposalId: proposalId,
@@ -444,8 +453,8 @@ export const castVote = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const playMissionCard = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const playMissionCard = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   const success = req.data?.success;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
@@ -557,9 +566,14 @@ export const playMissionCard = onCall({region}, async (req) => {
       throw new HttpsError("failed-precondition", "Jogadores sem assento");
     }
     const nextRound = round + 1;
+    // Enquanto a Lanterna não for usada, o guia da câmara pode usá-la
+    // antes da próxima proposta.
+    const lanternUsed = (stateDoc.get("lanternUsed") as boolean | undefined) ?? false;
 
     tx.update(stateRef, {
-      phase: "proposing",
+      phase: lanternUsed ? "proposing" : "lantern",
+      lanternHolderUid: lanternUsed ? null : stateDoc.get("leaderUid"),
+      lanternProposalId: lanternUsed ? null : proposalId,
       round: nextRound,
       attempt: 1,
       leaderUid: nextLeaderUid(seats, stateDoc.get("leaderUid") as string),
@@ -576,8 +590,79 @@ export const playMissionCard = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const abortGame = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+/**
+ * A Lanterna da Expedição: uma vez por partida, o guia de uma câmara pode
+ * ver a carta que alguém da equipe jogou nela. Só ele vê a carta; todos
+ * sabem em quem ele usou. Com `targetUid` nulo, ele guarda a Lanterna.
+ */
+export const useLantern = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
+  const roomId = requireRoomId(req.data?.roomId);
+  const targetRaw = req.data?.targetUid;
+  if (targetRaw !== null && targetRaw !== undefined && typeof targetRaw !== "string") {
+    throw new HttpsError("invalid-argument", "Escolha alguém da equipe");
+  }
+  const targetUid = typeof targetRaw === "string" && targetRaw.length > 0 ? targetRaw : null;
+
+  await db.runTransaction(async (tx) => {
+    const stateRef = db.doc(`rooms/${roomId}/state/current`);
+    const stateDoc = await tx.get(stateRef);
+    if (!stateDoc.exists) {
+      throw new HttpsError("failed-precondition", "Partida não iniciada");
+    }
+    if (stateDoc.get("phase") !== "lantern") {
+      throw new HttpsError("failed-precondition", "Não é hora da Lanterna");
+    }
+    if (stateDoc.get("lanternHolderUid") !== uid) {
+      throw new HttpsError("permission-denied", "Só o guia da câmara usa a Lanterna");
+    }
+
+    if (!targetUid) {
+      tx.update(stateRef, {
+        phase: "proposing",
+        lanternHolderUid: null,
+        lanternProposalId: null,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    const proposalId = stateDoc.get("lanternProposalId") as string | null;
+    if (!proposalId) {
+      throw new HttpsError("failed-precondition", "Câmara não encontrada");
+    }
+    const proposalDoc = await tx.get(db.doc(`rooms/${roomId}/proposals/${proposalId}`));
+    const secretDoc = await tx.get(
+      db.doc(`rooms/${roomId}/secret/${missionSecretId(proposalId)}`),
+    );
+    const members = (proposalDoc.get("memberUids") as string[] | undefined) ?? [];
+    if (targetUid === uid || !members.includes(targetUid)) {
+      throw new HttpsError("invalid-argument", "Escolha alguém que entrou na câmara");
+    }
+    const cards = (secretDoc.get("cards") as Record<string, boolean> | undefined) ?? {};
+    if (!Object.prototype.hasOwnProperty.call(cards, targetUid)) {
+      throw new HttpsError("failed-precondition", "Carta não encontrada");
+    }
+    const round = proposalDoc.get("round") as number;
+
+    tx.set(db.doc(`rooms/${roomId}/private/${uid}`), {
+      lantern: {targetUid, success: cards[targetUid], round},
+    }, {merge: true});
+    tx.update(stateRef, {
+      phase: "proposing",
+      lanternUsed: true,
+      lanternHolderUid: null,
+      lanternProposalId: null,
+      lanternUse: {byUid: uid, targetUid, round},
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  });
+
+  return {ok: true};
+});
+
+export const abortGame = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
     throw new HttpsError("invalid-argument", "Sala inválida");
@@ -627,8 +712,8 @@ export const abortGame = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const resetRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const resetRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
     throw new HttpsError("invalid-argument", "Sala inválida");

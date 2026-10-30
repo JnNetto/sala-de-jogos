@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -75,7 +76,6 @@ class _AneisSalaRouterScreenState extends State<AneisSalaRouterScreen> {
     _jogadores = p.jogadores;
     _estado = p.estado;
     _mao = p.mao;
-    void ignorar(Object _) {}
 
     _assinaturas.addAll([
       p.observarSalaAtual().listen((sala) {
@@ -87,7 +87,7 @@ class _AneisSalaRouterScreenState extends State<AneisSalaRouterScreen> {
           return;
         }
         setState(() => _sala = sala);
-      }, onError: ignorar),
+      }, onError: _semAcesso),
       p.observarJogadoresAtuais().listen((jogadores) {
         if (!mounted || _saindo) return;
         setState(() {
@@ -95,16 +95,16 @@ class _AneisSalaRouterScreenState extends State<AneisSalaRouterScreen> {
           _jogadoresChegaram = true;
         });
         _verificarSeFuiRemovido();
-      }, onError: ignorar),
+      }, onError: _semAcesso),
       p.observarEstadoAtual().listen((estado) {
         if (!mounted || _saindo) return;
         setState(() => _estado = estado);
         _ajustarVisaoDoKnower();
-      }, onError: ignorar),
+      }, onError: _semAcesso),
       p.observarMaoAtual().listen((mao) {
         if (!mounted || _saindo) return;
         setState(() => _mao = mao);
-      }, onError: ignorar),
+      }, onError: _semAcesso),
     ]);
     _ajustarVisaoDoKnower();
   }
@@ -120,6 +120,23 @@ class _AneisSalaRouterScreenState extends State<AneisSalaRouterScreen> {
       _assinaturaDaVisao = null;
       _visao = null;
     }
+  }
+
+  /// As regras do Firestore só deixam ler a sala quem está nela: se a
+  /// leitura passa a ser negada, a pessoa foi tirada (ou a sala sumiu).
+  void _semAcesso(Object erro) {
+    if (erro is! FirebaseException || erro.code != 'permission-denied') return;
+    if (!mounted || _saindo) return;
+    _saindo = true;
+    final navigator = Navigator.of(context);
+    mostrarAviso(
+      context,
+      'Você não está mais nesta sala.',
+      tipo: TipoAviso.info,
+    );
+    _provider.esquecerUltimaSala().then((_) {
+      if (mounted) navigator.popUntil(ehBaseDosJogos);
+    });
   }
 
   void _verificarSeFuiRemovido() {

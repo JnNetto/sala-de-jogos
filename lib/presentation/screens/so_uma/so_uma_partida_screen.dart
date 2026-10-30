@@ -208,7 +208,7 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
 
     switch (etapa) {
       case _Etapa.escolher:
-        return EtapaSoUma(
+        return Etapa(
           rodape: BotaoSala(
             rotulo: _numero == null
                 ? 'Escolha um número'
@@ -222,13 +222,17 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
             CabecaDaEtapa(
               nome: adivinhador.nome,
               indice: _indice(p, adivinhador),
-              titulo: '${adivinhador.nome}, escolha',
-              texto:
-                  'São cinco palavras escondidas. Escolha uma pelo número, '
-                  'às cegas.',
+              titulo: p.numerosUsados.isEmpty
+                  ? '${adivinhador.nome}, escolha'
+                  : 'Tente outra palavra',
+              texto: p.numerosUsados.isEmpty
+                  ? 'São cinco palavras escondidas. Escolha uma pelo número, '
+                        'às cegas.'
+                  : 'A carta é a mesma. As que já saíram ficam de fora.',
             ),
             const SizedBox(height: Espaco.e6),
             CartaSoUma(
+              tentadas: {for (final n in p.numerosUsados) n - 1},
               escolhido: _numero,
               aoEscolher: (i) {
                 HapticFeedback.selectionClick();
@@ -263,7 +267,7 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
             .read<SoUmaPartidaProvider>()
             .pistasEscritasPorAutor(escritor.id);
         final ultima = !duas || feitas == 1;
-        return EtapaSoUma(
+        return Etapa(
           rodape: BotaoSala(
             rotulo: ultima ? 'Pronto' : 'Próxima pista',
             icone: ultima
@@ -312,7 +316,7 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
       case _Etapa.conferir:
         final provider = context.read<SoUmaPartidaProvider>();
         final nomes = {for (final j in p.jogadores) j.id: j.nome};
-        return EtapaSoUma(
+        return Etapa(
           rodape: BotaoSala(
             rotulo: 'Pronto, pode chutar',
             icone: Symbols.check_rounded,
@@ -360,7 +364,7 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
         );
 
       case _Etapa.adivinhar:
-        return EtapaSoUma(
+        return Etapa(
           rodape: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -389,8 +393,8 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
               indice: _indice(p, adivinhador),
               titulo: 'Qual é a palavra?',
               texto:
-                  'Errar custa duas cartas; passar, só uma. Na dúvida, '
-                  'passe.',
+                  'Errou? A carta volta e você tenta outra palavra dela. '
+                  'Passar descarta a carta.',
             ),
             const SizedBox(height: Espaco.e6),
             PistasNaMesa(
@@ -407,10 +411,12 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
 
       case _Etapa.resultado:
         final r = p.historico[_resultadosVistos];
-        return EtapaSoUma(
+        return Etapa(
           rodape: BotaoSala(
             rotulo: p.fase == SoUmaFase.finalizada
                 ? 'Ver o placar final'
+                : p.numerosUsados.isNotEmpty
+                ? 'Tentar de novo'
                 : 'Próxima carta',
             icone: Symbols.arrow_forward_rounded,
             iconeNoFim: true,
@@ -428,6 +434,7 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
               palavraAlvo: r.palavraAlvo,
               adivinhador: r.adivinhador.nome,
               palpite: r.palpite,
+              cartaVolta: p.numerosUsados.isNotEmpty,
               palavras: r.carta.palavras,
               pistas: [
                 for (final x in r.pistas) (texto: x.texto, anulada: x.anulada),
@@ -437,7 +444,7 @@ class _SoUmaPartidaScreenState extends State<SoUmaPartidaScreen> {
         );
 
       case _Etapa.fim:
-        return EtapaSoUma(
+        return Etapa(
           rodape: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,

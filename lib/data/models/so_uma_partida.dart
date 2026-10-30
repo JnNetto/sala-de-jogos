@@ -12,6 +12,10 @@ class SoUmaPartida {
   final SoUmaFase fase;
   final SoUmaRodada? rodadaAtual;
 
+  /// Os números (1 a 5) já tentados na carta do topo: depois de um erro,
+  /// a mesma carta volta e essas palavras ficam de fora.
+  final List<int> numerosUsados;
+
   const SoUmaPartida({
     required this.jogadores,
     required this.baralho,
@@ -20,6 +24,7 @@ class SoUmaPartida {
     this.historico = const [],
     this.fase = SoUmaFase.escolhendoNumero,
     this.rodadaAtual,
+    this.numerosUsados = const [],
   });
 
   SoUmaJogador get adivinhadorAtual => jogadores[adivinhadorIndex];
@@ -41,6 +46,7 @@ class SoUmaPartida {
     List<SoUmaRodada>? historico,
     SoUmaFase? fase,
     SoUmaRodada? rodadaAtual,
+    List<int>? numerosUsados,
     bool limparRodadaAtual = false,
   }) {
     return SoUmaPartida(
@@ -51,6 +57,7 @@ class SoUmaPartida {
       historico: historico ?? this.historico,
       fase: fase ?? this.fase,
       rodadaAtual: limparRodadaAtual ? null : rodadaAtual ?? this.rodadaAtual,
+      numerosUsados: numerosUsados ?? this.numerosUsados,
     );
   }
 }

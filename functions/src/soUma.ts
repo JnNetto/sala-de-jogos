@@ -1,15 +1,16 @@
 import {FieldValue} from "firebase-admin/firestore";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
-import {db} from "./firebaseAdmin";
+import {EXIGIR_APP_CHECK, db} from "./firebaseAdmin";
 import {
   criarSala,
   entrarSala,
   expulsarJogador,
   normalizeCode,
   normalizeDisplayName,
+  requireConta,
   requireRoomId,
   requireTargetUid,
-  requireUid,
+  limparTexto,
   sairSala,
   shuffle,
   type SalaLobby,
@@ -54,7 +55,7 @@ function normalizeWord(value: unknown, label: string): string {
   if (typeof value !== "string") {
     throw new HttpsError("invalid-argument", `${label} inválida`);
   }
-  const word = value.trim();
+  const word = limparTexto(value);
   if (word.length < 1 || word.length > 40) {
     throw new HttpsError("invalid-argument", `${label} deve ter 1 a 40 caracteres`);
   }
@@ -80,37 +81,37 @@ function nextGuesserUid(players: PlayerSeat[], currentUid: string): string {
 
 // --- callables ---
 
-export const soUmaCreateRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaCreateRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const displayName = normalizeDisplayName(req.data?.displayName);
   return criarSala(soUmaLobby, uid, displayName);
 });
 
-export const soUmaJoinRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaJoinRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const displayName = normalizeDisplayName(req.data?.displayName);
   const code = normalizeCode(req.data?.code);
   const roomId = await entrarSala(soUmaLobby, uid, displayName, code);
   return {roomId};
 });
 
-export const soUmaLeaveRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaLeaveRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   await sairSala(soUmaLobby, uid, roomId);
   return {ok: true};
 });
 
-export const soUmaRemovePlayer = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaRemovePlayer = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = requireRoomId(req.data?.roomId);
   const targetUid = requireTargetUid(req.data?.targetUid);
   await expulsarJogador(soUmaLobby, uid, roomId, targetUid);
   return {ok: true};
 });
 
-export const soUmaStartGame = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaStartGame = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
     throw new HttpsError("invalid-argument", "Sala inválida");
@@ -143,7 +144,7 @@ export const soUmaStartGame = onCall({region}, async (req) => {
 
     const uids = playersSnap.docs.map((doc) => doc.id);
     if (uids.length < MIN_JOGADORES || uids.length > MAX_JOGADORES) {
-      throw new HttpsError("failed-precondition", "Só uma! precisa de 3 a 7 jogadores");
+      throw new HttpsError("failed-precondition", "Eco! precisa de 3 a 7 jogadores");
     }
 
     const seated = shuffle(uids);
@@ -173,6 +174,7 @@ export const soUmaStartGame = onCall({region}, async (req) => {
       pistasReveladas: [],
       cartasGanhas: 0,
       historico: [],
+      palavrasUsadas: [],
       playerCount: seated.length,
       updatedAt: FieldValue.serverTimestamp(),
     });
@@ -187,8 +189,8 @@ export const soUmaStartGame = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const soUmaChooseNumber = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaChooseNumber = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   const numero = req.data?.numero;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
@@ -218,6 +220,13 @@ export const soUmaChooseNumber = onCall({region}, async (req) => {
     const drawIndex = deckDoc.get("drawIndex") as number;
     if (drawIndex >= cards.length) {
       throw new HttpsError("failed-precondition", "O baralho acabou");
+    }
+
+    // Depois de um erro, a mesma carta volta e as palavras já tentadas
+    // ficam de fora.
+    const usadas = (stateDoc.get("palavrasUsadas") as number[] | undefined) ?? [];
+    if (usadas.includes(numero)) {
+      throw new HttpsError("failed-precondition", "Essa palavra já saiu. Escolha outra.");
     }
 
     const carta = cards[drawIndex];
@@ -253,8 +262,8 @@ export const soUmaChooseNumber = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const soUmaSubmitClues = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaSubmitClues = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   const palavrasRaw = req.data?.palavras;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
@@ -350,8 +359,8 @@ export const soUmaSubmitClues = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const soUmaToggleClueCancel = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaToggleClueCancel = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   const clueId = req.data?.clueId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
@@ -401,8 +410,8 @@ export const soUmaToggleClueCancel = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const soUmaFinalizeComparison = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaFinalizeComparison = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
     throw new HttpsError("invalid-argument", "Sala inválida");
@@ -444,8 +453,8 @@ export const soUmaFinalizeComparison = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const soUmaSubmitGuess = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaSubmitGuess = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   const passar = req.data?.passar === true;
   const palpiteRaw = req.data?.palpite;
@@ -489,11 +498,16 @@ export const soUmaSubmitGuess = onCall({region}, async (req) => {
       "passou" :
       (palpiteCorreto(palpite as string, palavraAlvo) ? "acerto" : "erro");
 
+    // Errou: a carta volta para o topo e a mesma pessoa escolhe outra
+    // palavra dela. Só quando as cinco já foram tentadas a carta se perde.
     const cards = deckDoc.get("cards") as Carta[];
     let drawIndex = deckDoc.get("drawIndex") as number;
-    if (resultado === "erro" && drawIndex < cards.length) {
-      drawIndex += 1;
-    }
+    const tentadas = [
+      ...((stateDoc.get("palavrasUsadas") as number[] | undefined) ?? []),
+      (roundDoc.get("mysteryIndex") as number) + 1,
+    ];
+    const repete = resultado === "erro" && tentadas.length < palavras.length;
+    if (repete) drawIndex -= 1;
     tx.update(deckRef, {drawIndex});
     const deckRemaining = cards.length - drawIndex;
 
@@ -516,6 +530,7 @@ export const soUmaSubmitGuess = onCall({region}, async (req) => {
         deckRemaining: 0,
         cartasGanhas,
         historico,
+        palavrasUsadas: [],
         pistasReveladas: [],
         updatedAt: FieldValue.serverTimestamp(),
       });
@@ -529,11 +544,12 @@ export const soUmaSubmitGuess = onCall({region}, async (req) => {
     const seats = orderedSeats(playersSnap);
     tx.update(stateRef, {
       phase: "drawing",
-      guesserUid: nextGuesserUid(seats, uid),
+      guesserUid: repete ? uid : nextGuesserUid(seats, uid),
       currentRoundId: null,
       deckRemaining,
       cartasGanhas,
       historico,
+      palavrasUsadas: repete ? tentadas : [],
       submittedCount: 0,
       expectedCount: 0,
       pistasReveladas: [],
@@ -544,8 +560,8 @@ export const soUmaSubmitGuess = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const soUmaResetRoom = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaResetRoom = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
     throw new HttpsError("invalid-argument", "Sala inválida");
@@ -585,8 +601,8 @@ export const soUmaResetRoom = onCall({region}, async (req) => {
   return {ok: true};
 });
 
-export const soUmaAbortGame = onCall({region}, async (req) => {
-  const uid = requireUid(req.auth?.uid);
+export const soUmaAbortGame = onCall({region, enforceAppCheck: EXIGIR_APP_CHECK}, async (req) => {
+  const uid = requireConta(req.auth);
   const roomId = req.data?.roomId;
   if (typeof roomId !== "string" || roomId.trim().length < 1) {
     throw new HttpsError("invalid-argument", "Sala inválida");

@@ -38,17 +38,17 @@ enum AneisRegiao {
       case AneisRegiao.nenhum:
         return 'Nenhum anel';
       case AneisRegiao.palavra:
-        return 'Só Palavra';
+        return 'Só Letra';
       case AneisRegiao.atributo:
-        return 'Só Atributo';
+        return 'Só Jeito';
       case AneisRegiao.contexto:
-        return 'Só Contexto';
+        return 'Só Lugar';
       case AneisRegiao.palavraAtributo:
-        return 'Palavra + Atributo';
+        return 'Letra + Jeito';
       case AneisRegiao.palavraContexto:
-        return 'Palavra + Contexto';
+        return 'Letra + Lugar';
       case AneisRegiao.atributoContexto:
-        return 'Atributo + Contexto';
+        return 'Jeito + Lugar';
       case AneisRegiao.todos:
         return 'Os três';
     }

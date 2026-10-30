@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../models/jogo_disponivel.dart';
@@ -92,6 +93,21 @@ class JogosDisponiveis {
       novo: true,
     ),
   ];
+
+  /// Jogos que ainda não vão para as lojas: aparecem só em debug.
+  static const _emDesenvolvimento = {idQuiz, idLobisomem};
+
+  /// A lista da tela de jogos: em release, sem os que estão em
+  /// desenvolvimento.
+  static List<JogoDisponivel> get visiveis => [
+    for (final jogo in todos)
+      if (mostrarEmDesenvolvimento || !_emDesenvolvimento.contains(jogo.id))
+        jogo,
+  ];
+
+  /// Ligado em debug. Os prints da loja (gerados num teste, em debug) o
+  /// desligam para mostrar só o que vai ser publicado.
+  static bool mostrarEmDesenvolvimento = kDebugMode;
 
   JogosDisponiveis._();
 }

@@ -1,3 +1,4 @@
+import {randomInt} from "node:crypto";
 import {HttpsError} from "firebase-functions/v2/https";
 
 export type SalaLobby = {
@@ -15,11 +16,41 @@ export function requireUid(uid: string | undefined): string {
   return uid;
 }
 
+/**
+ * Tira caracteres de controle e de formatação invisíveis (zero-width,
+ * inversão de direção do texto), que serviriam para disfarçar um nome ou
+ * bagunçar a tela dos outros, e junta espaços repetidos.
+ */
+export function limparTexto(value: string): string {
+  return value
+    .replace(/[\p{Cc}\p{Cf}]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** O que as chamadas trazem de quem chamou (o `req.auth`). */
+type Autenticacao = {
+  uid: string;
+  token: {firebase?: {sign_in_provider?: string}};
+} | undefined;
+
+/**
+ * As salas online só aceitam quem entrou com uma conta: sessões anônimas
+ * (sem login) ficam de fora.
+ */
+export function requireConta(auth: Autenticacao): string {
+  const uid = requireUid(auth?.uid);
+  if (auth?.token?.firebase?.sign_in_provider === "anonymous") {
+    throw new HttpsError("unauthenticated", "Entre com sua conta para jogar online");
+  }
+  return uid;
+}
+
 export function normalizeDisplayName(value: unknown): string {
   if (typeof value !== "string") {
     throw new HttpsError("invalid-argument", "Nome inválido");
   }
-  const name = value.trim();
+  const name = limparTexto(value);
   if (name.length < 1 || name.length > 24) {
     throw new HttpsError("invalid-argument", "Nome deve ter 1 a 24 caracteres");
   }
@@ -51,19 +82,23 @@ export function requireTargetUid(value: unknown): string {
   return value.trim();
 }
 
+/** Tamanho do código: 32^6 ≈ 1 bilhão, para não dar para chutar salas. */
+export const TAMANHO_CODIGO = 6;
+
 export function createRoomCode(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "";
-  for (let i = 0; i < 4; i++) {
-    code += alphabet[Math.floor(Math.random() * alphabet.length)];
+  for (let i = 0; i < TAMANHO_CODIGO; i++) {
+    code += alphabet[randomInt(alphabet.length)];
   }
   return code;
 }
 
+/** Embaralha com RNG criptográfico: papéis e cartas não dão para prever. */
 export function shuffle<T>(items: T[]): T[] {
   const list = [...items];
   for (let i = list.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = randomInt(i + 1);
     [list[i], list[j]] = [list[j], list[i]];
   }
   return list;

@@ -138,6 +138,37 @@ class ResistenciaPartidaProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Usa a Lanterna em alguém da última câmara e devolve a carta dele
+  /// (`true` = Avançar). Só o guia da câmara deve ver o resultado.
+  bool? usarLanterna(String alvoId) {
+    final partida = _partida;
+    if (partida == null || partida.fase != ResistenciaFase.lanterna) {
+      return null;
+    }
+    final carta = partida.cartasDaUltimaMissao[alvoId];
+    if (carta == null || alvoId == partida.guiaDaLanterna) return null;
+    _partida = partida.copyWith(
+      fase: ResistenciaFase.propondo,
+      lanternaUsada: true,
+      limparGuiaDaLanterna: true,
+      lanternaAlvoId: alvoId,
+      lanternaCarta: carta,
+    );
+    notifyListeners();
+    return carta;
+  }
+
+  /// O guia guarda a Lanterna para outra câmara.
+  void guardarLanterna() {
+    final partida = _partida;
+    if (partida == null || partida.fase != ResistenciaFase.lanterna) return;
+    _partida = partida.copyWith(
+      fase: ResistenciaFase.propondo,
+      limparGuiaDaLanterna: true,
+    );
+    notifyListeners();
+  }
+
   bool resolverMissao() {
     final partida = _partida;
     if (partida == null || !partida.todosJogaramMissao) return false;

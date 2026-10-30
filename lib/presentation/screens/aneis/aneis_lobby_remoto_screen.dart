@@ -14,7 +14,7 @@ import '../../widgets/sala/jogador_sala.dart';
 import '../../widgets/sala/pressionavel.dart';
 import '../../widgets/sala/sala_online.dart';
 
-/// O lobby do Nos Anéis: o comum das salas online e, para o host, quem
+/// O lobby do Cabe Aqui?: o comum das salas online e, para o host, quem
 /// sabe as regras e a dificuldade.
 class AneisLobbyRemotoScreen extends StatelessWidget {
   const AneisLobbyRemotoScreen({
@@ -42,8 +42,8 @@ class AneisLobbyRemotoScreen extends StatelessWidget {
       maximo: AneisConstants.maxJogadores,
       enquantoEspera:
           'Cada anel tem uma regra secreta. Na sua vez, coloque uma carta '
-          'da mão na região que achar certa. Acertou, joga de novo. Quem '
-          'esvaziar a mão primeiro vence.',
+          'da mão na região que achar certa, ou tente desvendar a regra de '
+          'um anel. Quem esvaziar a mão primeiro vence.',
       ajustesDoHost: _AjustesDoHost(jogadores: jogadores),
     );
   }
@@ -78,7 +78,7 @@ class _AjustesDoHost extends StatelessWidget {
         const SizedBox(height: Espaco.e3),
         CartaoConfig(
           icone: Symbols.visibility_rounded,
-          titulo: 'Quem sabe as regras',
+          titulo: 'Quem é o Guardião',
           subtitulo: AneisConstants.descricaoKnowerMode(modo),
           luz: luz,
           controle: Column(
@@ -88,7 +88,7 @@ class _AjustesDoHost extends StatelessWidget {
                 children: [
                   Expanded(
                     child: BotaoOpcao(
-                      rotulo: 'Um jogador',
+                      rotulo: 'Uma pessoa',
                       icone: Symbols.person_rounded,
                       selecionado: porJogador,
                       luz: luz,

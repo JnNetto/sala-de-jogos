@@ -14,6 +14,9 @@ class SoUmaEstadoRemoto {
   final List<SoUmaHistoricoEntrada> historico;
   final int playerCount;
 
+  /// Os números (1 a 5) já tentados na carta do topo, depois de um erro.
+  final List<int> palavrasUsadas;
+
   const SoUmaEstadoRemoto({
     required this.gameId,
     required this.round,
@@ -27,6 +30,7 @@ class SoUmaEstadoRemoto {
     required this.cartasGanhas,
     required this.historico,
     required this.playerCount,
+    this.palavrasUsadas = const [],
   });
 
   factory SoUmaEstadoRemoto.fromMap(Map<String, dynamic> data) {
@@ -52,6 +56,10 @@ class SoUmaEstadoRemoto {
           )
           .toList(growable: false),
       playerCount: data['playerCount'] as int? ?? 0,
+      palavrasUsadas: [
+        for (final n in data['palavrasUsadas'] as List<dynamic>? ?? const [])
+          if (n is int) n,
+      ],
     );
   }
 }

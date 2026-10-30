@@ -17,12 +17,12 @@ class AneisHomeScreen extends StatelessWidget {
       ),
       offline: false,
       resumo:
-          'Três anéis, três regras secretas. Encaixe suas cartas no lugar '
-          'certo e descubra as regras antes de todo mundo.',
+          'Três anéis, três regras secretas. Descubra onde cada carta '
+          'cabe e esvazie a mão antes de todo mundo.',
       passos: const [
         'Um cria a sala e passa o código. Cada um joga no seu celular.',
         'Na sua vez, coloque uma carta na região que achar certa.',
-        'Acertou, joga de novo. Quem esvaziar a mão primeiro vence.',
+        'Acertou, joga de novo. Ou arrisque dizer a regra de um anel.',
       ],
       aoJogar: () => Navigator.push(
         context,
@@ -34,15 +34,17 @@ class AneisHomeScreen extends StatelessWidget {
         barra: 'REGRAS',
         titulo: 'Como se joga',
         corpo:
-            'Cada anel tem uma regra secreta: um sobre a Palavra (escrita '
-            'ou som), um sobre o Atributo (o que a coisa é) e um sobre o '
-            'Contexto (onde se usa).\n\n'
+            'Cada anel tem uma regra secreta: a Letra (como a palavra se '
+            'escreve ou soa), o Jeito (o que a coisa é ou tem) e o Lugar '
+            '(onde aparece ou para que se usa).\n\n'
             'Uma carta entra em todos os anéis cuja regra ela cumpre, '
             'inclusive nas interseções. Se não cumpre nenhuma, fica fora.\n\n'
-            'Quem conhece as regras pode ser um jogador ou o próprio jogo. '
-            'Na sua vez, escolha uma carta e uma região. Acertou, joga de '
-            'novo; errou, a carta vai para o lugar certo e você compra '
-            'outra.',
+            'O Guardião conhece as regras: pode ser uma pessoa ou o próprio '
+            'jogo. Ele começa com uma pista em cada anel e uma fora.\n\n'
+            'Na sua vez, jogue uma carta numa região. Acertou, joga de novo; '
+            'errou, a carta vai para o lugar certo e você compra outra.\n\n'
+            'Ou tente desvendar a regra de um anel: acertando, descarta duas '
+            'cartas e o anel fica aberto para todos; errando, compra uma.',
         acao: 'Entendi',
       ),
     );

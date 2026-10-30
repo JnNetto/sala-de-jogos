@@ -209,15 +209,15 @@ String _descricao(AneisRegiao regiao, AneisAnelPublico? anel) {
     if (subtitulo.isNotEmpty) return subtitulo;
   }
   return switch (regiao) {
-    AneisRegiao.palavra => 'Cumpre só a regra da Palavra: escrita ou som.',
-    AneisRegiao.atributo => 'Cumpre só a regra do Atributo: o que a coisa é.',
-    AneisRegiao.contexto => 'Cumpre só a regra do Contexto: onde se usa.',
-    AneisRegiao.palavraAtributo =>
-      'Cumpre Palavra e Atributo, mas não Contexto.',
-    AneisRegiao.palavraContexto =>
-      'Cumpre Palavra e Contexto, mas não Atributo.',
-    AneisRegiao.atributoContexto =>
-      'Cumpre Atributo e Contexto, mas não Palavra.',
+    AneisRegiao.palavra =>
+      'Cumpre só a regra da Letra: como a palavra se escreve ou soa.',
+    AneisRegiao.atributo =>
+      'Cumpre só a regra do Jeito: o que a coisa é ou tem.',
+    AneisRegiao.contexto =>
+      'Cumpre só a regra do Lugar: onde aparece ou para que se usa.',
+    AneisRegiao.palavraAtributo => 'Cumpre Letra e Jeito, mas não Lugar.',
+    AneisRegiao.palavraContexto => 'Cumpre Letra e Lugar, mas não Jeito.',
+    AneisRegiao.atributoContexto => 'Cumpre Jeito e Lugar, mas não Letra.',
     AneisRegiao.todos => 'Cumpre as três regras secretas ao mesmo tempo.',
     AneisRegiao.nenhum => 'Não cumpre nenhuma das três regras.',
   };

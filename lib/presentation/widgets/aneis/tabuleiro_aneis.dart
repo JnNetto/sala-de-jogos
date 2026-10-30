@@ -9,7 +9,7 @@ import '../../../data/models/aneis_carta_tabuleiro.dart';
 import '../sala/pressionavel.dart';
 import 'cores_dos_aneis.dart';
 
-/// O tabuleiro do Nos Anéis: três anéis entrelaçados sobre o céu, cada um
+/// O tabuleiro do Cabe Aqui?: três anéis entrelaçados sobre o céu, cada um
 /// na sua luz, com a contagem de cartas de cada região e, embaixo, a
 /// bandeja de quem ficou fora de todos.
 ///
@@ -360,9 +360,9 @@ class _PintorDosAneis extends CustomPainter {
     final c = cores;
     final r = geometria.raio;
     final aneis = [
-      (geometria.palavra, c.anelPalavra, 'PALAVRA'),
-      (geometria.atributo, c.anelAtributo, 'ATRIBUTO'),
-      (geometria.contexto, c.anelContexto, 'CONTEXTO'),
+      (geometria.palavra, c.anelPalavra, 'LETRA'),
+      (geometria.atributo, c.anelAtributo, 'JEITO'),
+      (geometria.contexto, c.anelContexto, 'LUGAR'),
     ];
 
     // Preenchimento translúcido: nas interseções as luzes se somam.

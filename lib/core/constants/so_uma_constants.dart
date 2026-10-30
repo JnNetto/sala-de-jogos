@@ -1,5 +1,5 @@
 class SoUmaConstants {
-  static const String jogoNome = 'Só uma!';
+  static const String jogoNome = 'Eco!';
   static const String jogoDescricao =
       'Dê uma pista de uma única palavra para a palavra certa da carta';
 

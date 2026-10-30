@@ -11,7 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      # As configurações do Firebase vêm do segredo ENV_LOCAL (o conteúdo do
+      # .env.local), nunca do repositório.
+      - run: echo "$ENV_LOCAL" > .env.local
+        env:
+          ENV_LOCAL: ${{ secrets.ENV_LOCAL }}
+      - run: flutter pub get
+      - run: flutter build web --release --dart-define-from-file=.env.local
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

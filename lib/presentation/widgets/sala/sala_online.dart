@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/theme/sala_tokens.dart';
 import '../../../core/utils/service_locator.dart';
 import '../../navegacao.dart';
+import '../../providers/conta_provider.dart';
 import '../../providers/sala_online.dart';
 import 'aviso.dart';
 import 'botao_sala.dart';
 import 'carregando_tela.dart';
 import 'cartao_config.dart';
+import 'conta.dart';
+import 'link.dart';
 import 'dialogo.dart';
 import 'fim_de_jogo.dart';
 import 'janela.dart';
@@ -75,6 +79,7 @@ class _EntradaSalaOnlineState extends State<EntradaSalaOnline> {
   final _codigo = TextEditingController();
   _Acao? _acao;
   bool _temSalaSalva = false;
+  bool _nomeSugerido = false;
 
   @override
   void initState() {
@@ -146,6 +151,50 @@ class _EntradaSalaOnlineState extends State<EntradaSalaOnline> {
       letterSpacing: 8,
       color: c.texto,
     );
+    final conta = context.watch<ContaProvider>();
+
+    // Sem conta, não há sala online: primeiro o login.
+    if (!conta.logado) {
+      return TelaDaSala(
+        sobretitulo: 'SALA ONLINE',
+        titulo: widget.nomeDoJogo,
+        matiz: widget.matiz,
+        corpo: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            Espaco.margemTela,
+            Espaco.e4,
+            Espaco.margemTela,
+            Espaco.e6,
+          ),
+          children: [
+            Text('Entre para jogar online', style: texto.headlineLarge),
+            const SizedBox(height: Espaco.e2),
+            Text(
+              'As salas online usam sua conta para saber quem é quem. Os '
+              'jogos num celular só continuam sem login.',
+              style: texto.bodyLarge?.copyWith(color: c.texto2),
+            ),
+            const SizedBox(height: Espaco.e6),
+            CartaoConta(
+              luz: luz,
+              titulo: 'Entrar',
+              convite:
+                  'Use sua conta Google. Só o seu nome e e-mail são '
+                  'usados, para identificar você nas salas.',
+            ),
+            const SizedBox(height: Espaco.e3),
+            const LinkPrivacidade(prefixo: 'Ao entrar, você aceita a'),
+          ],
+        ),
+      );
+    }
+
+    // Recém-logado e sem apelido salvo: sugere o primeiro nome da conta.
+    if (!_nomeSugerido && _nome.text.trim().isEmpty) {
+      _nomeSugerido = true;
+      final sugestao = conta.primeiroNome;
+      if (sugestao != null) _nome.text = sugestao;
+    }
 
     return TelaDaSala(
       sobretitulo: 'SALA ONLINE',

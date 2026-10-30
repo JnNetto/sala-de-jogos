@@ -9,9 +9,11 @@ import '../../data/models/resistencia_proposta_remota.dart';
 import '../../data/models/resistencia_sala.dart';
 import '../../data/services/resistencia_firebase_service.dart';
 import '../../data/services/sala_erro.dart';
+import 'sala_online.dart';
 
-class ResistenciaSalaProvider extends ChangeNotifier {
-  static const String _ultimaSalaKey = 'resistencia_ultima_sala_id';
+class ResistenciaSalaProvider extends ChangeNotifier implements SalaOnline {
+  /// Onde fica o id da última sala (para o "Continuar").
+  static const String chaveUltimaSala = 'resistencia_ultima_sala_id';
 
   final ResistenciaFirebaseService _service;
 
@@ -36,10 +38,15 @@ class ResistenciaSalaProvider extends ChangeNotifier {
   ResistenciaPrivado? get privado => _privado;
   ResistenciaEstadoRemoto? get estado => _estado;
   ResistenciaPropostaRemota? get proposta => _proposta;
+  @override
   bool get isLoading => _isLoading;
+  @override
   String? get erro => _erro;
+  @override
   String? get uid => _service.uid;
+  @override
   bool get souHost => _sala != null && _sala!.hostUid == _service.uid;
+  @override
   bool get podeIniciar =>
       souHost && _sala?.status == 'lobby' && _jogadores.length >= 5;
   bool get podeDetectarRemocao {
@@ -48,6 +55,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     return DateTime.now().difference(entrada) > const Duration(seconds: 3);
   }
 
+  @override
   Future<bool> criarSala(String nome) async {
     return _executar(() async {
       _sala = await _service.criarSala(displayName: nome.trim());
@@ -56,6 +64,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     });
   }
 
+  @override
   Future<bool> entrarNaSala({
     required String codigo,
     required String nome,
@@ -72,13 +81,13 @@ class ResistenciaSalaProvider extends ChangeNotifier {
 
   Future<bool> restaurarUltimaSala() async {
     final prefs = await SharedPreferences.getInstance();
-    final roomId = prefs.getString(_ultimaSalaKey);
+    final roomId = prefs.getString(chaveUltimaSala);
     if (roomId == null || roomId.isEmpty) return false;
 
     return _executar(() async {
       final sala = await _service.obterSala(roomId);
       if (sala == null) {
-        await prefs.remove(_ultimaSalaKey);
+        await prefs.remove(chaveUltimaSala);
         throw Exception('Sala salva não encontrada.');
       }
       _sala = sala;
@@ -142,6 +151,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     });
   }
 
+  @override
   Future<bool> iniciarPartidaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -172,6 +182,16 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     );
   }
 
+  /// Usa a Lanterna em [targetUid], ou a guarda com `null`.
+  Future<bool> usarLanternaRemota(String? targetUid) async {
+    final sala = _sala;
+    if (sala == null) return false;
+    return _executar(
+      () => _service.usarLanterna(roomId: sala.id, targetUid: targetUid),
+    );
+  }
+
+  @override
   Future<bool> voltarAoLobbyRemoto() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -180,6 +200,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     return ok;
   }
 
+  @override
   Future<bool> sairDaSalaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -190,6 +211,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     return ok;
   }
 
+  @override
   Future<bool> removerJogadorRemoto(String targetUid) async {
     final sala = _sala;
     if (sala == null) return false;
@@ -198,6 +220,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
     );
   }
 
+  @override
   Future<bool> abortarPartidaRemota() async {
     final sala = _sala;
     if (sala == null) return false;
@@ -208,7 +231,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
 
   Future<void> esquecerUltimaSala() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_ultimaSalaKey);
+    await prefs.remove(chaveUltimaSala);
     _sala = null;
     _jogadores = const [];
     _privado = null;
@@ -387,7 +410,7 @@ class ResistenciaSalaProvider extends ChangeNotifier {
 
   Future<void> _salvarUltimaSala(String roomId) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_ultimaSalaKey, roomId);
+    await prefs.setString(chaveUltimaSala, roomId);
   }
 
   String _papelReveladoKey(String roomId, String uid, String gameId) {

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Política de privacidade · Sala de Jogos</title>
+  <meta name="description" content="Quais dados o app Sala de Jogos usa, por quê, por quanto tempo e como excluir.">
+  <link rel="icon" href="favicon.png">
+  <style>
+    :root {
+      --fundo: #0d0f2b;
+      --superficie: #181b4a;
+      --linha: #2b2f70;
+      --texto: #f1eeff;
+      --texto-2: #b7b5e6;
+      --luz: #ffc94d;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --fundo: #f4eee3;
+        --superficie: #fffbf4;
+        --linha: #ddd2bf;
+        --texto: #1b1d5c;
+        --texto-2: #4a4c86;
+        --luz: #8a5a00;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--fundo);
+      color: var(--texto);
+      font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 48px 20px 64px; }
+    .marca {
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--luz);
+      font-weight: 700;
+    }
+    h1 { font-size: 32px; line-height: 1.2; margin: 8px 0 8px; }
+    .data { color: var(--texto-2); margin: 0 0 24px; font-size: 15px; }
+    h2 { font-size: 20px; margin: 0 0 8px; }
+    p, li, td { color: var(--texto-2); }
+    strong { color: var(--texto); }
+    section {
+      background: var(--superficie);
+      border: 1.5px solid var(--linha);
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-top: 16px;
+    }
+    ul { padding-left: 22px; margin: 8px 0 0; }
+    li + li { margin-top: 6px; }
+    .resumo { border-color: var(--luz); }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px; }
+    th, td { text-align: left; padding: 8px 6px; border-top: 1px solid var(--linha); vertical-align: top; }
+    th { color: var(--texto); font-weight: 700; }
+    .rolagem { overflow-x: auto; }
+    a { color: var(--luz); }
+    footer { margin-top: 32px; font-size: 14px; color: var(--texto-2); }
+  </style>
+</head>
+<body>
+<main>
+  <div class="marca">Sala de Jogos · JnNetto</div>
+  <h1>Política de privacidade</h1>
+  <p class="data">Em vigor desde 30 de outubro de 2026.</p>
+
+  <section class="resumo">
+    <h2>Em resumo</h2>
+    <ul>
+      <li>Os jogos <strong>num celular só</strong> não precisam de conta e não enviam nada para fora do aparelho.</li>
+      <li>Para jogar <strong>online</strong>, você entra com sua conta Google (ou Apple, no iPhone). Usamos isso só para saber quem é quem nas salas.</li>
+      <li>Não há anúncios, não vendemos dados e não usamos ferramentas de rastreamento ou de análise de uso.</li>
+      <li>Você pode <a href="excluir-conta.html">excluir sua conta</a> a qualquer momento, pelo app.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Quem é o responsável</h2>
+    <p>
+      O app <strong>Sala de Jogos</strong> é desenvolvido por <strong>JnNetto</strong>, responsável
+      pelo tratamento dos dados descritos aqui. Contato:
+      <a href="mailto:jnnetto456@gmail.com">jnnetto456@gmail.com</a>.
+    </p>
+  </section>
+
+  <section>
+    <h2>Quais dados usamos, e por quê</h2>
+    <div class="rolagem">
+      <table>
+        <tr><th>Dado</th><th>Para quê</th><th>Onde fica</th><th>Por quanto tempo</th></tr>
+        <tr>
+          <td>Conta: nome, e-mail e foto da sua conta Google ou Apple, e um identificador</td>
+          <td>Entrar nas salas online e identificar você nelas</td>
+          <td>Firebase Authentication (Google)</td>
+          <td>Até você excluir a conta</td>
+        </tr>
+        <tr>
+          <td>Apelido que você escolhe para a sala</td>
+          <td>Mostrar seu nome aos outros jogadores da sala</td>
+          <td>Cloud Firestore (Google)</td>
+          <td>Enquanto a sala existir: salas paradas são apagadas em até 2 horas</td>
+        </tr>
+        <tr>
+          <td>Jogadas da partida online (cartas, votos, pistas, palpites)</td>
+          <td>Fazer o jogo funcionar entre os celulares</td>
+          <td>Cloud Firestore (Google)</td>
+          <td>Apagadas com a sala, em até 2 horas sem movimento</td>
+        </tr>
+        <tr>
+          <td>Sinal de integridade do app e do aparelho (Play Integrity, App Attest)</td>
+          <td>Bloquear robôs e cópias alteradas do app</td>
+          <td>Firebase App Check (Google ou Apple)</td>
+          <td>Não guardamos esse sinal; ele só é conferido a cada acesso</td>
+        </tr>
+        <tr>
+          <td>Nomes dos jogadores, preferências, tema, estatísticas e palavras já sorteadas</td>
+          <td>Lembrar suas escolhas e não repetir palavras</td>
+          <td>Só no seu aparelho</td>
+          <td>Até você apagar os dados do app ou desinstalá-lo</td>
+        </tr>
+      </table>
+    </div>
+    <p>
+      Não pedimos acesso a contatos, localização, câmera, microfone ou arquivos.
+    </p>
+  </section>
+
+  <section>
+    <h2>Com quem compartilhamos</h2>
+    <p>
+      Os dados das salas online ficam visíveis apenas para quem está na mesma sala.
+      Usamos os serviços do <strong>Google Firebase</strong> para o login, o banco de
+      dados e o servidor dos jogos, e o login da <strong>Apple</strong> no iPhone.
+      Eles tratam os dados em nosso nome, de acordo com suas próprias políticas
+      (<a href="https://firebase.google.com/support/privacy" rel="noopener">Firebase</a>,
+      <a href="https://policies.google.com/privacy" rel="noopener">Google</a>,
+      <a href="https://www.apple.com/br/legal/privacy/" rel="noopener">Apple</a>), e podem
+      armazená-los em servidores fora do Brasil. Não vendemos nem cedemos dados a
+      mais ninguém.
+    </p>
+  </section>
+
+  <section>
+    <h2>Segurança</h2>
+    <p>
+      As conexões são sempre criptografadas. O app não grava nada direto no banco:
+      cada jogada passa pelo nosso servidor, que confere quem está jogando, e as
+      regras do banco só deixam cada pessoa ver a própria sala e as próprias cartas.
+    </p>
+  </section>
+
+  <section>
+    <h2>Seus direitos</h2>
+    <p>
+      Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir para confirmar
+      quais dados temos, corrigi-los, recebê-los ou excluí-los. A base legal para
+      tratar os dados é a execução do serviço que você pede ao jogar online.
+    </p>
+    <ul>
+      <li><strong>Excluir:</strong> no app, em Configurações → Conta → Excluir conta. Veja também <a href="excluir-conta.html">como excluir sua conta</a>.</li>
+      <li><strong>Outros pedidos:</strong> escreva para <a href="mailto:jnnetto456@gmail.com">jnnetto456@gmail.com</a>. Respondemos em até 15 dias.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Crianças</h2>
+    <p>
+      O app não é direcionado a menores de 13 anos, e a conta para jogar online
+      segue as regras de idade do Google e da Apple. Se você é responsável por uma
+      criança que criou uma conta, escreva para nós e a excluímos.
+    </p>
+  </section>
+
+  <section>
+    <h2>Mudanças nesta política</h2>
+    <p>
+      Se algo mudar, atualizamos esta página e a data no topo. Mudanças
+      importantes também serão avisadas no app.
+    </p>
+  </section>
+
+  <footer>
+    Sala de Jogos · desenvolvido por JnNetto ·
+    <a href="excluir-conta.html">Excluir conta</a>
+  </footer>
+</main>
+</body>
+</html>

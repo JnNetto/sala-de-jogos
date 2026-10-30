@@ -1,3 +1,5 @@
+import '../widgets/sala/conta.dart';
+import '../widgets/sala/link.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +47,9 @@ class ConfiguracoesAppScreen extends StatelessWidget {
               Espaco.e12,
             ),
             children: [
+              secao('CONTA'),
+              const CartaoConta(),
+              const SizedBox(height: Espaco.e8),
               secao('APARÊNCIA'),
               CartaoConfig(
                 icone: noite
@@ -60,6 +65,8 @@ class ConfiguracoesAppScreen extends StatelessWidget {
               const SizedBox(height: Espaco.e8),
               secao('SOBRE'),
               _Sobre(),
+              const SizedBox(height: Espaco.e2),
+              const LinkPrivacidade(),
             ],
           ),
         ),
